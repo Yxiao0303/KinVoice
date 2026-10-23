@@ -1,0 +1,25 @@
+<template>
+  <div></div>
+</template>
+
+<script>
+/**
+ * 应用级别的配置，供所有页面公用
+ */
+import $utils from './helper/utils'
+import $apis from './helper/apis'
+import userIdentity from './helper/userIdentity'
+
+/* @desc: 注入方法至全局 global,以便页面调用 */
+const hook2global = global.__proto__ || global
+hook2global.$utils = $utils
+hook2global.$apis = $apis
+hook2global.$user = userIdentity
+
+export default {
+  onCreate() {
+    // 应用启动时从本地存储恢复登录态
+    userIdentity.init()
+  }
+}
+</script>

@@ -1,0 +1,8 @@
+{"stage": "state", "status": "started", "utc": "2026-10-23T15:19:26.463933+00:00", "external_calls": 0}
+{"stage": "state", "status": "cancelled", "utc": "2026-10-23T15:19:26.758583+00:00", "external_calls": 0}
+{"stage": "state", "status": "started", "utc": "2026-10-23T15:20:21.994029+00:00", "external_calls": 0}
+{"stage": "state", "status": "finished", "utc": "2026-10-23T15:20:30.011295+00:00", "external_calls": 0}
+{"stage": "generate", "status": "started", "utc": "2026-10-23T15:20:30.012297+00:00", "external_calls": 0}
+{"stage": "generate", "status": "finished", "utc": "2026-10-23T15:20:38.009806+00:00", "external_calls": 0}
+{"stage": "verify", "status": "started", "utc": "2026-10-23T15:20:38.011808+00:00", "external_calls": 0}
+{"stage": "verify", "status": "finished", "utc": "2026-10-23T15:20:46.015845+00:00", "external_calls": 0}

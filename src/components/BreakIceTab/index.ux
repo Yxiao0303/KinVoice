@@ -1,0 +1,438 @@
+<template>
+  <!-- BreakIceTab：原 pages/BreakIce 的主内容，移除了 Tabbar 引用 -->
+  <div class="page">
+    <!-- 顶部标题栏 -->
+    <div class="title-bar">
+      <text class="title-text">聊天</text>
+    </div>
+
+    <!-- 对话列表 -->
+    <div class="conv-list">
+      <!-- 加载中 -->
+      <div class="loading-hint" if="loading">
+        <text class="loading-text">加载中...</text>
+      </div>
+
+      <!-- 未加入家庭组 -->
+      <div class="empty-card" if="!loading && !familyId">
+        <text class="empty-icon">🏠</text>
+        <text class="empty-text">你还没有加入家庭组</text>
+        <text class="empty-sub">加入家庭组后即可与家人聊天</text>
+        <div class="go-family-btn" onclick="goFamily">
+          <text class="go-family-text">去加入家庭组</text>
+        </div>
+      </div>
+
+      <!-- 有家庭组但无对话 -->
+      <div class="empty-card" if="!loading && familyId && sortedConvs.length === 0">
+        <text class="empty-icon">💬</text>
+        <text class="empty-text">暂无聊天</text>
+        <text class="empty-sub">等待家庭组成员发起聊天</text>
+      </div>
+
+      <!-- 对话列表 -->
+      <block for="conv in sortedConvs">
+        <!-- 群聊置顶标识 -->
+        <div class="pinned-label" if="conv._pinned">
+          <text class="pinned-label-text">置顶聊天</text>
+        </div>
+
+        <div class="conv-item {{ conv._pinned ? 'conv-item-pinned' : '' }}"
+             onclick="openChat(conv)">
+          <!-- 头像 -->
+          <div class="conv-avatar {{ conv.type === 'group' ? 'conv-avatar-group' : '' }}">
+            <text class="conv-avatar-text">{{ conv._avatarText }}</text>
+          </div>
+
+          <!-- 中间信息区 -->
+          <div class="conv-info">
+            <text class="conv-name">{{ conv._displayName }}</text>
+            <text class="conv-preview">{{ conv._preview }}</text>
+          </div>
+
+          <!-- 右侧时间 -->
+          <div class="conv-meta">
+            <text class="conv-time">{{ conv._timeText }}</text>
+            <text class="conv-arrow">›</text>
+          </div>
+        </div>
+      </block>
+    </div>
+  </div>
+</template>
+
+<script>
+import $utils from '../../helper/utils'
+import userIdentity from '../../helper/userIdentity'
+import familyAPI from '../../helper/apis/family'
+import chatroomAPI from '../../helper/apis/chatroom'
+import { safePush } from '../../helper/navigate'
+
+/** 获取组件存活标志（if 控制生命周期，mounted 在 onDestroy 置 false） */
+function checkActive(vm) {
+  try { return vm && vm.mounted === true } catch (e) { return false }
+}
+
+/**
+ * 格式化时间为微信风格：
+ * - 今天 → HH:mm
+ * - 昨天 → "昨天"
+ * - 本周内 → "星期X"
+ * - 今年内 → "MM/DD"
+ * - 更早 → "YYYY/MM/DD"
+ */
+function formatChatTime(isoStr) {
+  if (!isoStr) return ''
+  const date = new Date(isoStr)
+  const now = new Date()
+  if (isNaN(date.getTime())) return ''
+
+  const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate())
+  const yesterdayStart = new Date(todayStart.getTime() - 86400000)
+  const dateStart = new Date(date.getFullYear(), date.getMonth(), date.getDate())
+
+  if (dateStart.getTime() >= todayStart.getTime()) {
+    const hh = String(date.getHours()).padStart(2, '0')
+    const mm = String(date.getMinutes()).padStart(2, '0')
+    return `${hh}:${mm}`
+  }
+  if (dateStart.getTime() >= yesterdayStart.getTime()) {
+    return '昨天'
+  }
+  const weekAgo = new Date(todayStart.getTime() - 6 * 86400000)
+  if (dateStart.getTime() >= weekAgo.getTime()) {
+    const days = ['周日', '周一', '周二', '周三', '周四', '周五', '周六']
+    return days[date.getDay()]
+  }
+  if (date.getFullYear() === now.getFullYear()) {
+    return `${String(date.getMonth() + 1).padStart(2, '0')}/${String(date.getDate()).padStart(2, '0')}`
+  }
+  return `${date.getFullYear()}/${String(date.getMonth() + 1).padStart(2, '0')}/${String(date.getDate()).padStart(2, '0')}`
+}
+
+export default {
+  props: {},
+
+  data: {
+    familyId: '',
+    myUserId: '',
+    loading: true,
+    loadingData: false,
+    rawConvs: [],       // 后端原始列表
+    mounted: true,
+    userIdPromise: null,
+  },
+
+  computed: {
+    sortedConvs() {
+      const list = (this.rawConvs || []).map(conv => {
+        const isGroup = conv.type === 'group'
+        // 防御性提取首字母：确保 peer_nickname 为有效字符串
+        const peerName = (conv && typeof conv.peer_nickname === 'string') ? conv.peer_nickname : ''
+        const initial = peerName ? peerName.charAt(0).toUpperCase() : '?'
+        return {
+          ...conv,
+          _pinned: isGroup,
+          _avatarText: isGroup ? '👥' : initial,
+          _displayName: isGroup
+            ? (conv.title || '家庭群聊')
+            : (conv.peer_nickname || '未知'),
+          _preview: conv.last_message || '暂无消息',
+          _timeText: formatChatTime(conv.last_time),
+        }
+      })
+
+      // 如果已加入家庭组但群聊会话尚不存在，补一个虚拟入口
+      if (this.familyId) {
+        const hasGroupConv = list.some(c => c.type === 'group')
+        if (!hasGroupConv) {
+          list.push({
+            type: 'group',
+            title: '家庭群聊',
+            _pinned: true,
+            _isVirtual: true,
+            _avatarText: '👥',
+            _displayName: '家庭群聊',
+            _preview: '点击进入群聊，发送第一条消息',
+            _timeText: '',
+          })
+        }
+      }
+
+      // 排序：置顶在前，然后按 last_time 倒序
+      list.sort((a, b) => {
+        if (a._pinned && !b._pinned) return -1
+        if (!a._pinned && b._pinned) return 1
+        const ta = a.last_time ? new Date(a.last_time).getTime() : 0
+        const tb = b.last_time ? new Date(b.last_time).getTime() : 0
+        return tb - ta
+      })
+
+      return list
+    },
+  },
+
+  /**
+   * if 指令控制生命周期：每次切到此 tab 时组件重建，onInit 触发。
+   * 显式重置可变数据 → 初始化用户身份 → 加载数据。
+   */
+  async onInit() {
+    this.mounted = true
+    // 显式重置可变数据，防止实例复用时残留旧状态
+    this.familyId = ''
+    this.myUserId = ''
+    this.rawConvs = []
+    this.loading = true
+    this.loadingData = false
+    // 初始化用户身份
+    this.userIdPromise = userIdentity.initUserId().then(id => {
+      this.myUserId = id
+    })
+    userIdentity.initNickname()
+    // 等待 userId 就绪后加载数据
+    if (this.userIdPromise) {
+      await this.userIdPromise
+      this.userIdPromise = null
+    }
+    if (checkActive(this) && this.myUserId) {
+      this.loadData()
+    }
+  },
+
+  /**
+   * 组件即将被 if 移除
+   */
+  onDestroy() {
+    this.mounted = false
+  },
+
+  /**
+   * 由 MainPage 在从子页面（ChatRoom 等）返回时调用，刷新数据。
+   */
+  refresh() {
+    if (checkActive(this) && this.myUserId && !this.loadingData) {
+      this.loadData()
+    }
+  },
+
+  // ==================== 数据加载 ====================
+
+  async loadData() {
+    this.loadingData = true
+    this.loading = true
+    try {
+      // 1. 获取家庭组信息
+      const famRes = await familyAPI.getMyGroup()
+      if (!checkActive(this)) return
+      if (famRes.family_id) {
+        this.familyId = famRes.family_id
+      } else {
+        this.familyId = ''
+      }
+
+      // 2. 获取对话列表（私聊 + 群聊）
+      if (this.familyId) {
+        const convRes = await chatroomAPI.getConversations()
+        if (!checkActive(this)) return
+        this.rawConvs = convRes.conversations || []
+      } else {
+        this.rawConvs = []
+      }
+    } catch (e) {
+      console.log('加载聊天列表失败:', e)
+    } finally {
+      if (checkActive(this)) {
+        this.loading = false
+        this.loadingData = false
+      }
+    }
+  },
+
+  // ==================== 导航 ====================
+
+  openChat(conv) {
+    if (conv.type === 'group') {
+      safePush('/pages/ChatRoom?type=group')
+    } else {
+      const peerId = conv.peer_user_id || ''
+      const peerName = conv.peer_nickname || ''
+      safePush(`/pages/ChatRoom?type=private&peer_id=${peerId}&peer_name=${encodeURIComponent(peerName)}`)
+    }
+  },
+
+  goFamily() {
+    safePush('/pages/Family')
+  },
+}
+</script>
+
+<style lang="less">
+/* ===== 莫兰迪色系 ===== */
+@bg:          #f7f0e7;
+@white:       #faf8f5;
+@text:        #4a3728;
+@text-light:  #9a8b7a;
+@text-lighter:#bfb5a8;
+@border:      #e8e1d8;
+@brown:       #d4874b;
+@blue:        #8ab4c9;
+@pinned-bg:   #f0ebe2;
+
+.page {
+  flex: 1;
+  flex-direction: column;
+  background-color: @bg;
+  padding-bottom: 96px;  /* 给 MainPage 的 TabBar 留空间 */
+}
+
+/* ===== 标题栏 ===== */
+.title-bar {
+  padding: 60px 30px 20px;
+  background-color: @bg;
+}
+
+.title-text {
+  font-size: 44px;
+  font-weight: 700;
+  color: @text;
+}
+
+/* ===== 对话列表 ===== */
+.conv-list {
+  flex: 1;
+  flex-direction: column;
+  margin: 0 16px;
+}
+
+.loading-hint {
+  padding: 60px;
+  align-items: center;
+}
+
+.loading-text {
+  font-size: 26px;
+  color: @text-light;
+}
+
+.empty-card {
+  flex-direction: column;
+  align-items: center;
+  padding: 60px 30px;
+  margin-top: 20px;
+  background-color: @white;
+  border-radius: 16px;
+}
+
+.empty-icon {
+  font-size: 56px;
+  margin-bottom: 12px;
+}
+
+.empty-text {
+  font-size: 28px;
+  color: @text;
+  font-weight: 500;
+  margin-bottom: 6px;
+}
+
+.empty-sub {
+  font-size: 24px;
+  color: @text-light;
+  margin-bottom: 20px;
+}
+
+.go-family-btn {
+  background-color: @brown;
+  border-radius: 10px;
+  padding: 14px 32px;
+}
+
+.go-family-text {
+  font-size: 26px;
+  color: #ffffff;
+}
+
+.pinned-label {
+  padding: 14px 4px 6px 4px;
+  margin-top: 8px;
+}
+
+.pinned-label-text {
+  font-size: 22px;
+  color: @text-lighter;
+}
+
+.conv-item {
+  flex-direction: row;
+  align-items: center;
+  background-color: @white;
+  border-radius: 14px;
+  padding: 20px 18px;
+  margin-bottom: 6px;
+}
+
+.conv-item-pinned {
+  background-color: @pinned-bg;
+}
+
+.conv-avatar {
+  width: 72px;
+  height: 72px;
+  border-radius: 36px;
+  background-color: @brown;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.conv-avatar-group {
+  background-color: @blue;
+}
+
+.conv-avatar-text {
+  font-size: 32px;
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.conv-info {
+  flex: 1;
+  flex-direction: column;
+  margin-left: 16px;
+}
+
+.conv-name {
+  font-size: 30px;
+  color: @text;
+  font-weight: 500;
+  margin-bottom: 6px;
+  lines: 1;
+  text-overflow: ellipsis;
+}
+
+.conv-preview {
+  font-size: 24px;
+  color: @text-light;
+  lines: 1;
+  text-overflow: ellipsis;
+}
+
+.conv-meta {
+  flex-direction: row;
+  align-items: center;
+  margin-left: 10px;
+  flex-shrink: 0;
+}
+
+.conv-time {
+  font-size: 22px;
+  color: @text-lighter;
+  margin-right: 4px;
+}
+
+.conv-arrow {
+  font-size: 30px;
+  color: @text-lighter;
+}
+</style>

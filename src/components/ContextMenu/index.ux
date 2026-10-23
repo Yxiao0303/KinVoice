@@ -1,0 +1,60 @@
+<template>
+  <div class="context-menu-bg" onclick="closeMenu">
+    <div class="context-menu" style="top: {{top}}px; left: {{left}}px;">
+      <div class="menu-item" for="item in menuItems" onclick="handleClick(item.action)">
+        <text class="menu-icon">{{ item.icon }}</text>
+        <text class="menu-text">{{ item.text }}</text>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+export default {
+  props: {
+    top: { default: 0 },
+    left: { default: 0 },
+    menuItems: { default: [] }
+  },
+  handleClick(action) {
+    this.$emit('action', action)
+    this.$emit('close')
+  },
+  closeMenu() {
+    this.$emit('close')
+  }
+}
+</script>
+
+<style>
+.context-menu-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1000;
+  background-color: rgba(0, 0, 0, 0.2);
+}
+.context-menu {
+  position: fixed;
+  z-index: 1001;
+  background-color: #ffffff;
+  border-radius: 8px;
+  padding: 8px 0;
+  min-width: 200px;
+}
+.menu-item {
+  flex-direction: row;
+  align-items: center;
+  padding: 12px 20px;
+}
+.menu-icon {
+  font-size: 28px;
+  margin-right: 12px;
+}
+.menu-text {
+  font-size: 26px;
+  color: #4a3728;
+}
+</style>

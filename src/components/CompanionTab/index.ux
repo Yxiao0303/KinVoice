@@ -1,0 +1,1068 @@
+<template>
+  <!-- CompanionTab：原 pages/Companion 的主内容，移除了 Tabbar 引用 -->
+  <div class="companion-tab">
+    <!-- ========== 侧边栏遮罩 ========== -->
+    <div class="sidebar-overlay" if="showSidebar" onclick="closeSidebar"></div>
+
+    <!-- ========== 侧边栏 ========== -->
+    <div class="sidebar {{ showSidebar ? 'sidebar-open' : '' }}">
+      <div class="sidebar-header">
+        <text class="sidebar-title">对话记录</text>
+        <div class="sidebar-new-btn" onclick="newConversation">
+          <text class="sidebar-new-icon">+</text>
+        </div>
+      </div>
+      <div class="sidebar-list">
+        <block for="conv in conversationList">
+          <div class="sidebar-item {{ conv.id === conversationId ? 'sidebar-item-active' : '' }}"
+               onclick="switchConversation(conv.id)">
+            <div class="sidebar-item-main">
+              <text class="sidebar-item-title">{{ conv.title || '新对话' }}</text>
+              <text class="sidebar-item-date">{{ conv.created_at }}</text>
+            </div>
+            <div class="sidebar-item-del" onclick="deleteConversation(conv.id, $event)">
+              <text class="sidebar-del-icon">×</text>
+            </div>
+          </div>
+        </block>
+        <div class="sidebar-empty" if="conversationList.length === 0">
+          <text class="sidebar-empty-text">暂无对话记录</text>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== 主聊天区 ========== -->
+    <div class="main-area">
+      <!-- 顶部标题栏 -->
+      <div class="title-bar">
+        <div class="hamburger" onclick="toggleSidebar">
+          <text class="hamburger-line"></text>
+          <text class="hamburger-line"></text>
+          <text class="hamburger-line"></text>
+        </div>
+        <text class="title-text">Cloudie</text>
+        <text class="title-sub">你的家庭情绪树洞</text>
+      </div>
+
+      <!-- 对话消息列表（双击弹出菜单） -->
+      <div class="chat-list" id="chatList">
+        <block for="(index, msg) in messages">
+          <div class="msg-row msg-ai" if="msg.role === 'assistant'" onclick="handleMessageClick(index, $event)">
+            <image class="msg-avatar" src="../../assets/images/logo.png" />
+            <div class="msg-body">
+              <div class="msg-bubble msg-bubble-ai">
+                <text class="msg-text">{{ msg.content }}</text>
+              </div>
+            </div>
+          </div>
+          <div class="msg-row msg-user" elif="msg.role === 'user'" onclick="handleMessageClick(index, $event)">
+            <div class="msg-body">
+              <div class="msg-bubble msg-bubble-user">
+                <text class="msg-text">{{ msg.content }}</text>
+              </div>
+            </div>
+            <div class="msg-avatar msg-avatar-user">
+              <text class="avatar-placeholder">我</text>
+            </div>
+          </div>
+          <div class="msg-row msg-system" else>
+            <text class="msg-system-text">{{ msg.content }}</text>
+          </div>
+        </block>
+
+        <!-- 正在输入指示器 -->
+        <div class="msg-row msg-ai" if="isThinking">
+          <image class="msg-avatar" src="../../assets/images/logo.png" />
+          <div class="msg-body">
+            <div class="msg-bubble msg-bubble-ai msg-bubble-thinking">
+              <text class="msg-text msg-thinking">···</text>
+            </div>
+          </div>
+        </div>
+
+        <div class="chat-bottom-spacer"></div>
+      </div>
+
+      <!-- 底部输入区 -->
+      <div class="bottom-input-area">
+        <input class="message-input" type="text" placeholder="告诉小云你的心事吧..." value="{{ messageText }}" onchange="onMessageChange" />
+        <div class="send-btn" onclick="sendMessage">
+          <text class="send-icon">→</text>
+        </div>
+      </div>
+    </div>
+
+    <!-- 内联菜单（双击消息：播放/删除） -->
+    <div class="context-menu-bg" if="{{contextMenu.visible}}" onclick="closeContextMenu">
+      <div class="context-menu" style="top: {{contextMenu.top}}px; left: {{contextMenu.left}}px;">
+        <div class="menu-item" onclick="handlePlayClick">
+          <text class="ctx-menu-icon">🔊</text>
+          <text class="ctx-menu-text">播放消息</text>
+        </div>
+        <div class="menu-item" onclick="handleDeleteClick">
+          <text class="ctx-menu-icon">🗑️</text>
+          <text class="ctx-menu-text">删除消息</text>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+import storage from '@system.storage'
+import $utils from '../../helper/utils'
+import chatAPI from '../../helper/apis/chat'
+import familyAPI from '../../helper/apis/family'
+import ttsAPI from '../../helper/apis/tts'
+import profileAI from '../../helper/apis/profile_ai'
+
+// 本地存储 key
+const CONV_ID_KEY = 'companion_conv_id'
+const DOUBLE_CLICK_DELAY = 500
+const CONV_LIST_KEY = 'companion_conv_list'
+const CONV_MSG_PREFIX = 'conv_msgs_'
+
+/** 获取组件存活标志（if 控制生命周期，mounted 在 onDestroy 置 false） */
+function checkActive(vm) {
+  try { return vm && vm.mounted === true } catch (e) { return false }
+}
+
+/** 生成本地会话 ID */
+function generateLocalId() {
+  return Date.now()
+}
+
+/** 格式化日期 */
+function formatDate(ts) {
+  const d = new Date(ts)
+  const y = d.getFullYear()
+  const m = String(d.getMonth() + 1).padStart(2, '0')
+  const day = String(d.getDate()).padStart(2, '0')
+  return `${y}-${m}-${day}`
+}
+
+/** 截取会话标题（取第一条用户消息前20字） */
+function makeTitle(messages) {
+  const firstUser = messages.find(m => m.role === 'user')
+  if (firstUser) {
+    return firstUser.content.length > 20
+      ? firstUser.content.substring(0, 20) + '...'
+      : firstUser.content
+  }
+  return '新对话'
+}
+
+export default {
+  props: {},
+
+  data: {
+    messageText: '',
+    messages: [],
+    isThinking: false,
+    conversationId: null,
+    showSidebar: false,
+    conversationList: [],
+    mounted: true,
+    timers: [],
+    familyId: null,
+    familyIdPromise: null,
+    contextMenu: { visible: false, top: 0, left: 0, msg: null },
+    lastClickTime: 0,
+    lastClickIndex: -1,
+  },
+
+  /**
+   * if 指令控制生命周期：每次切到此 tab 时组件重建，onInit 触发。
+   * 显式重置所有可变数据 → 显示占位欢迎语 → 异步恢复。
+   */
+  onInit() {
+    this.mounted = true
+    // 显式重置可变数据，防止实例复用时残留旧状态
+    this.messageText = ''
+    this.isThinking = false
+    this.conversationId = null
+    this.showSidebar = false
+    this.conversationList = []
+    this.timers = []
+    this.familyId = null
+    this.familyIdPromise = null
+    // 立即显示欢迎消息，消除空白等待
+    this.messages = [this.welcomeMsg()]
+    // 异步恢复本地数据 + 后台同步
+    this.restoreConvList()
+    this.restoreCurrentConv()
+    this.syncFromBackend()
+    this.fetchFamilyId()
+  },
+
+  /**
+   * 组件即将被 if 移除：清理定时器 + 缓存会话。
+   */
+  onDestroy() {
+    this.mounted = false
+    this.clearTimers()
+    this.cacheCurrentConv()
+    this.triggerProfileUpdate()
+  },
+
+  /**
+   * 由 MainPage 在从子页面（ChatRoom 等）返回时调用，刷新数据。
+   */
+  refresh() {
+    this.syncFromBackend()
+  },
+
+  clearTimers() {
+    if (Array.isArray(this.timers)) {
+      this.timers.forEach((timer) => {
+        if (timer) clearTimeout(timer)
+      })
+    }
+    this.timers = []
+  },
+
+  // ==================== 本地存储：会话列表 ====================
+
+  restoreConvList() {
+    if (!checkActive(this)) return
+    storage.get({
+      key: CONV_LIST_KEY,
+      success: (data) => {
+        if (!checkActive(this)) return
+        if (data) {
+          try {
+            const list = JSON.parse(data)
+            if (Array.isArray(list)) {
+              this.conversationList = list
+            }
+          } catch (e) { /* ignore */ }
+        }
+      },
+      fail: () => {}
+    })
+  },
+
+  saveConvList() {
+    storage.set({
+      key: CONV_LIST_KEY,
+      value: JSON.stringify(this.conversationList),
+      success: () => {},
+      fail: (err) => console.log('[Companion] 保存会话列表失败:', err)
+    })
+  },
+
+  upsertConvInList(convId, title, createdAt) {
+    const existing = this.conversationList.find(c => c.id === convId)
+    if (existing) {
+      existing.title = title || existing.title
+    } else {
+      this.conversationList.unshift({ id: convId, title: title || '新对话', created_at: createdAt || formatDate(Date.now()) })
+    }
+    this.saveConvList()
+  },
+
+  // ==================== 本地存储：会话消息 ====================
+
+  msgKey(convId) {
+    return CONV_MSG_PREFIX + convId
+  },
+
+  loadConvMessages(convId, callback) {
+    storage.get({
+      key: this.msgKey(convId),
+      success: (data) => {
+        if (data) {
+          try {
+            const msgs = JSON.parse(data)
+            if (Array.isArray(msgs)) {
+              callback(msgs)
+              return
+            }
+          } catch (e) { /* ignore */ }
+        }
+        this._fallbackToBackendHistory(convId, callback)
+      },
+      fail: () => this._fallbackToBackendHistory(convId, callback)
+    })
+  },
+
+  _fallbackToBackendHistory(convId, callback) {
+    if (typeof convId !== 'number' || convId >= 1e10) {
+      callback(null)
+      return
+    }
+    chatAPI.getHistory(convId).then((raw) => {
+      if (!checkActive(this)) return
+      const data = this.unwrapProxy(raw)
+      if (data && Array.isArray(data.messages)) {
+        const msgs = data.messages.map(m => ({ role: m.role, content: m.content }))
+        this._saveMessagesToStorage(convId, msgs)
+        callback(msgs)
+      } else {
+        callback(null)
+      }
+    }).catch(() => {
+      callback(null)
+    })
+  },
+
+  _saveMessagesToStorage(convId, msgs) {
+    storage.set({
+      key: this.msgKey(convId),
+      value: JSON.stringify(msgs),
+      success: () => {},
+      fail: () => {}
+    })
+  },
+
+  cacheCurrentConv() {
+    if (!this.conversationId) return
+    if (!this.messages || this.messages.length === 0) return
+    storage.set({
+      key: this.msgKey(this.conversationId),
+      value: JSON.stringify(this.messages),
+      success: () => {},
+      fail: (err) => console.log('[Companion] 缓存消息失败:', err)
+    })
+  },
+
+  deleteConvMessages(convId) {
+    storage.delete({
+      key: this.msgKey(convId),
+      success: () => {},
+      fail: () => {}
+    })
+  },
+
+  // ==================== 当前会话恢复 ====================
+
+  restoreCurrentConv() {
+    if (!checkActive(this)) return
+    storage.get({
+      key: CONV_ID_KEY,
+      success: (data) => {
+        if (!checkActive(this)) return
+        let savedId = null
+        if (data) {
+          try {
+            const parsed = JSON.parse(data)
+            if (typeof parsed === 'number' && parsed > 0) {
+              savedId = parsed
+            }
+          } catch (e) { /* ignore */ }
+        }
+        if (savedId) {
+          this.conversationId = savedId
+          this.loadConvMessages(savedId, (msgs) => {
+            if (!checkActive(this)) return
+            if (msgs && msgs.length > 0) {
+              this.messages = msgs
+            } else {
+              this.messages = [this.welcomeMsg()]
+            }
+            this.scrollToBottom()
+          })
+        } else {
+          this.createNewConversation(false)
+        }
+      },
+      fail: () => {
+        if (checkActive(this)) {
+          this.createNewConversation(false)
+        }
+      }
+    })
+  },
+
+  saveCurrentConvId(id) {
+    storage.set({
+      key: CONV_ID_KEY,
+      value: JSON.stringify(id),
+      success: () => {},
+      fail: (err) => console.log('保存会话 ID 失败:', err)
+    })
+  },
+
+  welcomeMsg() {
+    return { role: 'assistant', content: '今天过得开心吗？戳戳我，或者直接跟我说说话吧！' }
+  },
+
+  // ==================== 后端静默同步 ====================
+
+  syncFromBackend() {
+    if (!checkActive(this)) return
+    chatAPI.listConversations().then((raw) => {
+      if (!checkActive(this)) return
+      const data = this.unwrapProxy(raw)
+      if (data && Array.isArray(data.conversations)) {
+        const localMap = {}
+        this.conversationList.forEach(c => { localMap[c.id] = c })
+        let changed = false
+        data.conversations.forEach(c => {
+          if (localMap[c.id]) {
+            if (c.title && localMap[c.id].title !== c.title) {
+              localMap[c.id].title = c.title
+              changed = true
+            }
+          } else {
+            this.conversationList.unshift({
+              id: c.id,
+              title: c.title || '新对话',
+              created_at: c.created_at ? formatDate(new Date(c.created_at).getTime()) : formatDate(Date.now())
+            })
+            changed = true
+          }
+        })
+        if (changed) {
+          this.saveConvList()
+        }
+      }
+    }).catch(() => {})
+  },
+
+  fetchFamilyId() {
+    if (this.familyIdPromise) {
+      return this.familyIdPromise
+    }
+    this.familyIdPromise = familyAPI.getMyGroup().then((raw) => {
+      if (!checkActive(this)) return
+      let data = this.unwrapProxy(raw)
+      if (data && data.family_id) {
+        this.familyId = data.family_id
+      }
+    }).catch(() => {})
+    return this.familyIdPromise
+  },
+
+  // ==================== 代理解包 ====================
+
+  unwrapProxy(raw) {
+    let data = raw
+    if (raw && typeof raw === 'object' && raw.headers && typeof raw.data === 'string') {
+      try {
+        data = JSON.parse(raw.data)
+      } catch (e) { /* ignore */ }
+    }
+    return data
+  },
+
+  // ==================== 侧边栏 ====================
+
+  toggleSidebar() {
+    this.showSidebar = !this.showSidebar
+  },
+
+  closeSidebar() {
+    this.showSidebar = false
+  },
+
+  newConversation() {
+    this.cacheCurrentConv()
+    this.createNewConversation(true)
+  },
+
+  createNewConversation(closeSidebar) {
+    const newId = generateLocalId()
+    this.conversationId = newId
+    this.saveCurrentConvId(newId)
+    this.messages = [this.welcomeMsg()]
+    this.upsertConvInList(newId, '新对话', formatDate(Date.now()))
+    this.cacheCurrentConv()
+    if (closeSidebar) {
+      this.showSidebar = false
+    }
+    this.scrollToBottom()
+  },
+
+  switchConversation(targetId) {
+    if (targetId === this.conversationId) {
+      this.showSidebar = false
+      return
+    }
+    this.cacheCurrentConv()
+    this.conversationId = targetId
+    this.saveCurrentConvId(targetId)
+    this.showSidebar = false
+    this.loadConvMessages(targetId, (msgs) => {
+      if (!checkActive(this)) return
+      if (msgs && msgs.length > 0) {
+        this.messages = msgs
+      } else {
+        this.messages = [this.welcomeMsg()]
+      }
+      this.scrollToBottom()
+    })
+  },
+
+  deleteConversation(convId, event) {
+    if (event && event.stopPropagation) {
+      event.stopPropagation()
+    }
+    this.conversationList = this.conversationList.filter(c => c.id !== convId)
+    this.saveConvList()
+    this.deleteConvMessages(convId)
+    if (typeof convId === 'number' && convId < 1e10) {
+      chatAPI.deleteConversation(convId).catch(() => {})
+    }
+    if (this.conversationId === convId) {
+      this.createNewConversation(false)
+    }
+    $utils.showToast('已删除')
+  },
+
+  // ==================== 聊天 ====================
+
+  onMessageChange(event) {
+    if (!checkActive(this)) return
+    this.messageText = event.value || ''
+  },
+
+  sendMessage() {
+    if (!checkActive(this)) return
+    if (this.isThinking) {
+      $utils.showToast('请等小云回复完再发送')
+      return
+    }
+    const content = (this.messageText || '').trim()
+    if (!content) {
+      $utils.showToast('请输入内容')
+      return
+    }
+
+    const isFirstMessage = !this.messages.some(m => m.role === 'user')
+    this.messages.push({ role: 'user', content: content })
+    this.messageText = ''
+
+    if (isFirstMessage) {
+      this.upsertConvInList(this.conversationId, makeTitle(this.messages), formatDate(Date.now()))
+    }
+    this.cacheCurrentConv()
+
+    this.isThinking = true
+    this.scrollToBottom()
+    this.callCloudieAPI(content)
+  },
+
+  scrollToBottom() {
+    const timer = setTimeout(() => {
+      if (!checkActive(this)) return
+      const idx = this.timers.indexOf(timer)
+      if (idx !== -1) this.timers.splice(idx, 1)
+      try {
+        const el = this.$element('chatList')
+        if (el && el.scrollTo) {
+          el.scrollTo({ index: -1 })
+        }
+      } catch (e) { /* ignore */ }
+    }, 100)
+    this.timers.push(timer)
+  },
+
+  callCloudieAPI(message) {
+    const familyReady = this.familyIdPromise
+      ? this.familyIdPromise.catch(() => {})
+      : Promise.resolve()
+    familyReady.then(() => {
+      chatAPI.sendMessage({
+        message: message,
+        conversation_id: this.conversationId || null,
+        family_id: this.familyId || null,
+      }).then((raw) => {
+        if (!checkActive(this)) return
+        this.isThinking = false
+        let data = this.unwrapProxy(raw)
+        if (data && data.reply) {
+          this.messages.push({ role: 'assistant', content: data.reply })
+          this.cacheCurrentConv()
+          if (data.conversation_id && data.conversation_id !== this.conversationId) {
+            this.migrateConvId(this.conversationId, data.conversation_id)
+          }
+        } else {
+          $utils.showToast('AI 回复为空，请重试')
+        }
+        this.scrollToBottom()
+      }).catch((error) => {
+        if (!checkActive(this)) return
+        console.log('[Companion] API Error:', error)
+        this.isThinking = false
+        $utils.showToast('AI 回复失败，请重试')
+        this.scrollToBottom()
+      })
+    })
+  },
+
+  migrateConvId(oldId, newId) {
+    if (!oldId || !newId || oldId === newId) return
+    storage.get({
+      key: this.msgKey(oldId),
+      success: (data) => {
+        if (data) {
+          storage.set({ key: this.msgKey(newId), value: data, success: () => {}, fail: () => {} })
+          storage.delete({ key: this.msgKey(oldId), success: () => {}, fail: () => {} })
+        }
+      },
+      fail: () => {}
+    })
+    const item = this.conversationList.find(c => c.id === oldId)
+    if (item) {
+      item.id = newId
+      this.saveConvList()
+    }
+    this.conversationId = newId
+    this.saveCurrentConvId(newId)
+  },
+
+  // ==================== 双击菜单（播放 / 删除消息） ====================
+
+  handleMessageClick(index, evt) {
+    const now = Date.now()
+    if (this.lastClickIndex === index && (now - this.lastClickTime < DOUBLE_CLICK_DELAY)) {
+      this.lastClickTime = 0
+      this.lastClickIndex = -1
+      this.showContextMenu(index, evt)
+    } else {
+      this.lastClickTime = now
+      this.lastClickIndex = index
+    }
+  },
+
+  showContextMenu(index, evt) {
+    const msg = this.messages[index]
+    if (!msg) return
+    let clientX = 200, clientY = 400
+    if (evt && evt.touches && evt.touches.length > 0) {
+      clientX = evt.touches[0].clientX
+      clientY = evt.touches[0].clientY
+    } else if (evt && typeof evt.clientX !== 'undefined') {
+      clientX = evt.clientX
+      clientY = evt.clientY
+    }
+    this.contextMenu.visible = true
+    this.contextMenu.top = clientY
+    this.contextMenu.left = clientX
+    this.contextMenu.msg = msg
+  },
+
+  closeContextMenu() {
+    this.contextMenu.visible = false
+    this.contextMenu.msg = null
+  },
+
+  handlePlayClick() {
+    if (this.contextMenu.msg) {
+      this.playMessage(this.contextMenu.msg.content)
+    }
+    this.closeContextMenu()
+  },
+
+  handleDeleteClick() {
+    if (this.contextMenu.msg) {
+      this.deleteMessage(this.contextMenu.msg)
+    }
+    this.closeContextMenu()
+  },
+
+  async playMessage(text) {
+    const voice = (await this.getSelectedVoice()) || 'yunye'
+    try {
+      await ttsAPI.play(text, voice)
+    } catch (e) {
+      console.error('[Companion] 播放失败:', e)
+      $utils.showToast('播放失败')
+    }
+  },
+
+  getSelectedVoice() {
+    return new Promise((resolve) => {
+      storage.get({
+        key: 'selected_voice',
+        success: (data) => resolve(data || ''),
+        fail: () => resolve('')
+      })
+    })
+  },
+
+  async deleteMessage(msg) {
+    const idx = this.messages.indexOf(msg)
+    if (idx > -1) this.messages.splice(idx, 1)
+    if (msg.id && !String(msg.id).startsWith('temp_')) {
+      try { await chatAPI.deleteMessage(msg.id) } catch (e) {}
+    }
+    this.cacheCurrentConv()
+  },
+
+  // ==================== 后台档案更新 ====================
+
+  triggerProfileUpdate() {
+    profileAI.updateDynamic()
+      .then(res => console.log('[CompanionTab] 动态档案更新完成'))
+      .catch(() => {})
+  },
+}
+</script>
+
+<style lang="less">
+/* ================================================================
+   莫兰迪色系 (Morandi Palette)
+   ================================================================ */
+
+@morandi-bg:        #e8e4df;
+@morandi-bg-dark:   #dcd5ce;
+@morandi-green:     #b5c4b1;
+@morandi-green-dark:#9ab09a;
+@morandi-pink:      #d4c5c0;
+@morandi-blue:      #a3b5c7;
+@morandi-blue-dark: #8a9eb2;
+@morandi-brown:     #c4b7a6;
+@morandi-text:      #5c5c5c;
+@morandi-text-light:#9a9490;
+@morandi-white:     #faf8f5;
+@morandi-border:    #d9d3cb;
+
+.companion-tab {
+  flex: 1;
+  flex-direction: row;
+  background-color: @morandi-bg;
+  position: relative;
+}
+
+/* ========== 侧边栏遮罩 ========== */
+.sidebar-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
+/* ========== 侧边栏 ========== */
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: -560px;
+  bottom: 0;
+  width: 560px;
+  background-color: @morandi-white;
+  flex-direction: column;
+  transition: left 0.25s ease;
+}
+
+.sidebar-open {
+  left: 0;
+}
+
+.sidebar-header {
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 40px 30px 20px;
+  border-bottom-width: 1px;
+  border-bottom-color: @morandi-border;
+}
+
+.sidebar-title {
+  font-size: 30px;
+  font-weight: 600;
+  color: @morandi-text;
+}
+
+.sidebar-new-btn {
+  width: 56px;
+  height: 56px;
+  border-radius: 28px;
+  background-color: @morandi-green;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.sidebar-new-icon {
+  font-size: 36px;
+  color: @morandi-white;
+  font-weight: 300;
+}
+
+.sidebar-list {
+  flex: 1;
+  flex-direction: column;
+}
+
+.sidebar-item {
+  flex-direction: row;
+  align-items: center;
+  padding: 20px 30px;
+  border-bottom-width: 1px;
+  border-bottom-color: @morandi-border;
+}
+
+.sidebar-item-active {
+  background-color: @morandi-bg;
+}
+
+.sidebar-item-main {
+  flex: 1;
+  flex-direction: column;
+}
+
+.sidebar-item-title {
+  font-size: 26px;
+  color: @morandi-text;
+  lines: 1;
+  text-overflow: ellipsis;
+}
+
+.sidebar-item-date {
+  font-size: 20px;
+  color: @morandi-text-light;
+  margin-top: 4px;
+}
+
+.sidebar-item-del {
+  width: 52px;
+  height: 52px;
+  border-radius: 26px;
+  background-color: @morandi-pink;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-left: 12px;
+}
+
+.sidebar-del-icon {
+  font-size: 28px;
+  color: @morandi-text;
+  font-weight: 300;
+}
+
+.sidebar-empty {
+  padding: 60px 30px;
+  align-items: center;
+}
+
+.sidebar-empty-text {
+  font-size: 24px;
+  color: @morandi-text-light;
+}
+
+/* ========== 主聊天区 ========== */
+.main-area {
+  flex: 1;
+  flex-direction: column;
+}
+
+.title-bar {
+  padding: 30px 30px 16px;
+  background-color: @morandi-bg;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+.hamburger {
+  position: absolute;
+  left: 20px;
+  top: 34px;
+  width: 48px;
+  height: 40px;
+  flex-direction: column;
+  justify-content: space-around;
+  padding: 4px 6px;
+}
+
+.hamburger-line {
+  height: 4px;
+  background-color: @morandi-text-light;
+  border-radius: 2px;
+}
+
+.title-text {
+  font-size: 34px;
+  font-weight: 600;
+  color: @morandi-text;
+}
+
+.title-sub {
+  font-size: 22px;
+  color: @morandi-text-light;
+  margin-top: 4px;
+}
+
+.chat-list {
+  flex: 1;
+  flex-direction: column;
+  padding: 12px 16px;
+  padding-bottom: 180px;
+}
+
+.msg-row {
+  flex-direction: row;
+  margin-bottom: 16px;
+}
+
+.msg-ai {
+  justify-content: flex-start;
+  padding-right: 60px;
+}
+
+.msg-user {
+  justify-content: flex-end;
+  padding-left: 60px;
+}
+
+.msg-system {
+  justify-content: center;
+}
+
+.msg-avatar {
+  width: 72px;
+  height: 72px;
+  border-radius: 8px;
+  flex-shrink: 0;
+}
+
+.msg-avatar-user {
+  background-color: @morandi-brown;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-left: 10px;
+}
+
+.avatar-placeholder {
+  font-size: 24px;
+  color: @morandi-white;
+  font-weight: 600;
+}
+
+.msg-body {
+  flex-direction: column;
+  max-width: 100%;
+}
+
+.msg-ai .msg-body {
+  margin-left: 10px;
+}
+
+.msg-user .msg-body {
+  margin-right: 10px;
+  align-items: flex-end;
+}
+
+.msg-bubble {
+  padding: 16px 20px;
+  border-radius: 8px;
+  max-width: 100%;
+}
+
+.msg-bubble-ai {
+  background-color: @morandi-pink;
+}
+
+.msg-bubble-user {
+  background-color: @morandi-green;
+}
+
+.msg-bubble-thinking {
+  padding: 12px 24px;
+}
+
+.msg-text {
+  font-size: 28px;
+  color: @morandi-text;
+  line-height: 36px;
+}
+
+.msg-thinking {
+  font-size: 32px;
+  letter-spacing: 4px;
+  color: @morandi-text-light;
+}
+
+.msg-system-text {
+  font-size: 22px;
+  color: @morandi-text-light;
+  padding: 8px 16px;
+  background-color: rgba(0, 0, 0, 0.04);
+  border-radius: 6px;
+}
+
+.chat-bottom-spacer {
+  height: 20px;
+}
+
+.bottom-input-area {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 90px;
+  padding: 12px 16px;
+  background-color: @morandi-white;
+  flex-direction: row;
+  align-items: center;
+  border-top-width: 1px;
+  border-top-color: @morandi-border;
+}
+
+.message-input {
+  flex: 1;
+  height: 68px;
+  padding: 0 20px;
+  background-color: @morandi-bg;
+  border-radius: 6px;
+  font-size: 28px;
+  color: @morandi-text;
+  placeholder-color: @morandi-text-light;
+}
+
+.send-btn {
+  width: 68px;
+  height: 68px;
+  background-color: @morandi-blue;
+  border-radius: 6px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-left: 10px;
+}
+
+.send-icon {
+  font-size: 32px;
+  color: @morandi-white;
+  font-weight: bold;
+}
+.context-menu-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1000;
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+.context-menu {
+  position: fixed;
+  z-index: 1001;
+  background-color: #ffffff;
+  border-radius: 8px;
+  padding: 8px 0;
+  min-width: 200px;
+}
+
+.context-menu .menu-item {
+  flex-direction: row;
+  align-items: center;
+  padding: 12px 20px;
+}
+
+.ctx-menu-icon {
+  font-size: 28px;
+  margin-right: 12px;
+}
+
+.ctx-menu-text {
+  font-size: 26px;
+  color: #4a3728;
+}
+</style>

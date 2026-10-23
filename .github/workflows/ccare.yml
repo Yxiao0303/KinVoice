@@ -1,0 +1,22 @@
+name: C-CARE offline checks
+on: [push, pull_request]
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install -r backend/requirements-ccare.lock.txt
+      - run: python scripts/check_ccare.py
+      - run: node --check backend/app/ccare/web/app.js
+      - run: node --check backend/app/ccare/web/site.js
+      - run: node --test tests/web-session.test.mjs
+      - run: node --test tests/web-stream.test.mjs
+      - run: python scripts/evaluate_ccare.py
+      - run: python scripts/evaluate_policy_pairs.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: development-diagnostics-not-clinical-results
+          path: experiments/

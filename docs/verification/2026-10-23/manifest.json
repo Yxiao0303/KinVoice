@@ -1,0 +1,42 @@
+{
+  "kind": "development_diagnostic_not_research_result",
+  "commit": "768765dac377a66d3376087a8f94fbf4c2602f62",
+  "dirty": false,
+  "dirty_paths": [],
+  "config": {
+    "name": "ccare-development-rule-smoke-v1",
+    "mode": "local_rules_only",
+    "seed": 20261023,
+    "dataset": "data/development/synthetic_cases.jsonl",
+    "purpose": "Expose rule limitations; not a held-out benchmark or evidence of clinical efficacy",
+    "success_criteria": {
+      "engineering": "All cases processed; zero external calls; each mismatch retained",
+      "clinical": "No clinical acceptance threshold; labels require professional review"
+    }
+  },
+  "config_sha256": "98fde90a88c2fb31fba6744865f5fd065d7f332bfc9f34ac8f2a0fada8744383",
+  "data_sha256": "3f9a490de83e92f3c8c637363d91b73f8df523597fb8d4acea024821ce675f09",
+  "python": "3.12.10",
+  "packages": {
+    "fastapi": "0.115.0",
+    "pydantic": "2.7.0",
+    "httpx": "0.27.0"
+  },
+  "code_sha256": {
+    "backend\\app\\ccare\\api.py": "2ad79133a362ffb7bf9ba12476c775ddda9d512f5ce0f8287ffec91c56e59d34",
+    "backend\\app\\ccare\\auth.py": "241e65aa37d29f2b174e764d4368b678301c4d21b74b2add2e38e9b1542c05e3",
+    "backend\\app\\ccare\\config.py": "94bf6c16139eae692f67b74f5cae58366aa932777d1565f5f78c3b29fbbe9614",
+    "backend\\app\\ccare\\engine.py": "3af3325a1ee832e9dcf3b50b6eb4fbe664c72ceac7928001ee9ef0109afaa5d8",
+    "backend\\app\\ccare\\provider.py": "b4fcf71146c52284a639375923e784c92cabb98bcb329e67a22f798cea2751cf",
+    "backend\\app\\ccare\\schemas.py": "aacfc4ba989024c2918b1a3d9a4eea0c6721fa009b6378ea6b48ca2929971e06",
+    "backend\\app\\ccare\\__init__.py": "526925502da213b08f5af12681de8ca5f6f4f4a5a7f31ab4ddc4ed5f408f030b"
+  },
+  "external_model_calls": 0,
+  "cases": 20,
+  "mismatches": [
+    "dev14",
+    "dev15",
+    "dev16",
+    "dev17"
+  ]
+}

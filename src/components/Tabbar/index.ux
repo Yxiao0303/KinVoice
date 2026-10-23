@@ -1,0 +1,144 @@
+<!--
+  底部导航栏组件
+  - 通过 props.activeTab 接收当前激活的 tab key
+  - 点击时通过 $dispatch('tabchange', { key }) 通知父页面（MainPage）
+  - 不再直接操作路由，由 MainPage 统一管理 tab 切换
+  - 样式自包含
+
+  用法（仅在 MainPage 中）：
+    <import name="tab-bar" src="../../components/Tabbar/index.ux"></import>
+    <tab-bar active-tab="{{ activeTab }}" ontabchange="onTabChange"></tab-bar>
+-->
+<template>
+  <div class="tabbar">
+    <!-- 陪伴 -->
+    <div class="tab-item {{ activeTab === 'companion' ? 'tab-active' : '' }} {{ pressedTab === 'companion' ? 'tab-pressed' : '' }}"
+         onclick="onTabClick('companion')"
+         ontouchstart="onPressStart('companion')"
+         ontouchend="onPressEnd"
+         ontouchcancel="onPressEnd">
+      <text class="tab-icon {{ activeTab === 'companion' ? 'tab-icon-active' : '' }}">🏠</text>
+      <text class="tab-label {{ activeTab === 'companion' ? 'tab-label-active' : '' }}">陪伴</text>
+    </div>
+    <!-- 聊天 -->
+    <div class="tab-item {{ activeTab === 'breakIce' ? 'tab-active' : '' }} {{ pressedTab === 'breakIce' ? 'tab-pressed' : '' }}"
+         onclick="onTabClick('breakIce')"
+         ontouchstart="onPressStart('breakIce')"
+         ontouchend="onPressEnd"
+         ontouchcancel="onPressEnd">
+      <text class="tab-icon {{ activeTab === 'breakIce' ? 'tab-icon-active' : '' }}">💬</text>
+      <text class="tab-label {{ activeTab === 'breakIce' ? 'tab-label-active' : '' }}">聊天</text>
+    </div>
+    <!-- 传承 -->
+    <div class="tab-item {{ activeTab === 'memory' ? 'tab-active' : '' }} {{ pressedTab === 'memory' ? 'tab-pressed' : '' }}"
+         onclick="onTabClick('memory')"
+         ontouchstart="onPressStart('memory')"
+         ontouchend="onPressEnd"
+         ontouchcancel="onPressEnd">
+      <text class="tab-icon {{ activeTab === 'memory' ? 'tab-icon-active' : '' }}">📚</text>
+      <text class="tab-label {{ activeTab === 'memory' ? 'tab-label-active' : '' }}">传承</text>
+    </div>
+    <!-- 我的 -->
+    <div class="tab-item {{ activeTab === 'profile' ? 'tab-active' : '' }} {{ pressedTab === 'profile' ? 'tab-pressed' : '' }}"
+         onclick="onTabClick('profile')"
+         ontouchstart="onPressStart('profile')"
+         ontouchend="onPressEnd"
+         ontouchcancel="onPressEnd">
+      <text class="tab-icon {{ activeTab === 'profile' ? 'tab-icon-active' : '' }}">👤</text>
+      <text class="tab-label {{ activeTab === 'profile' ? 'tab-label-active' : '' }}">我的</text>
+    </div>
+  </div>
+</template>
+
+<script>
+/**
+ * Tabbar 组件 —— 只负责 UI 展示 + 事件通知。
+ * 不再直接操作路由；tab 切换由父页面（MainPage）通过 on-tabchange 事件处理。
+ */
+export default {
+  props: ['activeTab'],
+
+  data: {
+    pressedTab: '',
+  },
+
+  onTabClick(key) {
+    if (!key || key === this.activeTab) return
+    // 向上层派发 tabchange 事件，由 MainPage 统一管理 tab 切换
+    this.$dispatch('tabchange', { key })
+  },
+
+  onPressStart(key) {
+    this.pressedTab = key
+  },
+
+  onPressEnd() {
+    this.pressedTab = ''
+  },
+}
+</script>
+
+<style>
+/* ===== 底部导航栏容器 ===== */
+.tabbar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 100px;
+  background-color: #ffffff;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  border-top-width: 1px;
+  border-top-color: #f0e8df;
+}
+
+/* ===== Tab 项（默认态） ===== */
+.tab-item {
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 20px;
+  border-radius: 12px;
+  transition: transform 0.1s ease, background-color 0.15s ease;
+}
+
+/* ===== 图标（默认态：浅灰） ===== */
+.tab-icon {
+  font-size: 36px;
+  opacity: 0.5;
+  transition: opacity 0.2s ease, transform 0.15s ease;
+}
+
+/* ===== 文字（默认态：浅灰） ===== */
+.tab-label {
+  font-size: 22px;
+  color: #9a8b7a;
+  margin-top: 4px;
+  transition: color 0.2s ease, font-weight 0.15s ease;
+}
+
+/* ===== 激活态 — 整体 ===== */
+.tab-active {
+  /* 容器可加微弱背景高亮 */
+}
+
+/* ===== 激活态 — 图标（完全不透明，微微放大） ===== */
+.tab-icon-active {
+  opacity: 1;
+  transform: scale(1.08);
+}
+
+/* ===== 激活态 — 文字（褐色加深 + 加粗） ===== */
+.tab-label-active {
+  color: #d4874b;
+  font-weight: 600;
+}
+
+/* ===== 按压/点击反馈态（缩放 + 背景高亮） ===== */
+.tab-pressed {
+  transform: scale(0.9);
+  background-color: rgba(212, 135, 75, 0.08);
+}
+</style>

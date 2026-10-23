@@ -1,0 +1,15 @@
+✔ a normal response becomes visible with its input and metadata (0.5098ms)
+✔ a late response cannot resurrect a cleared conversation (0.3652ms)
+✔ pause suppresses a late response and excludes the interrupted turn from context (0.1069ms)
+✔ a previous request cannot finish or fail a newer turn (0.1186ms)
+✔ failures retain the user message without polluting the next context (0.0863ms)
+✔ context keeps recent complete turns within both bounds (0.2028ms)
+✔ double send is rejected while a turn is pending (0.2908ms)
+ℹ tests 7
+ℹ suites 0
+ℹ pass 7
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 60.0292

@@ -1,0 +1,11 @@
+{
+  "name": "ccare-development-rule-smoke-v1",
+  "mode": "local_rules_only",
+  "seed": 20261023,
+  "dataset": "data/development/synthetic_cases.jsonl",
+  "purpose": "Expose rule limitations; not a held-out benchmark or evidence of clinical efficacy",
+  "success_criteria": {
+    "engineering": "All cases processed; zero external calls; each mismatch retained",
+    "clinical": "No clinical acceptance threshold; labels require professional review"
+  }
+}

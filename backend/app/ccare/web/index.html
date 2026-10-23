@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="zh-CN">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>KinVoice · 个人情绪支持</title><link rel="stylesheet" href="/assets/style.css"></head>
+<body><main>
+<header><span class="brand">KinVoice</span><span class="tag">C-CARE 研究原型</span></header>
+<section class="intro"><p class="eyebrow">给自己一点空间</p><h1>先照顾此刻的你。</h1><p>面向 18–25 岁大学生的亲子冲突情绪支持。你决定聊什么，也可以随时停下。</p></section>
+<aside><strong id="mode">正在检查服务…</strong><p>专业审阅尚未完成，仅供内部演示。请使用虚构情境，勿输入真实隐私。此原型不提供诊断或紧急救援。</p></aside>
+<section id="auth" class="panel"><h2>进入个人空间</h2><p>使用本地演示账号。对话只在当前页面内存中，刷新或关闭后清除。</p><form id="auth-form">
+<label>用户名<input id="username" autocomplete="username" pattern="[A-Za-z0-9_-]{3,40}" maxlength="40" required placeholder="3–40 位字母、数字或下划线"></label>
+<label>密码<input id="password" type="password" autocomplete="current-password" minlength="10" maxlength="100" required placeholder="至少 10 个字符"></label>
+<div class="actions"><button type="submit">登录</button><button type="button" id="register" class="secondary">创建演示账号</button></div></form></section>
+<section id="support" class="panel" hidden><div class="section-head"><h2>你的对话，由你决定</h2><button id="logout" class="link">退出</button></div>
+<label class="choice"><input type="checkbox" id="eligible">我确认正在评审 18–25 岁在校大学生的虚构情境</label>
+<div id="remote-notice" hidden><p id="provider"></p><a id="privacy" target="_blank" rel="noopener noreferrer">查看模型服务商隐私说明</a><label class="choice"><input type="checkbox" id="consent">我同意将本次消息与页面中最近的对话发送给上述模型服务商</label></div>
+<label>此刻希望得到什么<select id="goal"><option value="listen">先听我说</option><option value="clarify">帮我理清这件事</option><option value="ground">先缓一缓</option><option value="draft">写一段我可以修改的话</option></select></label>
+<div id="messages" role="log" aria-live="polite"><p class="empty">不必急着沟通或和解。先从你愿意说的地方开始。</p></div>
+<form id="chat-form"><label for="message">想说的话</label><textarea id="message" maxlength="2000" rows="4" required placeholder="例如：父母反对我选的专业，我感觉自己的想法没有被听见。"></textarea><div class="actions"><button id="send" type="submit">发送</button><button type="button" id="pause" class="secondary">暂停回应</button><button type="button" id="clear" class="secondary">清空本次对话</button></div></form>
+<p class="quiet">不会发给家人，不生成家庭卡片。生成的草稿由你决定是否使用。</p><div class="actions"><button id="export" class="link">导出本页对话</button><button id="delete" class="link danger">删除演示账号</button></div></section>
+<p id="status" role="status" aria-live="polite"></p><footer>AI 支持原型 · 随时暂停 · 对话不在本地服务器落盘</footer>
+</main><script src="/assets/app.js" defer></script></body></html>

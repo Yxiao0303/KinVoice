@@ -1,0 +1,315 @@
+<template>
+  <div class="page">
+    <!-- 自定义标题栏 -->
+    <div class="title-bar">
+      <div class="title-left" onclick="goBack">
+        <text class="back-arrow">‹</text>
+      </div>
+      <text class="title-text">帮助与反馈</text>
+      <div class="title-right"></div>
+    </div>
+
+    <div class="scroll-content">
+      <!-- 功能介绍 -->
+      <div class="card">
+        <text class="card-title">功能介绍</text>
+        <div class="feature-list">
+          <div class="feature-item">
+            <text class="feature-icon">🏠</text>
+            <div class="feature-info">
+              <text class="feature-name">AI 陪伴</text>
+              <text class="feature-desc">随时向小云倾诉心事，它会温柔回应你的每一句话。无论是日常琐事还是内心烦恼，这里永远有一个愿意倾听的朋友。</text>
+            </div>
+          </div>
+          <div class="feature-item">
+            <text class="feature-icon">💬</text>
+            <div class="feature-info">
+              <text class="feature-name">家庭聊天</text>
+              <text class="feature-desc">加入家庭组后，即可与家人开启群聊或私聊。支持实时消息收发，让家人的声音穿越距离，随时温暖彼此。</text>
+            </div>
+          </div>
+          <div class="feature-item">
+            <text class="feature-icon">🕊️</text>
+            <div class="feature-info">
+              <text class="feature-name">NVC 非暴力沟通</text>
+              <text class="feature-desc">在聊天输入框中点击 NVC 按钮，AI 会帮你分析当前表达背后的情感，并将话语转换为更温和、更容易被对方接受的表达方式。特别适合情绪激动或沟通困难时使用。</text>
+            </div>
+          </div>
+          <div class="feature-item">
+            <text class="feature-icon">📚</text>
+            <div class="feature-info">
+              <text class="feature-name">记忆传承</text>
+              <text class="feature-desc">记录并整理家庭的珍贵回忆。那些温暖的瞬间，值得被好好保存、反复回味。</text>
+            </div>
+          </div>
+          <div class="feature-item">
+            <text class="feature-icon">🌱</text>
+            <div class="feature-info">
+              <text class="feature-name">家庭组</text>
+              <text class="feature-desc">与家人共享一个温暖的情感空间。在这里，你们可以一起记录、一起回忆、一起成长。</text>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 意见反馈 -->
+      <div class="card">
+        <text class="card-title">意见反馈</text>
+        <text class="card-text">
+          你的每一个想法都对 Cloudie 弥足珍贵。无论是功能建议、问题反馈，还是想和我们聊聊你的故事，都可以通过以下方式找到我们：
+        </text>
+        <div class="feedback-channels">
+          <div class="channel-item" onclick="copyQQ">
+            <text class="channel-icon">💬</text>
+            <div class="channel-info">
+              <text class="channel-name">QQ 反馈</text>
+              <text class="channel-desc">3423982851</text>
+            </div>
+            <text class="channel-arrow">›</text>
+          </div>
+          <div class="channel-item" onclick="openGitHub">
+            <text class="channel-icon">🐙</text>
+            <div class="channel-info">
+              <text class="channel-name">GitHub Issue</text>
+              <text class="channel-desc">提交问题或功能请求</text>
+            </div>
+            <text class="channel-arrow">›</text>
+          </div>
+        </div>
+      </div>
+
+      <!-- 常见问题 -->
+      <div class="card">
+        <text class="card-title">常见问题</text>
+        <div class="faq-list">
+          <div class="faq-item">
+            <text class="faq-question">Q: 如何在家庭聊天中与家人对话？</text>
+            <text class="faq-answer">A: 加入家庭组后，在「聊天」页面即可看到家庭群聊入口，点击进入即可群聊。如需私聊某位家人，点击对应成员即可发起一对一会话。</text>
+          </div>
+          <div class="faq-item">
+            <text class="faq-question">Q: NVC 非暴力沟通是什么？怎么使用？</text>
+            <text class="faq-answer">A: NVC（非暴力沟通）是一种温和的表达方式。在聊天输入框输入内容后，点击 NVC 按钮，AI 会分析你话语中的情绪并提供转换建议。你可以选择使用转换后的文本发送，或保留原话。</text>
+          </div>
+          <div class="faq-item">
+            <text class="faq-question">Q: 聊天记录是否安全？</text>
+            <text class="faq-answer">A: 所有对话数据仅存储在您的本地设备，我们承诺不会将任何聊天内容上传至第三方服务器。</text>
+          </div>
+          <div class="faq-item">
+            <text class="faq-question">Q: 如何加入家庭组？</text>
+            <text class="faq-answer">A: 在「我的」页面点击「我的家庭组」，可以通过分享邀请码邀请家人加入。</text>
+          </div>
+          <div class="faq-item">
+            <text class="faq-question">Q: AI 回复不准确怎么办？</text>
+            <text class="faq-answer">A: 在「我的」页面使用「AI 更新固定档案」功能，让 AI 更了解你的背景，回复会更加贴合你的需求。</text>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+import $utils from '../../helper/utils'
+import { safeBack } from '../../helper/navigate'
+
+export default {
+  onInit() {
+    this.$page.setTitleBar({ text: '', menu: false })
+  },
+
+  goBack() {
+    safeBack()
+  },
+
+  copyQQ() {
+    $utils.showToast('QQ：3423982851')
+  },
+
+  openGitHub() {
+    $utils.showToast('GitHub：github.com/qiyuxi24/KinVoice')
+  }
+}
+</script>
+
+<style lang="less">
+// ── 莫兰迪色板 ──
+@morandi-bg:        #f5ebe0;
+@morandi-card:      #ffffff;
+@morandi-text:      #4a3728;
+@morandi-text-light:#9a8b7a;
+@morandi-border:    #e0d5cc;
+@morandi-blue-dark: #7a9ab3;
+
+.page {
+  flex: 1;
+  flex-direction: column;
+  background-color: @morandi-bg;
+}
+
+.title-bar {
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  height: 90px;
+  padding: 0 20px;
+  background-color: #fffbf7;
+  border-bottom-width: 1px;
+  border-bottom-color: #f0e8dd;
+}
+
+.title-left {
+  width: 70px;
+  height: 70px;
+  align-items: center;
+  justify-content: center;
+}
+
+.back-arrow {
+  font-size: 50px;
+  color: #d4874b;
+  font-weight: 300;
+}
+
+.title-text {
+  font-size: 34px;
+  font-weight: 600;
+  color: #4a3728;
+}
+
+.title-right {
+  width: 70px;
+  height: 70px;
+}
+
+.scroll-content {
+  flex: 1;
+  flex-direction: column;
+  padding: 24px;
+}
+
+// ── 卡片 ──
+.card {
+  flex-direction: column;
+  background-color: @morandi-card;
+  border-radius: 16px;
+  padding: 24px;
+  margin-bottom: 16px;
+}
+
+.card-title {
+  font-size: 30px;
+  font-weight: 600;
+  color: @morandi-text;
+  margin-bottom: 16px;
+}
+
+.card-text {
+  font-size: 26px;
+  color: @morandi-text-light;
+  line-height: 40px;
+}
+
+// ── 功能列表 ──
+.feature-list {
+  flex-direction: column;
+}
+
+.feature-item {
+  flex-direction: row;
+  align-items: flex-start;
+  padding: 16px 0;
+  border-bottom-width: 1px;
+  border-bottom-color: @morandi-border;
+}
+
+.feature-icon {
+  font-size: 40px;
+  width: 56px;
+}
+
+.feature-info {
+  flex: 1;
+  flex-direction: column;
+  margin-left: 12px;
+}
+
+.feature-name {
+  font-size: 28px;
+  color: @morandi-text;
+  font-weight: 500;
+}
+
+.feature-desc {
+  font-size: 22px;
+  color: @morandi-text-light;
+  margin-top: 6px;
+  line-height: 34px;
+}
+
+// ── 反馈渠道 ──
+.feedback-channels {
+  flex-direction: column;
+  margin-top: 16px;
+}
+
+.channel-item {
+  flex-direction: row;
+  align-items: center;
+  padding: 18px 0;
+  border-bottom-width: 1px;
+  border-bottom-color: @morandi-border;
+}
+
+.channel-icon {
+  font-size: 40px;
+  width: 56px;
+}
+
+.channel-info {
+  flex: 1;
+  flex-direction: column;
+  margin-left: 12px;
+}
+
+.channel-name {
+  font-size: 28px;
+  color: @morandi-text;
+  font-weight: 500;
+}
+
+.channel-desc {
+  font-size: 22px;
+  color: @morandi-text-light;
+  margin-top: 4px;
+}
+
+.channel-arrow {
+  font-size: 36px;
+  color: @morandi-border;
+}
+
+// ── 常见问题 ──
+.faq-list {
+  flex-direction: column;
+}
+
+.faq-item {
+  flex-direction: column;
+  padding: 16px 0;
+  border-bottom-width: 1px;
+  border-bottom-color: @morandi-border;
+}
+
+.faq-question {
+  font-size: 26px;
+  color: @morandi-text;
+  font-weight: 500;
+}
+
+.faq-answer {
+  font-size: 24px;
+  color: @morandi-text-light;
+  line-height: 36px;
+  margin-top: 8px;
+}
+</style>

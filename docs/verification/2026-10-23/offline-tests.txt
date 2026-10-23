@@ -1,0 +1,37 @@
+test_age_scope_and_input_limits (test_ccare.ApiTests.test_age_scope_and_input_limits) ... ok
+test_body_and_browser_origin_limits (test_ccare.ApiTests.test_body_and_browser_origin_limits) ... ok
+test_conversation_never_written_to_auth_database (test_ccare.ApiTests.test_conversation_never_written_to_auth_database) ... ok
+test_delete_account_revokes_all_access (test_ccare.ApiTests.test_delete_account_revokes_all_access) ... ok
+test_demo_labels_and_zero_model_calls (test_ccare.ApiTests.test_demo_labels_and_zero_model_calls) ... ok
+test_expired_session_rejected (test_ccare.ApiTests.test_expired_session_rejected) ... ok
+test_forged_identity_and_missing_token_rejected (test_ccare.ApiTests.test_forged_identity_and_missing_token_rejected) ... ok
+test_legacy_routes_are_not_exposed (test_ccare.ApiTests.test_legacy_routes_are_not_exposed) ... ok
+test_logout_revokes_token (test_ccare.ApiTests.test_logout_revokes_token) ... ok
+test_new_login_revokes_previous_session (test_ccare.ApiTests.test_new_login_revokes_previous_session) ... ok
+test_no_automatic_parent_contact_or_draft_when_unsafe (test_ccare.ApiTests.test_no_automatic_parent_contact_or_draft_when_unsafe) ... ok
+test_old_environment_key_is_not_imported (test_ccare.ApiTests.test_old_environment_key_is_not_imported) ... ok
+test_validation_never_echoes_private_input (test_ccare.ApiTests.test_validation_never_echoes_private_input) ... ok
+test_crisis_bypasses_provider_and_uses_no_family_contact (test_ccare.PipelineTests.test_crisis_bypasses_provider_and_uses_no_family_contact) ... ok
+test_current_message_preserved_and_history_is_data (test_ccare.PipelineTests.test_current_message_preserved_and_history_is_data) ... ok
+test_deleted_account_cannot_receive_late_session (test_ccare.PipelineTests.test_deleted_account_cannot_receive_late_session) ... ok
+test_history_risk_cannot_be_hidden_by_latest_message (test_ccare.PipelineTests.test_history_risk_cannot_be_hidden_by_latest_message) ... ok
+test_logout_during_generation_discards_response (test_ccare.PipelineTests.test_logout_during_generation_discards_response) ... ok
+test_malformed_state_and_fabricated_evidence_fail_closed (test_ccare.PipelineTests.test_malformed_state_and_fabricated_evidence_fail_closed) ... ok
+test_no_consent_or_disabled_mode_never_calls_provider (test_ccare.PipelineTests.test_no_consent_or_disabled_mode_never_calls_provider) ... ok
+test_provider_failure_has_unknown_usage_and_honest_label (test_ccare.PipelineTests.test_provider_failure_has_unknown_usage_and_honest_label) ... ok
+test_provider_timeout_does_not_expose_error_body (test_ccare.PipelineTests.test_provider_timeout_does_not_expose_error_body) ... ok
+test_rejected_draft_gets_one_retry (test_ccare.PipelineTests.test_rejected_draft_gets_one_retry) ... ok
+test_remote_wire_parameters_and_token_usage (test_ccare.PipelineTests.test_remote_wire_parameters_and_token_usage) ... ok
+test_rule_rejects_coercive_parent_advice (test_ccare.PipelineTests.test_rule_rejects_coercive_parent_advice) ... ok
+test_state_strategy_generation_verification_and_usage (test_ccare.PipelineTests.test_state_strategy_generation_verification_and_usage) ... ok
+test_turn_timeout_returns_fixed_fallback (test_ccare.PipelineTests.test_turn_timeout_returns_fixed_fallback) ... ok
+test_two_failed_verifications_do_not_publish_candidate (test_ccare.PipelineTests.test_two_failed_verifications_do_not_publish_candidate) ... ok
+test_unsafe_or_invalid_verifier_never_reaches_user (test_ccare.PipelineTests.test_unsafe_or_invalid_verifier_never_reaches_user) ... ok
+test_user_refusal_overrides_draft_choice (test_ccare.PipelineTests.test_user_refusal_overrides_draft_choice) ... ok
+test_filters_invalid_entries_and_normalizes_content (test_llm_service.NormalizeHistoryMessagesTest.test_filters_invalid_entries_and_normalizes_content) ... ok
+test_returns_empty_list_for_none_or_empty (test_llm_service.NormalizeHistoryMessagesTest.test_returns_empty_list_for_none_or_empty) ... ok
+
+----------------------------------------------------------------------
+Ran 32 tests in 3.285s
+
+OK

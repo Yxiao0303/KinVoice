@@ -1,0 +1,121 @@
+<template>
+  <div class="page">
+    <div class="header" onclick="goBack">
+      <text class="back-icon">‹</text>
+      <text class="title">自定义音色</text>
+    </div>
+
+    <div class="sample-box">
+      <text class="sample-label">朗读下面这句话：</text>
+      <text class="sample-text">{{ sampleText }}</text>
+    </div>
+
+    <div class="action-area">
+      <div class="btn" onclick="handleRecord">
+        <text class="btn-text">🎙️ 开始录音</text>
+      </div>
+    </div>
+
+    <div class="tip-box">
+      <text class="tip-text">录音功能需要真机环境，模拟器暂不支持</text>
+    </div>
+  </div>
+</template>
+
+<script>
+import replica from '../../helper/apis/replica'
+import $utils from '../../helper/utils'
+import { safeBack } from '../../helper/navigate'
+
+export default {
+  private: {
+    sampleText: '欢迎来到情绪树洞',
+  },
+
+  async onInit() {
+    this.$page.setTitleBar({ text: '', menu: false })
+    try {
+      const res = await replica.getSampleTexts()
+      if (res && res.samples && res.samples.length > 0) {
+        this.sampleText = res.samples[0]
+      }
+    } catch (e) {
+      console.log('获取示例文本失败:', e)
+    }
+  },
+
+  handleRecord() {
+    $utils.showToast('录音功能需真机调试')
+  },
+
+  goBack() {
+    safeBack()
+  }
+}
+</script>
+
+<style>
+.page {
+  flex: 1;
+  flex-direction: column;
+  background-color: #e8e4df;
+  padding: 30px;
+}
+.header {
+  flex-direction: row;
+  align-items: center;
+  margin-bottom: 40px;
+}
+.back-icon {
+  font-size: 50px;
+  color: #c4b7a6;
+  margin-right: 12px;
+}
+.title {
+  font-size: 38px;
+  font-weight: 600;
+  color: #5c5c5c;
+}
+
+.sample-box {
+  background-color: #ffffff;
+  border-radius: 16px;
+  padding: 30px;
+  margin-bottom: 40px;
+}
+.sample-label {
+  font-size: 28px;
+  color: #9a9490;
+  margin-bottom: 12px;
+}
+.sample-text {
+  font-size: 32px;
+  color: #5c5c5c;
+  font-weight: 500;
+  line-height: 44px;
+}
+
+.action-area {
+  align-items: center;
+  margin-bottom: 30px;
+}
+.btn {
+  background-color: #c4b7a6;
+  border-radius: 12px;
+  padding: 20px 50px;
+}
+.btn-text {
+  font-size: 30px;
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.tip-box {
+  align-items: center;
+}
+.tip-text {
+  font-size: 24px;
+  color: #9a9490;
+  text-align: center;
+}
+</style>

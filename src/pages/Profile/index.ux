@@ -1,0 +1,672 @@
+<template>
+  <div class="page">
+    <!-- 头部用户信息 -->
+    <div class="header">
+      <div class="user-card" onclick="showUserPanel">
+        <div class="avatar">
+          <text class="avatar-text">{{ avatarChar }}</text>
+        </div>
+        <div class="user-info">
+          <text class="user-name">{{ nickname || '未登录' }}</text>
+          <text class="user-desc">{{ nickname ? (familyInfo || '点击管理账户') : '点击头像登录' }}</text>
+        </div>
+      </div>
+    </div>
+
+    <!-- 菜单列表 -->
+    <div class="menu-list">
+      <div class="menu-item" onclick="goProfileDetail">
+        <text class="menu-icon">📋</text>
+        <text class="menu-text">用户档案</text>
+        <text class="menu-arrow">›</text>
+      </div>
+      <div class="menu-item" onclick="goFamily">
+        <text class="menu-icon">🏠</text>
+        <text class="menu-text">我的家庭组</text>
+        <text class="menu-arrow">›</text>
+      </div>
+      <div class="menu-item" onclick="updateStableProfile">
+        <text class="menu-icon">🤖</text>
+        <text class="menu-text">{{ updatingStable ? 'AI 分析中...' : 'AI 更新固定档案' }}</text>
+        <text class="menu-arrow">›</text>
+      </div>
+      <div class="menu-item" onclick="showSettings">
+        <text class="menu-icon">⚙️</text>
+        <text class="menu-text">设置</text>
+        <text class="menu-arrow">›</text>
+      </div>
+      <div class="menu-item" onclick="showAbout">
+        <text class="menu-icon">ℹ️</text>
+        <text class="menu-text">关于我们</text>
+        <text class="menu-arrow">›</text>
+      </div>
+      <div class="menu-item" onclick="showHelp">
+        <text class="menu-icon">❓</text>
+        <text class="menu-text">帮助</text>
+        <text class="menu-arrow">›</text>
+      </div>
+    </div>
+
+    <!-- ===== 用户面板（底部弹出） ===== -->
+    <div class="panel-overlay" if="showPanel" onclick="closePanel"></div>
+    <div class="user-panel {{ showPanel ? 'panel-show' : '' }}">
+      <!-- 面板头部 -->
+      <div class="panel-header">
+        <text class="panel-title">{{ isLoggedIn ? '账户管理' : '登录 / 注册' }}</text>
+        <div class="panel-close" onclick="closePanel">
+          <text class="panel-close-text">✕</text>
+        </div>
+      </div>
+
+      <!-- 未登录：登录 / 注册 -->
+      <div class="panel-body" if="!isLoggedIn">
+        <!-- 模式切换标签 -->
+        <div class="panel-tabs">
+          <div class="panel-tab {{ authMode === 'login' ? 'panel-tab-active' : '' }}" onclick="switchAuthMode('login')">
+            <text class="panel-tab-text">登录</text>
+          </div>
+          <div class="panel-tab {{ authMode === 'register' ? 'panel-tab-active' : '' }}" onclick="switchAuthMode('register')">
+            <text class="panel-tab-text">注册</text>
+          </div>
+        </div>
+
+        <!-- 用户名 -->
+        <input
+          class="panel-input"
+          type="text"
+          placeholder="用户名"
+          value="{{ authUsername }}"
+          onchange="onAuthUsernameInput"
+        />
+
+        <!-- 密码 -->
+        <input
+          class="panel-input"
+          type="password"
+          placeholder="密码"
+          value="{{ authPassword }}"
+          onchange="onAuthPasswordInput"
+        />
+
+        <!-- 昵称（仅注册时显示） -->
+        <input
+          class="panel-input"
+          type="text"
+          placeholder="昵称"
+          value="{{ authNickname }}"
+          onchange="onAuthNicknameInput"
+          if="{{ authMode === 'register' }}"
+        />
+
+        <!-- 操作按钮 -->
+        <div class="panel-btn panel-btn-primary" onclick="doAuth">
+          <text class="panel-btn-text">{{ authLoading ? '处理中...' : (authMode === 'login' ? '登录' : '注册') }}</text>
+        </div>      </div>
+
+      <!-- 已登录：修改昵称 + 退出登录 -->
+      <div class="panel-body" else>
+        <!-- 当前信息 -->
+        <div class="panel-current">
+          <text class="panel-current-label">当前昵称</text>
+          <text class="panel-current-value">{{ nickname }}</text>
+        </div>
+
+        <!-- 修改昵称 -->
+        <text class="panel-section-title">修改昵称</text>
+        <input
+          class="panel-input"
+          type="text"
+          placeholder="输入新昵称"
+          value="{{ editNickname }}"
+          onchange="onEditNickInput"
+        />
+        <div class="panel-btn panel-btn-primary" onclick="doUpdateNickname">
+          <text class="panel-btn-text">{{ saving ? '保存中...' : '确认修改' }}</text>
+        </div>
+
+        <!-- 分隔线 -->
+        <div class="panel-divider"></div>
+
+        <!-- 退出登录 -->
+        <div class="panel-btn panel-btn-danger" onclick="doLogout">
+          <text class="panel-btn-text">退出登录</text>
+        </div>      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+import $utils from '../../helper/utils'
+import userIdentity from '../../helper/userIdentity'
+import authAPI from '../../helper/apis/auth'
+import familyAPI from '../../helper/apis/family'
+import profileAI from '../../helper/apis/profile_ai'
+import { safePush } from '../../helper/navigate'
+
+export default {
+  private: {
+    nickname: '',
+    isLoggedIn: false,
+    familyInfo: '',
+
+    // 用户面板
+    showPanel: false,
+
+    // 认证模式：login | register
+    authMode: 'login',
+    authUsername: '',
+    authPassword: '',
+    authNickname: '',
+    authLoading: false,
+
+    // 修改昵称
+    editNickname: '',
+    saving: false,
+
+    // AI 档案更新
+    updatingStable: false,
+  },
+
+  computed: {
+    avatarChar() {
+      return this.nickname ? this.nickname.charAt(0).toUpperCase() : '?'
+    }
+  },
+
+  async onInit() {
+    this.$page.setTitleBar({ text: '' })
+    await userIdentity.initUserId()
+    await userIdentity.initNickname()
+    await userIdentity.initLogin()
+    this.nickname = userIdentity.getNickname()
+    this.isLoggedIn = userIdentity.isLoggedIn()
+    if (this.isLoggedIn) {
+      this.loadFamilyInfo()
+    }
+  },
+
+  onShow() {
+    this.nickname = userIdentity.getNickname()
+    this.isLoggedIn = userIdentity.isLoggedIn()
+    if (this.isLoggedIn) {
+      this.loadFamilyInfo()
+    }
+  },
+
+  // ==================== 家庭组信息 ====================
+
+  async loadFamilyInfo() {
+    try {
+      const res = await familyAPI.getMyGroup()
+      if (res && res.family_id) {
+        const memberCount = (res.members && res.members.length) || 1
+        const names = (res.members || [])
+          .map((m) => m.nickname)
+          .filter(Boolean)
+          .slice(0, 3)
+          .join('、')
+        this.familyInfo = '家庭组 · ' + memberCount + '人（' + names + '）'
+      } else {
+        this.familyInfo = '暂未加入家庭组'
+      }
+    } catch (e) {
+      this.familyInfo = ''
+    }
+  },
+
+  // ==================== 面板控制 ====================
+
+  showUserPanel() {
+    if (!this.isLoggedIn) {
+      // 未登录 → 重置表单，默认登录模式
+      this.authMode = 'login'
+      this.authUsername = ''
+      this.authPassword = ''
+      this.authNickname = ''
+    } else {
+      // 已登录 → 预填当前昵称
+      this.editNickname = this.nickname
+    }
+    this.showPanel = true
+  },
+
+  closePanel() {
+    this.showPanel = false
+    this.authUsername = ''
+    this.authPassword = ''
+    this.authNickname = ''
+    this.editNickname = ''
+  },
+
+  // ==================== 认证模式切换 ====================
+
+  switchAuthMode(mode) {
+    this.authMode = mode
+  },
+
+  // ==================== 认证输入 ====================
+
+  onAuthUsernameInput(e) {
+    this.authUsername = e.value || e.text || ''
+  },
+
+  onAuthPasswordInput(e) {
+    this.authPassword = e.value || e.text || ''
+  },
+
+  onAuthNicknameInput(e) {
+    this.authNickname = e.value || e.text || ''
+  },
+
+  // ==================== 登录 / 注册 ====================
+
+  async doAuth() {
+    const username = (this.authUsername || '').trim()
+    const password = (this.authPassword || '').trim()
+    const nickname = (this.authNickname || '').trim()
+
+    if (!username) {
+      $utils.showToast('请输入用户名')
+      return
+    }
+    if (!password) {
+      $utils.showToast('请输入密码')
+      return
+    }
+    if (this.authMode === 'register' && !nickname) {
+      $utils.showToast('请输入昵称')
+      return
+    }
+    if (this.authLoading) return
+
+    this.authLoading = true
+    try {
+      if (this.authMode === 'login') {
+        // 登录：用户名 + 密码
+        const res = await authAPI.login(username, password)
+        userIdentity.setUserId(res.user_id)
+        userIdentity.setNickname(res.nickname)
+        userIdentity.markLoggedIn()
+        this.nickname = res.nickname
+        this.isLoggedIn = true
+        this.showPanel = false
+        $utils.showToast('登录成功！')
+        this.loadFamilyInfo()
+      } else {
+        // 注册：用户名 + 密码 + 昵称
+        const res = await authAPI.register(username, password, nickname)
+        userIdentity.setUserId(res.user_id)
+        userIdentity.setNickname(res.nickname)
+        userIdentity.markLoggedIn()
+        this.nickname = res.nickname
+        this.isLoggedIn = true
+        this.showPanel = false
+        $utils.showToast('注册成功！')
+        this.loadFamilyInfo()
+      }
+    } catch (e) {
+      const msg = (e && (e.message || e.detail || '')) || ''
+      if (msg.includes('409') || msg.includes('已被注册')) {
+        $utils.showToast('用户名已被注册')
+      } else if (msg.includes('401') || msg.includes('错误')) {
+        $utils.showToast('用户名或密码错误')
+      } else {
+        $utils.showToast('操作失败，请重试')
+      }
+    } finally {
+      this.authLoading = false
+    }
+  },
+
+  // ==================== 修改昵称 ====================
+
+  onEditNickInput(e) {
+    this.editNickname = e.value || e.text || ''
+  },
+
+  async doUpdateNickname() {
+    const trimmed = (this.editNickname || '').trim()
+    if (!trimmed) {
+      $utils.showToast('昵称不能为空')
+      return
+    }
+    if (trimmed === this.nickname) {
+      $utils.showToast('昵称未变化')
+      return
+    }
+    if (this.saving) return
+    this.saving = true
+    try {
+      // 用 register-with-id 更新昵称（upsert）
+      await familyAPI.register(trimmed)
+      userIdentity.setNickname(trimmed)
+      this.nickname = trimmed
+      this.showPanel = false
+      $utils.showToast('昵称已更新')
+    } catch (e) {
+      $utils.showToast('保存失败，请重试')
+    } finally {
+      this.saving = false
+    }
+  },
+
+  // ==================== 退出登录 ====================
+
+  doLogout() {
+    // 清除本地登录态，回到未登录状态
+    userIdentity.setNickname('')
+    userIdentity.markLoggedOut()
+    this.nickname = ''
+    this.isLoggedIn = false
+    this.showPanel = false
+    $utils.showToast('已退出登录')
+  },
+
+  // ==================== 路由 ====================
+
+  goProfileDetail() {
+    safePush('/pages/ProfileDetail')
+  },
+
+  goFamily() {
+    safePush('/pages/Family')
+  },
+
+  showSettings() {
+    safePush('/pages/Settings')
+  },
+
+  // ==================== AI 更新固定档案 ====================
+
+  updateStableProfile() {
+    if (this.updatingStable) return
+    this.updatingStable = true
+    $utils.showToast('AI 正在分析你的对话...')
+
+    profileAI.updateStable()
+      .then((res) => {
+        this.updatingStable = false
+        if (res && res.ok) {
+          $utils.showToast('固定档案已更新！')
+        } else {
+          $utils.showToast((res && res.content_preview) || '更新失败，请稍后重试')
+        }
+      })
+      .catch((err) => {
+        this.updatingStable = false
+        console.log('[Profile] 固定档案更新失败:', err)
+        $utils.showToast('更新失败，请检查网络')
+      })
+  },
+
+  // ==================== 其他路由 ====================
+
+  showAbout() {
+    safePush('/pages/About')
+  },
+
+  showHelp() {
+    safePush('/pages/Help')
+  },
+}
+</script>
+
+<style lang="less">
+@import '../../assets/styles/variables.less';
+@import '../../assets/styles/mixins.less';
+
+.page {
+  flex: 1;
+  flex-direction: column;
+  background-color: #f5ebe0;
+  padding-bottom: 180px;
+}
+
+.header {
+  padding: 60px 30px 30px;
+  background: linear-gradient(180deg, #fffbf7 0%, #f5ebe0 100%);
+}
+
+.user-card {
+  flex-direction: row;
+  align-items: center;
+}
+
+.avatar {
+  width: 100px;
+  height: 100px;
+  border-radius: 50px;
+  background-color: #9cb5c9;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.avatar-text {
+  font-size: 44px;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.user-info {
+  flex-direction: column;
+  margin-left: 24px;
+}
+
+.user-name {
+  font-size: 36px;
+  font-weight: 600;
+  color: #4a3728;
+}
+
+.user-desc {
+  font-size: 26px;
+  color: #8ab4c9;
+  margin-top: 8px;
+}
+
+/* ========== 菜单列表 ========== */
+.menu-list {
+  flex-direction: column;
+  padding: 0 24px;
+}
+
+.menu-item {
+  flex-direction: row;
+  align-items: center;
+  background-color: #ffffff;
+  border-radius: 16px;
+  padding: 24px;
+  margin-bottom: 12px;
+}
+
+.menu-icon {
+  font-size: 40px;
+}
+
+.menu-text {
+  flex: 1;
+  font-size: 30px;
+  color: #4a3728;
+  margin-left: 16px;
+}
+
+.menu-arrow {
+  font-size: 36px;
+  color: #c9b8ad;
+}
+
+/* ========== 用户面板（底部弹出） ========== */
+.panel-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+.panel-show {
+  transform: translateY(0);
+}
+
+/* 面板头部 */
+.panel-header {
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 28px 30px 20px;
+}
+
+.panel-title {
+  font-size: 34px;
+  font-weight: 600;
+  color: #4a3728;
+}
+
+.panel-close {
+  width: 56px;
+  height: 56px;
+  border-radius: 28px;
+  background-color: #f0e8dd;
+  align-items: center;
+  justify-content: center;
+}
+
+.panel-close-text {
+  font-size: 28px;
+  color: #9a8b7a;
+}
+
+/* 面板内容区 */
+.panel-body {
+  flex-direction: column;
+  padding-right: 30px;
+  padding-left: 30px;
+}
+
+.panel-hint {
+  font-size: 26px;
+  color: #9a8b7a;
+  margin-bottom: 16px;
+}
+
+/* 认证模式标签 */
+.panel-tabs {
+  flex-direction: row;
+  margin-bottom: 20px;
+  border-radius: 12px;
+  background-color: #f0e8dd;
+  padding: 4px;
+}
+
+.panel-tab {
+  flex: 1;
+  height: 64px;
+  border-radius: 10px;
+  align-items: center;
+  justify-content: center;
+}
+
+.panel-tab-active {
+  background-color: #ffffff;
+}
+
+.panel-tab-text {
+  font-size: 28px;
+  font-weight: 600;
+  color: #9a8b7a;
+}
+
+.panel-tab-active .panel-tab-text {
+  color: #d4874b;
+}
+
+.panel-input {
+  height: 72px;
+  border: 1px solid #d4c8b8;
+  border-radius: 14px;
+  padding: 0 18px;
+  font-size: 28px;
+  color: #4a3728;
+  background-color: #faf7f3;
+  margin-bottom: 20px;
+}
+
+.panel-btn {
+  height: 80px;
+  border-radius: 16px;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+
+.panel-btn-primary {
+  background-color: #d4874b;
+}
+
+.panel-btn-danger {
+  background-color: #ffffff;
+  border: 2px solid #e07070;
+}
+
+.panel-btn-text {
+  font-size: 30px;
+  font-weight: 600;
+}
+
+.panel-btn-primary .panel-btn-text {
+  color: #ffffff;
+}
+
+.panel-btn-danger .panel-btn-text {
+  color: #e07070;
+}
+
+/* 当前昵称展示 */
+.panel-current {
+  flex-direction: row;
+  align-items: center;
+  background-color: #faf7f3;
+  border-radius: 14px;
+  padding: 20px;
+  margin-bottom: 24px;
+}
+
+.panel-current-label {
+  font-size: 26px;
+  color: #9a8b7a;
+}
+
+.panel-current-value {
+  font-size: 30px;
+  font-weight: 600;
+  color: #4a3728;
+  margin-left: 16px;
+}
+
+/* 分区标题 */
+.panel-section-title {
+  font-size: 26px;
+  color: #9a8b7a;
+  margin-bottom: 12px;
+}
+
+.user-panel {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ffffff;
+  border-radius: 28px;
+  flex-direction: column;
+  padding-bottom: 120px;
+  transform: translateY(100%);
+}
+
+.panel-divider {
+  height: 1px;
+  background-color: #f0e8dd;
+  margin: 8px 0 20px;
+}
+</style>

@@ -1,0 +1,115 @@
+<import name="companion-tab" src="../../components/CompanionTab/index.ux"></import>
+<import name="breakice-tab" src="../../components/BreakIceTab/index.ux"></import>
+<import name="memory-tab" src="../../components/MemoryTab/index.ux"></import>
+<import name="profile-tab" src="../../components/ProfileTab/index.ux"></import>
+<import name="tab-bar" src="../../components/Tabbar/index.ux"></import>
+
+<template>
+  <div class="main-page">
+    <!-- ═══════════════════════════════════════════════ -->
+    <!--  Tab 内容区：if 放在原生 div 上更可靠       -->
+    <!--  组件随外层 div 一起创建/销毁              -->
+    <!-- ═══════════════════════════════════════════════ -->
+    <div class="tab-content" if="{{ activeTab === 'companion' }}">
+      <companion-tab id="companionTab"></companion-tab>
+    </div>
+    <div class="tab-content" if="{{ activeTab === 'breakIce' }}">
+      <breakice-tab id="breakIceTab"></breakice-tab>
+    </div>
+    <div class="tab-content" if="{{ activeTab === 'memory' }}">
+      <memory-tab id="memoryTab"></memory-tab>
+    </div>
+    <div class="tab-content" if="{{ activeTab === 'profile' }}">
+      <profile-tab id="profileTab"></profile-tab>
+    </div>
+
+    <!-- 底部导航栏 -->
+    <tab-bar active-tab="{{ activeTab }}" ontabchange="onTabChange"></tab-bar>
+  </div>
+</template>
+
+<script>
+/**
+ * MainPage —— 单页容器，负责管理 4 个 Tab 组件的切换。
+ *
+ * 架构要点（v2——if 指令方案）：
+ * - 使用 if（而非 show）切换 Tab，确保只有当前 Tab 组件存活
+ * - if 自动管理组件创建/销毁，组件通过 onInit/onDestroy 控制生命周期
+ * - Tabbar 通过 $dispatch('tabchange') 通知本页切换，不再操作 router
+ * - onShow/onHide 用于处理从子页面返回时的数据刷新
+ * - 组件需暴露 refresh() 方法供从子页面返回时调用
+ */
+const CHILD_IDS = {
+  companion: 'companionTab',
+  breakIce: 'breakIceTab',
+  memory: 'memoryTab',
+  profile: 'profileTab',
+}
+
+export default {
+  private: {
+    activeTab: 'companion',
+    showCount: 0,
+  },
+
+  onInit() {
+    this.$page.setTitleBar({ text: '' })
+  },
+
+  onShow() {
+    this.showCount++
+    if (this.showCount > 1) {
+      // 从子页面（ChatRoom / ProfileDetail / Family 等）返回，刷新当前 Tab
+      this.refreshCurrentTab()
+    }
+  },
+
+  onHide() {
+    // 即将跳转子页面，无需额外处理（组件保持在 DOM 中）
+  },
+
+  // ==================== Tab 切换 ====================
+
+  /**
+   * 由 Tabbar 组件派发的 tabchange 事件触发。
+   * 只需更新 activeTab，if 指令会自动销毁旧组件、创建新组件。
+   */
+  onTabChange(evt) {
+    const key = evt && evt.detail ? evt.detail.key : null
+    if (!key || key === this.activeTab) return
+    this.activeTab = key
+  },
+
+  // ==================== 子页面返回刷新 ====================
+
+  /**
+   * 从子页面返回时，通知当前可见 Tab 组件刷新数据。
+   * 通过 $child(id) 获取组件实例并调用其 refresh() 方法。
+   */
+  refreshCurrentTab() {
+    const childId = CHILD_IDS[this.activeTab]
+    if (!childId) return
+    try {
+      const child = this.$child(childId)
+      if (child && typeof child.refresh === 'function') {
+        child.refresh()
+      }
+    } catch (e) {
+      console.log(`[Main] refresh ${this.activeTab} failed:`, e)
+    }
+  },
+}
+</script>
+
+<style>
+.main-page {
+  flex: 1;
+  flex-direction: column;
+  background-color: #e8e4df;
+}
+
+.tab-content {
+  flex: 1;
+  flex-direction: column;
+}
+</style>

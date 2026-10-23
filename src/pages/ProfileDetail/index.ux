@@ -1,0 +1,332 @@
+<template>
+  <div class="page">
+    <!-- 自定义标题栏 -->
+    <div class="title-bar">
+      <div class="title-left" onclick="goBack">
+        <text class="back-arrow">‹</text>
+      </div>
+      <text class="title-text">用户档案</text>
+      <div class="title-right" onclick="toggleMode">
+        <text class="mode-icon">{{ isEditMode ? '📖' : '✏️' }}</text>
+      </div>
+    </div>
+
+    <!-- 加载中 -->
+    <div class="loading-wrap" if="loading">
+      <text class="loading-text">加载中...</text>
+    </div>
+
+    <!-- ===== 阅读模式 ===== -->
+    <div class="read-area" elif="!isEditMode">
+      <!-- 空状态 -->
+      <div class="empty" if="!content">
+        <text class="empty-icon">📋</text>
+        <text class="empty-title">还没有用户档案</text>
+        <text class="empty-hint">点击右上角 ✏️ 来创建你的个人档案</text>
+        <text class="empty-hint">支持 Markdown 格式记笔记</text>
+      </div>
+      <!-- 内容 -->
+      <text class="md-content" else>{{ content }}</text>
+    </div>
+
+    <!-- ===== 编辑模式 ===== -->
+    <div class="edit-area" else>
+      <textarea class="editor" placeholder="在这里写下你的个人档案，支持 Markdown 格式..." onchange="onEditorChange">{{ editText }}</textarea>
+      <div class="editor-tip">
+        <text class="tip-text">支持：## 标题  **加粗**  *斜体*  - 列表  [链接]()</text>
+      </div>
+      <div class="editor-actions">
+        <div class="btn btn-cancel" onclick="cancelEdit">
+          <text class="btn-label">取消</text>
+        </div>
+        <div class="btn btn-save" onclick="saveProfile">
+          <text class="btn-label">{{ saving ? '保存中...' : '保存' }}</text>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+import { safeBack } from '../../helper/navigate'
+import profilesAPI from '../../helper/apis/profiles'
+import userIdentity from '../../helper/userIdentity'
+import $utils from '../../helper/utils'
+
+export default {
+  private: {
+    isEditMode: false,
+    content: '',
+    editText: '',
+    profileId: null,       // family_members 表的 id，null 表示还没创建
+    loading: false,        // 初始不显示加载，由 loadProfile 控制
+    saving: false,
+  },
+
+  async onInit() {
+    this.$page.setTitleBar({ text: '', menu: false })
+    // 先确保身份就绪（与其他模块保持一致的调用模式）
+    await userIdentity.initUserId()
+    await userIdentity.initNickname()
+    await this.loadProfile()
+  },
+
+  onShow() {
+    // 每次回来刷新（可能从 Companion 页面 AI 更新触发）
+    if (!this.loading) {
+      this.loadProfile()
+    }
+  },
+
+  // ==================== 数据 ====================
+
+  async loadProfile() {
+    if (this.loading) return  // 防止重复加载
+    this.loading = true
+    try {
+      const data = await profilesAPI.mine()
+      // data 可能是 { id: 0, ... }（不存在）或 { id: 123, ... }
+      if (data && data.id && data.id > 0) {
+        this.profileId = data.id
+        this.content = data.content_md || ''
+      } else {
+        this.profileId = null
+        this.content = ''
+      }
+    } catch (e) {
+      console.log('ProfileDetail 加载失败:', e)
+    } finally {
+      this.loading = false
+    }
+  },
+
+  // ==================== 模式切换 ====================
+
+  toggleMode() {
+    if (this.isEditMode) {
+      // 切回阅读
+      this.isEditMode = false
+      this.editText = ''
+    } else {
+      // 进入编辑
+      this.editText = this.content || ''
+      this.isEditMode = true
+    }
+  },
+
+  cancelEdit() {
+    this.editText = ''
+    this.isEditMode = false
+  },
+
+  onEditorChange(e) {
+    this.editText = e.value || e.text || ''
+  },
+
+  // ==================== 保存 ====================
+
+  async saveProfile() {
+    if (this.saving) return
+    const trimmed = (this.editText || '').trim()
+    this.saving = true
+    try {
+      if (this.profileId) {
+        // 已有档案 → 更新
+        await profilesAPI.update(this.profileId, {
+          content_md: trimmed,
+        })
+      } else {
+        // 首次创建 → 创建
+        const data = await profilesAPI.create({
+          content_md: trimmed,
+        })
+        if (data && data.id) {
+          this.profileId = data.id
+        }
+      }
+      this.content = trimmed
+      this.isEditMode = false
+      this.editText = ''
+      $utils.showToast('✅ 档案已保存')
+    } catch (e) {
+      console.log('保存失败:', e)
+      $utils.showToast('保存失败，请重试')
+    } finally {
+      this.saving = false
+    }
+  },
+
+  // ==================== 返回 ====================
+
+  goBack() {
+    safeBack()
+  },
+}
+</script>
+
+<style lang="less">
+@import '../../assets/styles/variables.less';
+@import '../../assets/styles/mixins.less';
+
+.page {
+  flex: 1;
+  flex-direction: column;
+  background-color: #f5ebe0;
+}
+
+/* ========== 自定义标题栏 ========== */
+.title-bar {
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  height: 90px;
+  padding: 0 20px;
+  background-color: #fffbf7;
+  border-bottom-width: 1px;
+  border-bottom-color: #f0e8dd;
+}
+
+.title-left {
+  width: 70px;
+  height: 70px;
+  align-items: center;
+  justify-content: center;
+}
+
+.back-arrow {
+  font-size: 50px;
+  color: #d4874b;
+  font-weight: 300;
+}
+
+.title-text {
+  font-size: 34px;
+  font-weight: 600;
+  color: #4a3728;
+}
+
+.title-right {
+  width: 70px;
+  height: 70px;
+  align-items: center;
+  justify-content: center;
+}
+
+.mode-icon {
+  font-size: 40px;
+}
+
+/* ========== 加载 ========== */
+.loading-wrap {
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+}
+.loading-text {
+  font-size: 28px;
+  color: #9a8b7a;
+}
+
+/* ========== 阅读区 ========== */
+.read-area {
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0 28px;
+}
+
+.empty {
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.empty-icon {
+  font-size: 80px;
+  margin-bottom: 24px;
+}
+
+.empty-title {
+  font-size: 30px;
+  font-weight: 600;
+  color: #4a3728;
+  margin-bottom: 12px;
+}
+
+.empty-hint {
+  font-size: 24px;
+  color: #9a8b7a;
+  line-height: 36px;
+  text-align: center;
+}
+
+.md-content {
+  font-size: 28px;
+  color: #4a3728;
+  line-height: 44px;
+}
+
+/* ========== 编辑区 ========== */
+.edit-area {
+  flex: 1;
+  flex-direction: column;
+  padding: 20px 28px;
+}
+
+.editor {
+  flex: 1;
+  padding: 16px 18px;
+  background-color: #ffffff;
+  border-radius: 14px;
+  border: 1px solid #e0d6cc;
+  font-size: 26px;
+  color: #4a3728;
+}
+
+.editor-tip {
+  padding: 10px 4px 4px;
+}
+
+.tip-text {
+  font-size: 20px;
+  color: #c9b8ad;
+}
+
+.editor-actions {
+  flex-direction: row;
+  justify-content: flex-end;
+  margin-top: 12px;
+  margin-bottom: 20px;
+}
+
+.btn {
+  height: 64px;
+  border-radius: 32px;
+  align-items: center;
+  justify-content: center;
+  padding: 0 32px;
+  margin-left: 14px;
+}
+
+.btn-cancel {
+  background-color: #e0d6cc;
+}
+
+.btn-save {
+  background-color: #9cb5c9;
+}
+
+.btn-label {
+  font-size: 28px;
+  font-weight: 500;
+}
+
+.btn-cancel .btn-label {
+  color: #6b5e4f;
+}
+
+.btn-save .btn-label {
+  color: #ffffff;
+}
+</style>

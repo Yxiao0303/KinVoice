@@ -1,0 +1,16 @@
+{
+  "kind": "development_policy_pairs_not_model_results",
+  "commit": "b0f96c86c30a49a033f0fa9d34c938784c67c64e",
+  "dataset_sha256": "850ec0b2a815dda0ee79116d0e4a8ff7a2c1bd70e7521dcaaab0e36a21f86388",
+  "pairs": 8,
+  "cases": 16,
+  "both_arms_match": 8,
+  "external_model_calls": 0,
+  "success_criteria": "Both arms match prewritten developer expectations; exploratory engineering diagnostic only.",
+  "limitations": [
+    "Used during implementation, not held out",
+    "No expert labels",
+    "No generated replies or model comparison",
+    "Pair construction does not prove causal effect in real conversations"
+  ]
+}

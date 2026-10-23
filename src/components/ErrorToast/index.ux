@@ -1,0 +1,192 @@
+<!--
+  全局报错码显示组件
+  自动监听 global.$errorBus，在页面顶部显示报错码
+  按错误等级显示不同颜色：error(红) / warn(橙) / toast(灰)
+  自动 4 秒消失，点击可立即关闭
+-->
+<template>
+  <div class="error-toast-wrapper" if="{{ visible }}">
+    <div class="error-toast {{ levelClass }}" onclick="dismiss()">
+      <div class="error-code">[{{ code }}]</div>
+      <div class="error-msg">{{ message }}</div>
+      <div class="error-close" onclick="dismiss()">✕</div>
+    </div>
+  </div>
+</template>
+
+<script>
+export default {
+  data: {
+    visible: false,
+    code: 0,
+    message: '',
+    levelClass: 'level-error',
+  },
+
+  onInit() {
+    // 实例级私有状态（挂 this 上，不放 data 里避免 _ 前缀报错）
+    this.errTimer = null
+    this.errOnError = null
+    this.errPending = []
+    this.errActive = true
+
+    const bus = global.$errorBus
+    if (bus && bus.on) {
+      this.errOnError = bus.on(this.handleError.bind(this))
+    }
+  },
+
+  onDestroy() {
+    this.errActive = false
+    this.clearErrTimer()
+    if (this.errOnError) {
+      global.$errorBus.off(this.errOnError)
+      this.errOnError = null
+    }
+  },
+
+  /** 收到错误事件 */
+  handleError(err) {
+    if (!this.errActive) return
+    this.errPending.push(err)
+    if (!this.visible) {
+      this.showNext()
+    }
+  },
+
+  /** 显示队列中的下一个错误 */
+  showNext() {
+    if (!this.errActive || this.errPending.length === 0) {
+      this.visible = false
+      return
+    }
+    const err = this.errPending.shift()
+    this.code = err.code
+    this.message = err.message
+    this.levelClass = this.levelToClass(err.level)
+    this.visible = true
+
+    // 自动消失（error 4s，warn 3s，toast 2s）
+    const duration = err.level === 'error' || err.level === 'fatal' ? 4000
+      : err.level === 'warn' ? 3000
+      : 2000
+
+    this.clearErrTimer()
+    this.errTimer = setTimeout(() => {
+      this.dismiss()
+    }, duration)
+  },
+
+  /** 关闭当前报错，显示下一个 */
+  dismiss() {
+    this.clearErrTimer()
+    this.visible = false
+    // 短暂延迟后显示下一条（让消失动画自然过渡）
+    setTimeout(() => {
+      this.showNext()
+    }, 300)
+  },
+
+  /** 等级 → CSS class */
+  levelToClass(level) {
+    if (level === 'error' || level === 'fatal') return 'level-error'
+    if (level === 'warn') return 'level-warn'
+    return 'level-toast'
+  },
+
+  clearErrTimer() {
+    if (this.errTimer) {
+      clearTimeout(this.errTimer)
+      this.errTimer = null
+    }
+  },
+}
+</script>
+
+<style>
+.error-toast-wrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 9999;
+  display: flex;
+  justify-content: center;
+  padding: 12px 16px;
+  pointer-events: none;
+}
+
+.error-toast {
+  display: flex;
+  align-items: center;
+  max-width: 100%;
+  padding: 10px 16px;
+  border-radius: 8px;
+  pointer-events: auto;
+  animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* ── 错误等级配色 ── */
+
+.level-error {
+  background-color: #FFF0F0;
+  border: 1px solid #FF4D4F;
+}
+
+.level-warn {
+  background-color: #FFF7E6;
+  border: 1px solid #FA8C16;
+}
+
+.level-toast {
+  background-color: #F0F0F0;
+  border: 1px solid #D9D9D9;
+}
+
+/* ── 子元素 ── */
+
+.error-code {
+  font-size: 14px;
+  font-weight: bold;
+  margin-right: 8px;
+  white-space: nowrap;
+}
+
+.level-error .error-code {
+  color: #FF4D4F;
+}
+
+.level-warn .error-code {
+  color: #FA8C16;
+}
+
+.level-toast .error-code {
+  color: #8C8C8C;
+}
+
+.error-msg {
+  flex: 1;
+  font-size: 13px;
+  color: #595959;
+  line-height: 1.4;
+}
+
+.error-close {
+  margin-left: 8px;
+  font-size: 14px;
+  color: #BFBFBF;
+  cursor: pointer;
+  padding: 2px 4px;
+}
+</style>

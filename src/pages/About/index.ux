@@ -1,0 +1,279 @@
+<template>
+  <div class="page">
+    <!-- 自定义标题栏 -->
+    <div class="title-bar">
+      <div class="title-left" onclick="goBack">
+        <text class="back-arrow">‹</text>
+      </div>
+      <text class="title-text">关于我们</text>
+      <div class="title-right"></div>
+    </div>
+
+    <div class="scroll-content">
+      <!-- Logo + 名称 -->
+      <div class="brand-section">
+        <image class="brand-logo" src="../../assets/images/logo.png" onerror="onImgError" />
+        <text class="brand-name">Cloudie</text>
+        <text class="brand-slogan">你的家庭情绪树洞</text>
+        <text class="brand-version">版本 {{ versionName }}</text>
+      </div>
+
+      <!-- 制作团队 -->
+      <div class="card">
+        <text class="card-title">制作团队</text>
+        <text class="card-text">
+          Cloudie 由西北工业大学在校学生组成的 KinVoice 团队倾心打造。我们来自不同专业，因为对技术与情感交织领域的共同兴趣走到了一起，希望通过代码传递温度，用 AI 修复亲密关系中的裂痕。
+        </text>
+        <text class="card-text" style="margin-top: 12px;">
+          团队成员共同参与了产品设计、前端开发、后端架构与 AI 对话系统的搭建。每一行代码背后，都是对"家"的理解与热爱。
+        </text>
+      </div>
+
+      <!-- 设计灵感 -->
+      <div class="card">
+        <text class="card-title">设计灵感</text>
+        <text class="card-text">
+          上大学后第一次离开家，与父母之间的距离不仅在地图上拉远，沟通也渐渐变得困难。大一学期里，我们中的许多人都经历过——想说的话说不出口，想听的话没人倾诉。
+        </text>
+        <text class="card-text" style="margin-top: 12px;">
+          正是这些真实的矛盾与孤独，让我们决定打造一款工具：不是冷冰冰的聊天机器人，而是一个能帮你练习表达、帮你理解家人、帮你们重新靠近的情感树洞。Cloudie 是我们送给每一个"想家却说不出"的人的一份礼物。
+        </text>
+      </div>
+
+      <!-- 联系与开源 -->
+      <div class="card">
+        <text class="card-title">联系我们</text>
+        <div class="link-item" onclick="copyQQ">
+          <text class="link-label">QQ</text>
+          <text class="link-value">3423982851</text>
+        </div>
+        <div class="link-item" onclick="openGitHub">
+          <text class="link-label">GitHub</text>
+          <text class="link-value">github.com/qiyuxi24/KinVoice</text>
+        </div>
+      </div>
+
+      <!-- 底部版权 -->
+      <div class="footer">
+        <text class="footer-text">© 2026 KinVoice Team</text>
+        <text class="footer-text">All rights reserved.</text>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+import $utils from '../../helper/utils'
+import { safeBack } from '../../helper/navigate'
+
+export default {
+  private: {
+    versionName: '1.0.0',
+  },
+
+  onInit() {
+    this.$page.setTitleBar({ text: '', menu: false })
+  },
+
+  goBack() {
+    safeBack()
+  },
+
+  copyQQ() {
+    $utils.showToast('QQ：3423982851')
+  },
+
+  openGitHub() {
+    $utils.showToast('GitHub：github.com/qiyuxi24/KinVoice')
+  },
+
+  onImgError() {
+    // 图片加载失败时静默处理，不影响页面渲染
+  }
+}
+</script>
+
+<style lang="less">
+// ── 莫兰迪色板 ──
+@morandi-bg:        #f5ebe0;
+@morandi-card:      #ffffff;
+@morandi-text:      #4a3728;
+@morandi-text-light:#9a8b7a;
+@morandi-border:    #e0d5cc;
+@morandi-blue:      #9cb5c9;
+@morandi-blue-dark: #7a9ab3;
+
+.page {
+  flex: 1;
+  flex-direction: column;
+  background-color: @morandi-bg;
+  overflow: hidden;
+}
+
+.title-bar {
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  height: 90px;
+  padding: 0 20px;
+  background-color: #fffbf7;
+  border-bottom-width: 1px;
+  border-bottom-color: #f0e8dd;
+}
+
+.title-left {
+  width: 70px;
+  height: 70px;
+  align-items: center;
+  justify-content: center;
+}
+
+.back-arrow {
+  font-size: 50px;
+  color: #d4874b;
+  font-weight: 300;
+}
+
+.title-text {
+  font-size: 34px;
+  font-weight: 600;
+  color: #4a3728;
+}
+
+.title-right {
+  width: 70px;
+  height: 70px;
+}
+
+.scroll-content {
+  flex: 1;
+  flex-direction: column;
+  padding: 24px;
+  overflow-y: auto;
+}
+
+// ── 品牌区 ──
+.brand-section {
+  flex-direction: column;
+  align-items: center;
+  padding: 40px 0;
+}
+
+.brand-logo {
+  width: 120px;
+  height: 120px;
+  border-radius: 28px;
+  background-color: @morandi-card;
+}
+
+.brand-name {
+  font-size: 40px;
+  font-weight: 600;
+  color: @morandi-text;
+  margin-top: 20px;
+}
+
+.brand-slogan {
+  font-size: 26px;
+  color: @morandi-text-light;
+  margin-top: 8px;
+}
+
+.brand-version {
+  font-size: 22px;
+  color: @morandi-text-light;
+  margin-top: 8px;
+}
+
+// ── 卡片 ──
+.card {
+  flex-direction: column;
+  background-color: @morandi-card;
+  border-radius: 16px;
+  padding: 24px;
+  margin-bottom: 16px;
+}
+
+.card-title {
+  font-size: 30px;
+  font-weight: 600;
+  color: @morandi-text;
+  margin-bottom: 16px;
+}
+
+.card-text {
+  font-size: 26px;
+  color: @morandi-text-light;
+  line-height: 40px;
+}
+
+// ── 功能列表 ──
+.feature-list {
+  flex-direction: column;
+}
+
+.feature-item {
+  flex-direction: row;
+  align-items: center;
+  padding: 16px 0;
+  border-bottom-width: 1px;
+  border-bottom-color: @morandi-border;
+}
+
+.feature-icon {
+  font-size: 40px;
+  width: 56px;
+}
+
+.feature-info {
+  flex: 1;
+  flex-direction: column;
+  margin-left: 12px;
+}
+
+.feature-name {
+  font-size: 28px;
+  color: @morandi-text;
+  font-weight: 500;
+}
+
+.feature-desc {
+  font-size: 22px;
+  color: @morandi-text-light;
+  margin-top: 4px;
+}
+
+// ── 联系链接 ──
+.link-item {
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px 0;
+  border-bottom-width: 1px;
+  border-bottom-color: @morandi-border;
+}
+
+.link-label {
+  font-size: 28px;
+  color: @morandi-text;
+  font-weight: 500;
+}
+
+.link-value {
+  font-size: 26px;
+  color: @morandi-blue-dark;
+}
+
+// ── 底部 ──
+.footer {
+  flex-direction: column;
+  align-items: center;
+  padding-bottom: 40px;
+}
+
+.footer-text {
+  font-size: 20px;
+  color: @morandi-text-light;
+  margin-top: 4px;
+}
+</style>

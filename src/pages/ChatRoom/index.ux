@@ -1,0 +1,961 @@
+<template>
+  <div class="page">
+    <!-- 顶部标题栏（始终可见） -->
+    <div class="title-bar">
+      <div class="back-btn" onclick="goBack">
+        <text class="back-icon">‹</text>
+      </div>
+      <text class="title-text">{{ chatTitle }}</text>
+    </div>
+
+    <!-- 加载中 -->
+    <div class="status-container" if="loading">
+      <text class="status-text">加载中...</text>
+    </div>
+
+    <!-- 加载失败 -->
+    <div class="status-container" elif="loadError">
+      <text class="status-text status-error">加载失败</text>
+      <div class="retry-btn" onclick="retryLoad">
+        <text class="retry-text">点击重试</text>
+      </div>
+    </div>
+
+    <!-- 消息列表（非加载/非错误时才渲染，避免 for 循环报错） -->
+    <div class="chat-list" id="chatList" elif="!loading && !loadError">
+      <!-- 消息为空 -->
+      <div class="status-container" if="messages.length === 0">
+        <text class="status-text">暂无消息，开始聊天吧</text>
+      </div>
+
+      <!-- 有消息 -->
+      <block for="(index, msg) in messages">
+        <!-- 自己的消息（右对齐） -->
+        <div class="msg-row msg-self" if="showAsSelf(msg)">
+          <div class="msg-body">
+            <div class="msg-sender">
+              <text class="msg-sender-name">{{ msg.sender_nickname || '我' }}</text>
+            </div>
+            <div class="msg-bubble msg-bubble-self">
+              <text class="msg-text">{{ msg.content }}</text>
+            </div>
+          </div>
+          <div class="msg-avatar msg-avatar-self">
+            <text class="avatar-text">{{ avatarChar(msg) }}</text>
+          </div>
+        </div>
+        <!-- 别人的消息（左对齐） -->
+        <div class="msg-row msg-other" else>
+          <div class="msg-avatar msg-avatar-other">
+            <text class="avatar-text">{{ avatarChar(msg) }}</text>
+          </div>
+          <div class="msg-body">
+            <div class="msg-sender">
+              <text class="msg-sender-name">{{ msg.sender_nickname || '未知' }}</text>
+            </div>
+            <div class="msg-bubble msg-bubble-other">
+              <text class="msg-text">{{ msg.content }}</text>
+            </div>
+          </div>
+        </div>
+      </block>
+
+      <div class="chat-bottom-spacer"></div>
+    </div>
+
+    <!-- 底部输入区（始终可见，加载/错误时禁用） -->
+    <div class="bottom-input-area">
+      <input class="message-input" type="text" placeholder="输入消息..."
+             value="{{ inputText }}" onchange="onInputChange"
+             disabled="{{ loading || loadError || sending || nvcConverting }}" />
+      <!-- NVC 转换按钮（始终显示） -->
+      <div class="nvc-btn {{ nvcConverting ? 'nvc-btn-disabled' : (inputText ? 'nvc-btn-active' : 'nvc-btn-inactive') }}"
+           onclick="doNvcConvert"
+           disabled="{{ loading || loadError || sending || nvcConverting || !inputText }}">
+        <text class="nvc-btn-text">{{ nvcConverting ? '...' : 'NVC' }}</text>
+      </div>
+      <div class="send-btn" onclick="sendMessage">
+        <text class="send-text">{{ sending ? '...' : '发送' }}</text>
+      </div>
+    </div>
+
+    <!-- ===== NVC 转换结果弹窗 ===== -->
+    <div class="nvc-overlay" if="showNvcResult" onclick="closeNvcPanel"></div>
+    <div class="nvc-panel {{ showNvcResult ? 'nvc-panel-show' : '' }}">
+      <!-- 面板头部 -->
+      <div class="nvc-header">
+        <text class="nvc-title">NVC 情绪转换</text>
+        <div class="nvc-close" onclick="closeNvcPanel">
+          <text class="nvc-close-text">✕</text>
+        </div>
+      </div>
+
+      <!-- 原文 -->
+      <div class="nvc-section">
+        <text class="nvc-label">原文</text>
+        <text class="nvc-original">{{ nvcOriginalText }}</text>
+      </div>
+
+      <!-- 情感洞察 -->
+      <div class="nvc-section">
+        <text class="nvc-label">情感洞察</text>
+        <text class="nvc-insight">{{ nvcInsight }}</text>
+      </div>
+
+      <!-- 转换结果 -->
+      <div class="nvc-section nvc-section-converted">
+        <text class="nvc-label">转换后</text>
+        <text class="nvc-converted">{{ nvcConvertedText }}</text>
+      </div>
+
+      <!-- 操作按钮 -->
+      <div class="nvc-actions">
+        <div class="nvc-btn-action nvc-btn-discard" onclick="discardNvc">
+          <text class="nvc-action-text">使用原话</text>
+        </div>
+        <div class="nvc-btn-action nvc-btn-accept" onclick="acceptNvc">
+          <text class="nvc-action-text-accept">使用转换文本</text>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+import $utils from '../../helper/utils'
+import userIdentity from '../../helper/userIdentity'
+import chatroomAPI from '../../helper/apis/chatroom'
+import nvcAPI from '../../helper/apis/nvc'
+import { safeBack } from '../../helper/navigate'
+
+/** 获取页面存活标志 */
+function checkActive(vm) {
+  try { return vm && vm.isActive === true } catch (e) { return false }
+}
+
+/** 安全截取首字符 */
+function safeFirstChar(str) {
+  if (!str || typeof str !== 'string') return '?'
+  const ch = str.charAt(0)
+  if (!ch) return '?'
+  return ch.toUpperCase()
+}
+
+export default {
+  private: {
+    // 路由参数
+    chatType: '',
+    peerId: '',
+    peerName: '',
+
+    // 显示状态
+    chatTitle: '聊天',
+    myUserId: '',
+    myNickname: '',
+    conversationId: null,
+    messages: [],
+    inputText: '',
+    loading: true,
+    loadError: false,
+    sending: false,
+    isActive: false,
+
+    // 轮询
+    pollTimer: null,
+    lastMsgId: 0,
+
+    // 滚动定时器（防止泄漏）
+    _scrollTimer: null,
+
+    // NVC 转换
+    nvcConverting: false,
+    showNvcResult: false,
+    nvcOriginalText: '',
+    nvcConvertedText: '',
+    nvcInsight: '',
+  },
+
+  // ==================== 状态重置 ====================
+
+  /**
+   * 完整重置所有状态为初始值。
+   * 必须在 onInit 开头调用，确保多次进入页面时无状态泄漏。
+   */
+  _resetState() {
+    // 路由参数
+    this.chatType = ''
+    this.peerId = ''
+    this.peerName = ''
+
+    // 显示状态
+    this.chatTitle = '聊天'
+    this.myUserId = ''
+    this.myNickname = ''
+    this.conversationId = null
+    this.messages = []
+    this.inputText = ''
+    this.loading = true
+    this.loadError = false
+    this.sending = false
+
+    // 轮询
+    this.lastMsgId = 0
+
+    // NVC 转换
+    this.nvcConverting = false
+    this.showNvcResult = false
+    this.nvcOriginalText = ''
+    this.nvcConvertedText = ''
+    this.nvcInsight = ''
+  },
+
+  // ==================== 生命周期 ====================
+
+  /**
+   * onInit(): 重置全部状态 → 同步设置初始 UI → 异步加载数据。
+   * 关键：_resetState() 放在最前面，消除多次打开的状态残留。
+   */
+  onInit() {
+    this.$page.setTitleBar({ text: '', menu: false })
+
+    // ★ 核心：先完整重置，再初始化
+    this._resetState()
+    this.isActive = true
+
+    // 解析路由参数（同步）
+    this.chatType = (this.$page.query && this.$page.query.type) || 'group'
+    this.peerId = (this.$page.query && this.$page.query.peer_id) || ''
+    const rawPeerName = (this.$page.query && this.$page.query.peer_name) || ''
+    this.peerName = decodeURIComponent(rawPeerName) || '对方'
+
+    // 设置标题（同步，确保首次可渲染）
+    this.chatTitle = this.chatType === 'private'
+      ? (this.peerName || '私聊')
+      : '家庭群聊'
+
+    // 异步初始化用户身份 + 加载数据（不阻塞 onInit 返回）
+    this._initFlow()
+  },
+
+  onHide() {
+    this.isActive = false
+    this._clearScrollTimer()
+    this.stopPolling()
+  },
+
+  onShow() {
+    this.isActive = true
+    // 回到页面：拉取增量消息 + 恢复轮询
+    if (!this.loadError && this.conversationId) {
+      this.pollMessages()
+      this.startPolling()
+    }
+  },
+
+  onDestroy() {
+    this.isActive = false
+    this._clearScrollTimer()
+    this.stopPolling()
+  },
+
+  // ==================== 模板辅助方法 ====================
+
+  showAsSelf(msg) {
+    // 防御性判断：sender_id 与 myUserId 比较
+    if (!msg || !msg.sender_id) return false
+    return msg.sender_id === this.myUserId
+  },
+
+  avatarChar(msg) {
+    if (!msg) return '?'
+    const name = msg.sender_nickname || '?'
+    return safeFirstChar(name)
+  },
+
+  // ==================== 初始化流程 ====================
+
+  /**
+   * 主初始化流程：用户身份 → 查找会话 → 加载消息 → 启动轮询。
+   * 每一步带 try/catch，任一失败都会进入 loadError 状态。
+   */
+  async _initFlow() {
+    try {
+      // Step 1: 用户身份
+      this.myUserId = await userIdentity.initUserId()
+      if (!checkActive(this)) return
+      await userIdentity.initNickname()
+      this.myNickname = userIdentity.getNickname() || '我'
+      if (!checkActive(this)) return
+
+      // Step 2: 查找/确认会话
+      await this.ensureConversation()
+      if (!checkActive(this)) return
+
+      // Step 3: 加载消息
+      await this.loadMessages()
+      if (!checkActive(this)) return
+
+      // Step 4: 启动轮询
+      this.startPolling()
+    } catch (e) {
+      console.log('[ChatRoom] 初始化失败:', e)
+      if (checkActive(this)) {
+        this.loadError = true
+        this.loading = false
+      }
+    }
+  },
+
+  /** 点击重试 */
+  retryLoad() {
+    if (!checkActive(this)) return
+    this.loadError = false
+    this.loading = true
+    this._initFlow()
+  },
+
+  // ==================== 会话管理 ====================
+
+  async ensureConversation() {
+    try {
+      const res = await chatroomAPI.getConversations()
+      if (!checkActive(this)) return
+      const convs = (res && res.conversations) ? res.conversations : []
+
+      if (this.chatType === 'private') {
+        const found = convs.find(
+          c => c && c.type === 'private' && c.peer_user_id === this.peerId
+        )
+        if (found) this.conversationId = found.id
+      } else {
+        const found = convs.find(c => c && c.type === 'group')
+        if (found) this.conversationId = found.id
+      }
+    } catch (e) {
+      console.log('[ChatRoom] 获取会话列表失败:', e)
+      // 不阻断流程：没有 conversationId 也可以发消息（后端会懒创建）
+    }
+  },
+
+  // ==================== 消息加载 ====================
+
+  async loadMessages() {
+    if (!this.conversationId) {
+      this.loading = false
+      return
+    }
+    try {
+      const res = await chatroomAPI.getMessages(this.conversationId, 0)
+      if (!checkActive(this)) return
+      const msgs = (res && res.messages) ? res.messages : []
+      this.messages = msgs
+      if (msgs.length > 0) {
+        const last = msgs[msgs.length - 1]
+        this.lastMsgId = (last && last.id) ? last.id : this.lastMsgId
+      }
+    } catch (e) {
+      console.log('[ChatRoom] 加载消息失败:', e)
+    } finally {
+      if (checkActive(this)) {
+        this.loading = false
+        this.scrollToBottom()
+      }
+    }
+  },
+
+  // ==================== 轮询 ====================
+
+  startPolling() {
+    this.stopPolling()
+    this.pollTimer = setInterval(() => {
+      if (!checkActive(this) || !this.conversationId) return
+      this.pollMessages()
+    }, 2000)
+  },
+
+  stopPolling() {
+    if (this.pollTimer) {
+      clearInterval(this.pollTimer)
+      this.pollTimer = null
+    }
+  },
+
+  async pollMessages() {
+    if (!this.conversationId) return
+    try {
+      const res = await chatroomAPI.getMessages(this.conversationId, this.lastMsgId)
+      if (!checkActive(this)) return
+      const newMsgs = (res && res.messages) ? res.messages : []
+      if (newMsgs.length > 0) {
+        // 去重
+        const existingIds = new Set(this.messages.map(m => m.id))
+        const trulyNew = newMsgs.filter(m => m && !existingIds.has(m.id))
+        if (trulyNew.length > 0) {
+          this.messages = [...this.messages, ...trulyNew]
+          const last = trulyNew[trulyNew.length - 1]
+          this.lastMsgId = last.id
+          this.scrollToBottom()
+        }
+      }
+    } catch (e) {
+      // 轮询失败静默处理，不影响用户体验
+    }
+  },
+
+  // ==================== 发送消息 ====================
+
+  onInputChange(event) {
+    if (!checkActive(this)) return
+    this.inputText = (event && event.value) ? event.value : ''
+  },
+
+  async sendMessage() {
+    if (!checkActive(this)) return
+    if (this.loading || this.loadError) return
+    const content = (this.inputText || '').trim()
+    if (!content) return
+    if (this.sending) return
+
+    this.sending = true
+    this.inputText = ''
+
+    // 乐观更新
+    const tempId = -Date.now()
+    this.messages.push({
+      id: tempId,
+      sender_id: this.myUserId,
+      sender_nickname: this.myNickname || '我',
+      content: content,
+    })
+    this.scrollToBottom()
+
+    try {
+      const res = await chatroomAPI.sendMessage({
+        conversation_id: this.conversationId || null,
+        receiver_id: this.chatType === 'private' ? this.peerId : null,
+        chat_type: this.chatType,
+        content: content,
+      })
+      if (!checkActive(this)) return
+
+      // 首次发送：后端会创建会话并返回 conversation_id
+      if (!this.conversationId && res && res.conversation_id) {
+        this.conversationId = res.conversation_id
+        this.startPolling()
+      }
+
+      // 用服务器返回的真实消息替换临时消息
+      const idx = this.messages.findIndex(
+        m => m && m.id === tempId
+      )
+      if (idx >= 0 && res) {
+        this.messages[idx] = {
+          id: res.message_id || tempId,
+          sender_id: this.myUserId,
+          sender_nickname: this.myNickname || '我',
+          content: res.content || content,
+        }
+        if (res.message_id) {
+          this.lastMsgId = res.message_id
+        }
+      }
+    } catch (e) {
+      if (!checkActive(this)) return
+      console.log('[ChatRoom] 发送失败:', e)
+      // 标记临时消息为失败
+      const idx = this.messages.findIndex(
+        m => m && m.id === tempId
+      )
+      if (idx >= 0) {
+        this.messages[idx].content = content + '（发送失败）'
+        this.messages[idx]._failed = true
+      }
+      $utils.showToast('发送失败，请重试')
+    } finally {
+      if (checkActive(this)) {
+        this.sending = false
+      }
+    }
+  },
+
+  // ==================== NVC 非暴力沟通转换 ====================
+
+  async doNvcConvert() {
+    if (!checkActive(this)) return
+    if (this.loading || this.loadError || this.nvcConverting) return
+    const content = (this.inputText || '').trim()
+    if (!content) {
+      $utils.showToast('请先输入内容')
+      return
+    }
+
+    this.nvcConverting = true
+    try {
+      const res = await nvcAPI.convert(content)
+      if (!checkActive(this)) return
+
+      this.nvcOriginalText = content
+      this.nvcConvertedText = (res && res.converted_text) ? res.converted_text : ''
+      this.nvcInsight = (res && res.insight) ? res.insight : '已为您重新整理表达方式。'
+      this.showNvcResult = true
+    } catch (e) {
+      if (!checkActive(this)) return
+      console.log('[ChatRoom] NVC 转换失败:', e)
+      $utils.showToast('转换失败，请稍后重试')
+    } finally {
+      if (checkActive(this)) {
+        this.nvcConverting = false
+      }
+    }
+  },
+
+  /** 接受转换结果，替换输入框内容 */
+  acceptNvc() {
+    if (!this.nvcConvertedText) return
+    this.inputText = this.nvcConvertedText
+    this.closeNvcPanel()
+  },
+
+  /** 丢弃转换结果，保持原话 */
+  discardNvc() {
+    this.closeNvcPanel()
+  },
+
+  /** 关闭 NVC 转换面板 */
+  closeNvcPanel() {
+    this.showNvcResult = false
+    this.nvcOriginalText = ''
+    this.nvcConvertedText = ''
+    this.nvcInsight = ''
+  },
+
+  // ==================== 工具方法 ====================
+
+  scrollToBottom() {
+    // 清除上一次未执行的滚动定时器（防止多次调用时累积）
+    this._clearScrollTimer()
+    this._scrollTimer = setTimeout(() => {
+      this._scrollTimer = null  // 标记已执行
+      if (!checkActive(this)) return
+      try {
+        const el = this.$element('chatList')
+        if (el && typeof el.scrollTo === 'function') {
+          el.scrollTo({ index: -1 })
+        }
+      } catch (e) { /* ignore DOM 异常 */ }
+    }, 150)
+  },
+
+  /** 清理滚动定时器 */
+  _clearScrollTimer() {
+    if (this._scrollTimer) {
+      clearTimeout(this._scrollTimer)
+      this._scrollTimer = null
+    }
+  },
+
+  goBack() {
+    this._clearScrollTimer()
+    this.stopPolling()
+    this.isActive = false
+    safeBack()
+  },
+}
+</script>
+
+<style lang="less">
+/* ===== 莫兰迪色系 ===== */
+@morandi-bg:        #f7f0e7;
+@morandi-white:     #faf8f5;
+@morandi-text:      #4a3728;
+@morandi-text-light:#9a8b7a;
+@morandi-border:    #d9d3cb;
+@morandi-self:      #b5c4b1;
+@morandi-other:     #d4c5c0;
+@morandi-blue:      #8ab4c9;
+@morandi-brown:     #d4874b;
+
+.page {
+  flex: 1;
+  flex-direction: column;
+  background-color: @morandi-bg;
+}
+
+/* ===== 标题栏 ===== */
+.title-bar {
+  flex-direction: row;
+  align-items: center;
+  padding: 30px 20px 16px;
+  background-color: @morandi-white;
+  border-bottom-width: 1px;
+  border-bottom-color: @morandi-border;
+}
+
+.back-btn {
+  width: 56px;
+  height: 56px;
+  border-radius: 28px;
+  background-color: @morandi-bg;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.back-icon {
+  font-size: 42px;
+  color: @morandi-text;
+  font-weight: 300;
+}
+
+.title-text {
+  font-size: 32px;
+  font-weight: 600;
+  color: @morandi-text;
+  margin-left: 16px;
+}
+
+/* ===== 状态占位 ===== */
+.status-container {
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 30px;
+}
+
+.status-text {
+  font-size: 26px;
+  color: @morandi-text-light;
+}
+
+.status-error {
+  color: #c0392b;
+}
+
+.retry-btn {
+  margin-top: 20px;
+  padding: 14px 40px;
+  background-color: @morandi-brown;
+  border-radius: 8px;
+}
+
+.retry-text {
+  font-size: 26px;
+  color: #ffffff;
+  font-weight: 500;
+}
+
+/* ===== 消息列表 ===== */
+.chat-list {
+  flex: 1;
+  flex-direction: column;
+  padding: 12px 16px;
+  padding-bottom: 100px;
+}
+
+/* ===== 消息行 ===== */
+.msg-row {
+  flex-direction: row;
+  margin-bottom: 16px;
+}
+
+.msg-self {
+  justify-content: flex-end;
+  padding-left: 80px;
+}
+
+.msg-other {
+  justify-content: flex-start;
+  padding-right: 80px;
+}
+
+/* ===== 头像 ===== */
+.msg-avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 8px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.msg-avatar-self {
+  background-color: @morandi-brown;
+  margin-left: 10px;
+}
+
+.msg-avatar-other {
+  background-color: @morandi-blue;
+  margin-right: 10px;
+}
+
+.avatar-text {
+  font-size: 28px;
+  color: #ffffff;
+  font-weight: 600;
+}
+
+/* ===== 消息体 ===== */
+.msg-body {
+  flex-direction: column;
+  max-width: 100%;
+}
+
+.msg-self .msg-body {
+  align-items: flex-end;
+}
+
+/* ===== 发送者名称 ===== */
+.msg-sender {
+  margin-bottom: 4px;
+}
+
+.msg-sender-name {
+  font-size: 22px;
+  color: @morandi-text-light;
+}
+
+/* ===== 气泡 ===== */
+.msg-bubble {
+  padding: 14px 18px;
+  border-radius: 8px;
+  max-width: 100%;
+}
+
+.msg-bubble-self {
+  background-color: @morandi-self;
+}
+
+.msg-bubble-other {
+  background-color: @morandi-other;
+}
+
+.msg-text {
+  font-size: 28px;
+  color: @morandi-text;
+  line-height: 36px;
+}
+
+.chat-bottom-spacer {
+  height: 20px;
+}
+
+/* ===== 底部输入区 ===== */
+.bottom-input-area {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 12px 16px;
+  background-color: @morandi-white;
+  flex-direction: row;
+  align-items: center;
+  border-top-width: 1px;
+  border-top-color: @morandi-border;
+}
+
+.message-input {
+  flex: 1;
+  height: 68px;
+  padding: 0 20px;
+  background-color: @morandi-bg;
+  border-radius: 6px;
+  font-size: 28px;
+  color: @morandi-text;
+  placeholder-color: @morandi-text-light;
+}
+
+.send-btn {
+  width: 100px;
+  height: 68px;
+  background-color: @morandi-brown;
+  border-radius: 6px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-left: 10px;
+}
+
+.send-text {
+  font-size: 28px;
+  color: #ffffff;
+  font-weight: 600;
+}
+
+/* ===== NVC 转换按钮（始终可见） ===== */
+.nvc-btn {
+  width: 80px;
+  height: 68px;
+  border-radius: 6px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-left: 8px;
+}
+
+.nvc-btn-active {
+  background-color: @morandi-blue;
+}
+
+.nvc-btn-inactive {
+  background-color: @morandi-border;
+}
+
+.nvc-btn-disabled {
+  background-color: @morandi-border;
+}
+
+.nvc-btn-text {
+  font-size: 22px;
+  color: #ffffff;
+  font-weight: 700;
+}
+
+/* ===== NVC 结果弹窗 ===== */
+.nvc-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+.nvc-panel {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: @morandi-white;
+  border-radius: 28px;
+  flex-direction: column;
+  padding-bottom: 40px;
+  transform: translateY(100%);
+}
+
+.nvc-panel-show {
+  transform: translateY(0);
+}
+
+.nvc-header {
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 28px 30px 20px;
+}
+
+.nvc-title {
+  font-size: 34px;
+  font-weight: 600;
+  color: @morandi-text;
+}
+
+.nvc-close {
+  width: 56px;
+  height: 56px;
+  border-radius: 28px;
+  background-color: @morandi-bg;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.nvc-close-text {
+  font-size: 28px;
+  color: @morandi-text-light;
+}
+
+/* NVC 内容区 */
+.nvc-panel-body {
+  flex-direction: column;
+  padding: 0 30px;
+}
+
+.nvc-section {
+  flex-direction: column;
+  background-color: @morandi-bg;
+  border-radius: 14px;
+  padding: 20px;
+  margin-bottom: 14px;
+  margin-left: 30px;
+  margin-right: 30px;
+}
+
+.nvc-section-converted {
+  background-color: #e8f0e8;
+  border-width: 1px;
+  border-style: solid;
+  border-color: #a5c9a5;
+}
+
+.nvc-label {
+  font-size: 24px;
+  color: @morandi-blue;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.nvc-original {
+  font-size: 26px;
+  color: @morandi-text-light;
+  line-height: 36px;
+}
+
+.nvc-insight {
+  font-size: 26px;
+  color: #7a6b5a;
+  line-height: 36px;
+  padding: 10px 16px;
+  background-color: rgba(212, 135, 75, 0.08);
+  border-radius: 8px;
+  border-left-width: 6px;
+  border-left-style: solid;
+  border-left-color: @morandi-brown;
+}
+
+.nvc-converted {
+  font-size: 28px;
+  color: @morandi-text;
+  line-height: 40px;
+  font-weight: 500;
+}
+
+/* NVC 操作按钮 */
+.nvc-actions {
+  flex-direction: row;
+  padding: 20px 30px 0;
+  justify-content: space-between;
+}
+
+.nvc-btn-action {
+  flex: 1;
+  height: 76px;
+  border-radius: 16px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.nvc-btn-discard {
+  background-color: @morandi-bg;
+  margin-right: 12px;
+}
+
+.nvc-btn-accept {
+  background-color: @morandi-brown;
+  margin-left: 12px;
+}
+
+.nvc-action-text {
+  font-size: 28px;
+  font-weight: 600;
+  color: @morandi-text-light;
+}
+
+.nvc-action-text-accept {
+  font-size: 28px;
+  font-weight: 600;
+  color: #ffffff;
+}
+</style>

@@ -1,0 +1,95 @@
+{
+  "audit_date": "2026-10-23",
+  "scope": "local synthetic checks only; no deployment or real LLM calls",
+  "commit": "740412c29bdc9442a7a52b076f282c724c9c20b9",
+  "tracked_files": 145,
+  "python_syntax": {
+    "files": 56,
+    "errors": []
+  },
+  "credential_markers": [
+    {
+      "path": "backend/.env",
+      "line": 2,
+      "variable": "LLM_API_KEY",
+      "nonempty": true,
+      "obvious_placeholder": false,
+      "value": "[NOT DISCLOSED]"
+    },
+    {
+      "path": "backend/.env.example",
+      "line": 2,
+      "variable": "LLM_API_KEY",
+      "nonempty": true,
+      "obvious_placeholder": true,
+      "value": "[NOT DISCLOSED]"
+    }
+  ],
+  "tracked_signing_private_key": {
+    "path": "sign/private.pem",
+    "pem_private_key_header": true,
+    "production_use": "unknown"
+  },
+  "tracked_profile_files": [
+    "backend/data/profiles/854a6255-7838-4591-a715-4f2d82de9c0b/stable.md",
+    "backend/data/profiles/default/dynamic.md"
+  ],
+  "versions": {
+    "fastapi": "0.115.0",
+    "sqlalchemy": "2.0.30",
+    "httpx": "0.27.0",
+    "pydantic": "2.7.0",
+    "pydantic-settings": "2.2.0",
+    "aiosqlite": "0.19.0"
+  },
+  "existing_tests": {
+    "tests_run_including_loader_errors": 1,
+    "errors": 1,
+    "failures": 0,
+    "success": false,
+    "diagnostic": "test_llm_service (unittest.loader._FailedTest.test_llm_service) ... ERROR\n\n======================================================================\nERROR: test_llm_service (unittest.loader._FailedTest.test_llm_service)\n----------------------------------------------------------------------\nImportError: Failed to import test module: test_llm_service\nTraceback (most recent call last):\n  File \"C:\\Users\\YYX\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\unittest\\loader.py\", line 396, in _find_test_path\n    module = self._get_module_from_name(name)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\YYX\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\unittest\\loader.py\", line 339, in _get_module_from_name\n    __import__(name)\n  File \"[CHECKOUT]\\backend\\tests\\test_llm_service.py\", line 3, in <module>\n    from app.services.llm_service import normalize_history_messages\nImportError: cannot import name 'normalize_history_messages' from 'app.services.llm_service' ([CHECKOUT]\\backend\\app\\services\\llm_service.py)\n\n\n----------------------------------------------------------------------\nRan 1 test in 0.000s\n\nFAILED (errors=1)\n"
+  },
+  "checks": [
+    {
+      "id": "identity",
+      "missing_header_returns": "1",
+      "arbitrary_header_returns": "synthetic-user-b"
+    },
+    {
+      "id": "history_window",
+      "input_count": 60,
+      "returned_count": 50,
+      "first": "synthetic-00",
+      "last": "synthetic-49",
+      "latest_present": false
+    },
+    {
+      "id": "default_family_sharing",
+      "status": 200,
+      "unrelated_user_sees_synthetic_note": true
+    },
+    {
+      "id": "unauthenticated_card_update",
+      "status": 200,
+      "content_changed": true
+    },
+    {
+      "id": "unauthenticated_card_delete",
+      "status": 200,
+      "deleted": true
+    },
+    {
+      "id": "llm_parameter_forwarding",
+      "requested_temperature": 0.13,
+      "actual_temperature": 0.7,
+      "requested_max_tokens": 37,
+      "actual_max_tokens": 1024,
+      "timeout_seconds": 3600
+    },
+    {
+      "id": "profile_path_boundary",
+      "path_stays_under_profile_root": false,
+      "scope": "creates an empty directory inside audit runtime only; no external files read"
+    }
+  ]
+}

@@ -1,0 +1,298 @@
+<template>
+  <div class="page">
+    <div class="title-bar">
+      <div class="title-left" onclick="goBack">
+        <text class="back-arrow">‹</text>
+      </div>
+      <text class="title-text">音色选择</text>
+      <div class="title-right"></div>
+    </div>
+
+    <!-- 卡片网格（自动换行） -->
+    <div class="card-grid">
+      <block for="v in voices">
+        <div class="voice-card {{ selectedVoice === v.code ? 'card-selected' : '' }}"
+             onclick="handleCardClick(v)">
+          <div class="card-icon-box">
+            <text class="card-icon">{{ v.type === 'system' ? '🎤' : '🎙️' }}</text>
+          </div>
+          <text class="card-name">{{ v.name }}</text>
+          <text class="card-type">{{ v.type === 'system' ? '系统' : '自定义' }}</text>
+          <!-- 自定义音色管理按钮 -->
+          <div class="card-manage" if="v.type === 'custom'" onclick="showMenu(v, $event)">
+            <text class="manage-text">管理</text>
+          </div>
+        </div>
+      </block>
+      <!-- 空状态 -->
+      <div class="empty-hint" if="voices.length === 0">
+        <text class="empty-text">暂无可用音色</text>
+      </div>
+    </div>
+
+    <!-- 操作菜单 -->
+    <div class="menu-bg" if="{{menuVisible}}" onclick="closeMenu">
+      <div class="menu" style="top: {{menuTop}}px; left: {{menuLeft}}px;">
+        <div class="menu-item" onclick="handleListen">
+          <text class="menu-icon">👂</text>
+          <text class="menu-text">试听</text>
+        </div>
+        <div class="menu-item" onclick="handleDelete">
+          <text class="menu-icon">🗑️</text>
+          <text class="menu-text">删除</text>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+import tts from '../../helper/apis/tts'
+import replica from '../../helper/apis/replica'
+import storage from '@system.storage'
+import $utils from '../../helper/utils'
+import { safeBack } from '../../helper/navigate'
+
+export default {
+  private: {
+    voices: [],
+    selectedVoice: '',
+    menuVisible: false,
+    menuTop: 0,
+    menuLeft: 0,
+    currentVoice: null,
+    playing: false,
+  },
+
+  async onInit() {
+    this.$page.setTitleBar({ text: '', menu: false })
+    await this.loadVoices()
+    this.selectedVoice = await this.readSelectedVoice()
+  },
+
+  async loadVoices() {
+    try {
+      const res = await tts.getVoices()
+      let voices = []
+      if (res && typeof res === 'object' && typeof res.data === 'string' && res.headers) {
+        voices = JSON.parse(res.data)
+      } else if (Array.isArray(res)) {
+        voices = res
+      }
+      this.voices = voices
+    } catch (e) {
+      console.error('加载音色失败:', e)
+    }
+  },
+
+  readSelectedVoice() {
+    return new Promise((resolve) => {
+      storage.get({
+        key: 'selected_voice',
+        success: (data) => resolve(data || 'yunye'),
+        fail: () => resolve('yunye')
+      })
+    })
+  },
+
+  saveSelectedVoice(code) {
+    storage.set({ key: 'selected_voice', value: code })
+  },
+
+  // 点击卡片：选中 + 试听
+  async handleCardClick(voice) {
+    this.selectVoice(voice.code)
+    await this.tryPlaySample(voice.code)
+  },
+
+  selectVoice(code) {
+    this.selectedVoice = code
+    this.saveSelectedVoice(code)
+  },
+
+  async tryPlaySample(voiceCode) {
+    if (this.playing) return
+    this.playing = true
+    try {
+      await tts.play('欢迎来到情绪树洞', voiceCode)
+    } catch (e) {
+      // 模拟器可能无声，忽略
+    } finally {
+      this.playing = false
+    }
+  },
+
+  showMenu(voice, evt) {
+    let clientX = 200, clientY = 400
+    if (evt && evt.touches && evt.touches.length > 0) {
+      clientX = evt.touches[0].clientX
+      clientY = evt.touches[0].clientY
+    } else if (evt && typeof evt.clientX !== 'undefined') {
+      clientX = evt.clientX
+      clientY = evt.clientY
+    }
+    this.currentVoice = voice
+    this.menuVisible = true
+    this.menuTop = clientY
+    this.menuLeft = clientX
+  },
+
+  closeMenu() {
+    this.menuVisible = false
+    this.currentVoice = null
+  },
+
+  async handleListen() {
+    if (this.currentVoice) {
+      await this.tryPlaySample(this.currentVoice.code)
+    }
+    this.closeMenu()
+  },
+
+  async handleDelete() {
+    if (this.currentVoice) {
+      try {
+        await replica.deleteVoice(this.currentVoice.vcn)
+        $utils.showToast('已删除')
+        if (this.selectedVoice === this.currentVoice.code) {
+          this.selectedVoice = 'yunye'
+          this.saveSelectedVoice('yunye')
+        }
+        await this.loadVoices()
+      } catch (e) {
+        $utils.showToast('删除失败')
+      }
+    }
+    this.closeMenu()
+  },
+
+  goBack() { safeBack() }
+}
+</script>
+
+<style>
+.page {
+  flex: 1;
+  flex-direction: column;
+  background-color: #e8e4df;
+}
+.title-bar {
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  height: 90px;
+  padding: 0 20px;
+  background-color: #fffbf7;
+  border-bottom-width: 1px;
+  border-bottom-color: #f0e8dd;
+}
+.title-left {
+  width: 70px;
+  height: 70px;
+  align-items: center;
+  justify-content: center;
+}
+.back-arrow {
+  font-size: 50px;
+  color: #d4874b;
+  font-weight: 300;
+}
+.title-text {
+  font-size: 34px;
+  font-weight: 600;
+  color: #4a3728;
+}
+.title-right {
+  width: 70px;
+  height: 70px;
+}
+
+/* 卡片网格容器 */
+.card-grid {
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  padding: 24px 12px;
+}
+
+/* 卡片：宽度大约30%，保证一行3个，加上边距自适应 */
+.voice-card {
+  width: 30%;
+  flex-direction: column;
+  align-items: center;
+  background-color: #ffffff;
+  border-radius: 20px;
+  padding: 24px 8px 16px;
+  margin-right: 3%;
+  margin-bottom: 16px;
+  position: relative;
+}
+.card-selected {
+  background-color: #f0e6d3;
+  border: 2px solid #c4b7a6;
+}
+
+.card-icon-box {
+  width: 72px;
+  height: 72px;
+  border-radius: 36px;
+  background-color: #faf8f5;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 12px;
+}
+.card-icon {
+  font-size: 36px;
+}
+.card-name {
+  font-size: 24px;
+  color: #5c5c5c;
+  font-weight: 500;
+  text-align: center;
+  margin-bottom: 6px;
+  max-lines: 1;
+  text-overflow: ellipsis;
+}
+.card-type {
+  font-size: 20px;
+  color: #9a9490;
+  margin-bottom: 10px;
+}
+
+/* 管理按钮 */
+.card-manage {
+  background-color: #f5ebe0;
+  border-radius: 20px;
+  padding: 6px 18px;
+}
+.manage-text {
+  font-size: 20px;
+  color: #c4b7a6;
+}
+
+.empty-hint {
+  width: 100%;
+  padding: 40px;
+  align-items: center;
+}
+.empty-text {
+  font-size: 26px;
+  color: #9a9490;
+}
+
+/* 菜单样式 */
+.menu-bg {
+  position: fixed; top:0; left:0; right:0; bottom:0;
+  z-index:1000; background-color: rgba(0,0,0,0.2);
+}
+.menu {
+  position: fixed; z-index:1001;
+  background-color: #fff; border-radius:8px; padding:8px 0;
+}
+.menu-item {
+  flex-direction: row; align-items: center; padding:12px 20px;
+}
+.menu-icon { font-size:28px; margin-right:12px; }
+.menu-text { font-size:26px; color:#4a3728; }
+</style>

@@ -1,0 +1,23 @@
+✔ a normal response becomes visible with its input and metadata (0.5198ms)
+✔ a late response cannot resurrect a cleared conversation (0.366ms)
+✔ pause suppresses a late response and excludes the interrupted turn from context (0.1026ms)
+✔ a previous request cannot finish or fail a newer turn (0.1354ms)
+✔ failures retain the user message without polluting the next context (0.0889ms)
+✔ context keeps recent complete turns within both bounds (0.3032ms)
+✔ double send is rejected while a turn is pending (0.1499ms)
+✔ split Unicode chunks produce only checked final result and live metadata (17.1415ms)
+✔ missing final record and malformed JSON cannot publish a candidate (0.7044ms)
+✔ duplicate, reordered, or appended final records are rejected (0.4855ms)
+✔ unknown server error details are never reflected to user (0.2535ms)
+✔ stream closes on session expiration and provides actionable code (0.2288ms)
+✔ read rejection prevents publishing even after partial progress (0.2604ms)
+✔ technical export omits dialogue and evidence and leaves incomplete usage unknown (1.2061ms)
+✔ context truncation removes whole pairs and does not send receipt metadata (0.3193ms)
+ℹ tests 15
+ℹ suites 0
+ℹ pass 15
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 93.7042

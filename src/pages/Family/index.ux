@@ -1,0 +1,636 @@
+<template>
+  <div class="page">
+    <!-- 自定义标题栏 -->
+    <div class="title-bar">
+      <div class="title-left" onclick="goBack">
+        <text class="back-arrow">‹</text>
+      </div>
+      <text class="title-text">家庭组</text>
+      <div class="title-right"></div>
+    </div>
+
+    <!-- ========== 已加入家庭组 ========== -->
+    <div class="section" if="familyId">
+      <div class="card info-card">
+        <text class="card-title">我的家庭组</text>
+
+        <div class="info-row">
+          <text class="info-label">家庭组 ID</text>
+          <div class="info-value-row">
+            <text class="info-value">{{ familyId }}</text>
+            <text class="copy-btn" onclick="copyFamilyId">复制</text>
+          </div>
+        </div>
+
+        <div class="info-row">
+          <text class="info-label">访问密码</text>
+          <div class="info-value-row">
+            <text class="info-value">{{ password }}</text>
+            <text class="copy-btn" onclick="copyPassword">复制</text>
+          </div>
+        </div>
+      </div>
+
+      <!-- 成员列表 -->
+      <div class="card member-card">
+        <text class="card-title">家庭成员（{{ members.length }}人）</text>
+        <block for="m in members">
+          <div class="member-item">
+            <div class="member-avatar">
+              <text class="member-avatar-text">{{ m.nickname ? m.nickname.charAt(0).toUpperCase() : '?' }}</text>
+            </div>
+            <text class="member-name">{{ m.nickname || '未知' }}</text>
+            <text class="member-role">{{ m.user_id === myUserId ? '(我)' : '' }}</text>
+          </div>
+        </block>
+      </div>
+
+      <!-- 退出按钮 -->
+      <div class="leave-btn" onclick="handleLeave">
+        <text class="leave-btn-text">退出家庭组</text>
+      </div>
+    </div>
+
+    <!-- ========== 加载中 ========== -->
+    <div class="center-box" if="loading">
+      <text class="center-text">加载中...</text>
+    </div>
+
+    <!-- ========== 未加入家庭组 ========== -->
+    <div class="section" if="!familyId && !loading">
+      <div class="card welcome-card">
+        <text class="welcome-icon">🏠</text>
+        <text class="welcome-title">你还没有加入家庭组</text>
+        <text class="welcome-desc">创建一个家庭组，邀请家人一起记录和分享</text>
+      </div>
+
+      <div class="action-btn create-btn" onclick="handleCreate">
+        <text class="action-btn-text">创建家庭组</text>
+      </div>
+
+      <div class="action-btn join-btn" onclick="goJoin">
+        <text class="action-btn-text">加入家庭组</text>
+      </div>
+    </div>
+
+    <!-- ========== 创建家庭组弹窗 ========== -->
+    <div class="modal-overlay" if="showCreateModal" onclick="closeCreateModal"></div>
+    <div class="modal" if="showCreateModal">
+      <text class="modal-title">创建家庭组</text>
+
+      <!-- 未登录：需要先注册/登录 -->
+      <block if="!isLoggedIn">
+        <text class="form-label">用户名</text>
+        <input class="form-input" type="text" placeholder="设置用户名" value="{{ authUsername }}" onchange="onAuthUsernameChange" />
+
+        <text class="form-label">密码</text>
+        <input class="form-input" type="password" placeholder="设置密码" value="{{ authPassword }}" onchange="onAuthPasswordChange" />
+
+        <text class="form-label">昵称</text>
+        <input class="form-input" type="text" placeholder="输入昵称" value="{{ nickname }}" onchange="onNicknameChange" />
+      </block>
+
+      <div class="modal-btns">
+        <div class="modal-btn cancel-btn" onclick="closeCreateModal">
+          <text class="modal-btn-text">取消</text>
+        </div>
+        <div class="modal-btn confirm-btn" onclick="confirmCreate">
+          <text class="modal-btn-text">{{ creating ? '创建中...' : '确认创建' }}</text>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== 创建成功弹窗 ========== -->
+    <div class="modal-overlay" if="showResultModal"></div>
+    <div class="modal" if="showResultModal">
+      <text class="modal-title">家庭组创建成功！</text>
+      <text class="result-desc">请把以下信息分享给家人：</text>
+
+      <div class="result-row">
+        <text class="result-label">家庭组 ID</text>
+        <text class="result-value">{{ newFamilyId }}</text>
+      </div>
+      <div class="result-row">
+        <text class="result-label">访问密码</text>
+        <text class="result-value">{{ newPassword }}</text>
+      </div>
+
+      <div class="modal-btns">
+        <div class="modal-btn confirm-btn" onclick="closeResultModal">
+          <text class="modal-btn-text">我知道了</text>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+import $utils from '../../helper/utils'
+import userIdentity from '../../helper/userIdentity'
+import authAPI from '../../helper/apis/auth'
+import familyAPI from '../../helper/apis/family'
+import { safePush, safeBack } from '../../helper/navigate'
+
+export default {
+  private: {
+    // 家庭组状态
+    familyId: '',
+    password: '',
+    members: [],
+    myUserId: '',
+    loading: true,
+    isLoggedIn: false,
+    nickname: '',
+
+    // 创建弹窗
+    showCreateModal: false,
+    authUsername: '',
+    authPassword: '',
+    creating: false,
+
+    // 结果弹窗
+    showResultModal: false,
+    newFamilyId: '',
+    newPassword: '',
+
+    // 初始化守护（防止 onInit 和 onShow 竞态重复加载）
+    initDone: false,
+    loadingSeq: 0,
+  },
+
+  async onInit() {
+    this.$page.setTitleBar({ text: '', menu: false })
+    this.myUserId = await userIdentity.initUserId()
+    await userIdentity.initNickname()
+    await userIdentity.initLogin()
+    this.isLoggedIn = userIdentity.isLoggedIn()
+    this.nickname = userIdentity.getNickname()
+    await this.loadMyGroup()
+    this.initDone = true
+  },
+
+  async onShow() {
+    this.nickname = userIdentity.getNickname()
+    this.isLoggedIn = userIdentity.isLoggedIn()
+    if (this.initDone) {
+      await userIdentity.initUserId()
+      await this.loadMyGroup()
+    }
+  },
+
+  // ==================== 数据加载 ====================
+
+  async loadMyGroup() {
+    const seq = ++this.loadingSeq
+    this.loading = true
+    try {
+      const res = await familyAPI.getMyGroup()
+      // 丢弃过期响应（后来的请求可能先返回）
+      if (seq !== this.loadingSeq) return
+      if (res.family_id) {
+        this.familyId = res.family_id
+        this.password = res.password || ''
+        this.members = res.members || []
+      } else {
+        this.familyId = ''
+        this.password = ''
+        this.members = []
+      }
+    } catch (e) {
+      if (seq !== this.loadingSeq) return
+      console.log('加载家庭组失败:', e)
+    } finally {
+      if (seq === this.loadingSeq) {
+        this.loading = false
+      }
+    }
+  },
+
+  // ==================== 创建家庭组 ====================
+
+  handleCreate() {
+    if (!this.isLoggedIn) {
+      this.authUsername = ''
+      this.authPassword = ''
+      this.showCreateModal = true
+    } else {
+      this.doCreate()
+    }
+  },
+
+  async confirmCreate() {
+    this.creating = true
+    try {
+      if (!this.isLoggedIn) {
+        // 先注册新账号
+        const username = (this.authUsername || '').trim()
+        const password = (this.authPassword || '').trim()
+        const nickname = (this.nickname || '').trim()
+        if (!username) { $utils.showToast('请输入用户名'); return }
+        if (!password) { $utils.showToast('请输入密码'); return }
+        if (!nickname) { $utils.showToast('请输入昵称'); return }
+
+        const res = await authAPI.register(username, password, nickname)
+        userIdentity.setUserId(res.user_id)
+        userIdentity.setNickname(res.nickname)
+        userIdentity.markLoggedIn()
+        this.isLoggedIn = true
+        this.nickname = res.nickname
+      }
+      // 再创建
+      await this.doCreate()
+    } catch (e) {
+      const msg = (e && e.detail) || (e && e.message) || '操作失败'
+      $utils.showToast(msg)
+    } finally {
+      this.creating = false
+    }
+  },
+
+  async doCreate() {
+    $utils.showToast('正在创建...')
+    try {
+      const res = await familyAPI.createGroup(this.nickname || userIdentity.getNickname())
+      this.showCreateModal = false
+      this.newFamilyId = res.family_id
+      this.newPassword = res.password
+      this.showResultModal = true
+      await this.loadMyGroup()
+    } catch (e) {
+      const msg = (e && e.detail) || (e && e.message) || '创建失败'
+      $utils.showToast(msg)
+    }
+  },
+
+  closeCreateModal() {
+    this.showCreateModal = false
+  },
+
+  closeResultModal() {
+    this.showResultModal = false
+  },
+
+  onNicknameChange(e) {
+    this.nickname = e.value || e.text || ''
+  },
+
+  onAuthUsernameChange(e) {
+    this.authUsername = e.value || e.text || ''
+  },
+
+  onAuthPasswordChange(e) {
+    this.authPassword = e.value || e.text || ''
+  },
+
+  // ==================== 复制 ====================
+
+  copyFamilyId() {
+    $utils.showToast('家庭组 ID 已复制（请手动分享给家人）')
+  },
+
+  copyPassword() {
+    $utils.showToast('密码已复制（请手动分享给家人）')
+  },
+
+  // ==================== 退出 ====================
+
+  async handleLeave() {
+    $utils.showToast('正在退出...')
+    try {
+      await familyAPI.leaveGroup()
+      this.familyId = ''
+      this.password = ''
+      this.members = []
+      $utils.showToast('已退出家庭组')
+    } catch (e) {
+      $utils.showToast('退出失败，请重试')
+    }
+  },
+
+  // ==================== 路由 ====================
+
+  goBack() {
+    safeBack()
+  },
+
+  goJoin() {
+    safePush('/pages/FamilyJoin')
+  },
+}
+</script>
+
+<style lang="less">
+@import '../../assets/styles/variables.less';
+@import '../../assets/styles/mixins.less';
+
+.page {
+  flex: 1;
+  flex-direction: column;
+  background-color: #f5ebe0;
+}
+
+/* ========== 自定义标题栏 ========== */
+.title-bar {
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  height: 90px;
+  padding: 0 20px;
+  background-color: #fffbf7;
+  border-bottom-width: 1px;
+  border-bottom-color: #f0e8dd;
+}
+
+.title-left {
+  width: 70px;
+  height: 70px;
+  align-items: center;
+  justify-content: center;
+}
+
+.back-arrow {
+  font-size: 50px;
+  color: #d4874b;
+  font-weight: 300;
+}
+
+.title-text {
+  font-size: 34px;
+  font-weight: 600;
+  color: #4a3728;
+}
+
+.title-right {
+  width: 70px;
+  height: 70px;
+}
+
+.section {
+  flex-direction: column;
+  padding: 30px 24px;
+}
+
+.center-box {
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  padding: 80px;
+}
+
+.center-text {
+  font-size: 28px;
+  color: #9a8b7a;
+}
+
+.card {
+  flex-direction: column;
+  background-color: #ffffff;
+  border-radius: 16px;
+  padding: 24px;
+  margin-bottom: 16px;
+}
+
+.card-title {
+  font-size: 30px;
+  font-weight: 600;
+  color: #4a3728;
+  margin-bottom: 20px;
+}
+
+/* 信息卡片 */
+.info-row {
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 0;
+  border-bottom: 1px solid #f0e8dd;
+}
+
+.info-label {
+  font-size: 26px;
+  color: #9a8b7a;
+}
+
+.info-value-row {
+  flex-direction: row;
+  align-items: center;
+}
+
+.info-value {
+  font-size: 28px;
+  font-weight: 600;
+  color: #4a3728;
+  margin-right: 12px;
+}
+
+.copy-btn {
+  font-size: 22px;
+  color: #8ab4c9;
+  padding: 4px 12px;
+  border: 1px solid #8ab4c9;
+  border-radius: 8px;
+}
+
+/* 成员列表 */
+.member-item {
+  flex-direction: row;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid #f0e8dd;
+}
+
+.member-avatar {
+  width: 56px;
+  height: 56px;
+  border-radius: 28px;
+  background-color: #d4874b;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.member-avatar-text {
+  font-size: 28px;
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.member-name {
+  font-size: 28px;
+  color: #4a3728;
+  margin-left: 16px;
+  flex: 1;
+}
+
+.member-role {
+  font-size: 24px;
+  color: #9a8b7a;
+}
+
+/* 退出按钮 */
+.leave-btn {
+  background-color: #ffffff;
+  border-radius: 16px;
+  padding: 20px;
+  align-items: center;
+  margin-top: 8px;
+  border: 1px solid #e8a0a0;
+}
+
+.leave-btn-text {
+  font-size: 28px;
+  color: #d44;
+}
+
+/* 欢迎卡片 */
+.welcome-card {
+  align-items: center;
+  padding: 40px 24px;
+}
+
+.welcome-icon {
+  font-size: 64px;
+  margin-bottom: 16px;
+}
+
+.welcome-title {
+  font-size: 32px;
+  font-weight: 600;
+  color: #4a3728;
+  margin-bottom: 8px;
+}
+
+.welcome-desc {
+  font-size: 26px;
+  color: #9a8b7a;
+  text-align: center;
+}
+
+/* 操作按钮 */
+.action-btn {
+  background-color: #d4874b;
+  border-radius: 16px;
+  padding: 22px;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.action-btn-text {
+  font-size: 30px;
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.join-btn {
+  background-color: #ffffff;
+  border: 2px solid #d4874b;
+}
+
+.join-btn .action-btn-text {
+  color: #d4874b;
+}
+
+/* 弹窗 */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+.modal {
+  position: fixed;
+  left: 30px;
+  right: 30px;
+  top: 260px;
+  background-color: #ffffff;
+  border-radius: 20px;
+  padding: 30px;
+  flex-direction: column;
+}
+
+.modal-title {
+  font-size: 32px;
+  font-weight: 600;
+  color: #4a3728;
+  margin-bottom: 16px;
+  text-align: center;
+}
+
+.form-group {
+  flex-direction: column;
+  margin-bottom: 20px;
+}
+
+.form-label {
+  font-size: 26px;
+  color: #9a8b7a;
+  margin-bottom: 8px;
+}
+
+.form-input {
+  height: 60px;
+  border: 1px solid #d4c8b8;
+  border-radius: 12px;
+  padding: 0 16px;
+  font-size: 28px;
+  color: #4a3728;
+}
+
+.modal-btns {
+  flex-direction: row;
+  justify-content: space-around;
+  margin-top: 20px;
+}
+
+.modal-btn {
+  padding: 16px 40px;
+  border-radius: 12px;
+  align-items: center;
+}
+
+.cancel-btn {
+  background-color: #f0e8dd;
+}
+
+.confirm-btn {
+  background-color: #d4874b;
+}
+
+.modal-btn-text {
+  font-size: 28px;
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.cancel-btn .modal-btn-text {
+  color: #9a8b7a;
+}
+
+/* 结果弹窗 */
+.result-desc {
+  font-size: 26px;
+  color: #9a8b7a;
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+.result-row {
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 12px 0;
+}
+
+.result-label {
+  font-size: 26px;
+  color: #9a8b7a;
+}
+
+.result-value {
+  font-size: 28px;
+  font-weight: 600;
+  color: #d4874b;
+}
+</style>

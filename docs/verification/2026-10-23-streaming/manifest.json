@@ -1,0 +1,43 @@
+{
+  "kind": "engineering_verification_not_model_or_clinical_results",
+  "implementation_commit": "15535e56f6a71732320961e41145a61384debb9a",
+  "backend_tests_passed": 59,
+  "frontend_tests_passed": 15,
+  "external_model_calls": 0,
+  "browser_verified": [
+    "stage metadata before final result",
+    "pause cancels state worker",
+    "next turn succeeds",
+    "three simulated processing stages complete",
+    "demo refusal overrides draft selection",
+    "technical Markdown download exists and omits conversation text",
+    "no browser console errors"
+  ],
+  "limits": [
+    "No new key or real provider connectivity",
+    "No professional review or efficacy experiment",
+    "External provider may keep computing after disconnect",
+    "Old port 8765 process preserved; new demo uses 8768"
+  ],
+  "code_sha256": {
+    "backend\\app\\ccare\\api.py": "f0cc7300828e88a67ba42adf5b0bad19d19a82f5a2c5a1dfcbca790f50df0426",
+    "backend\\app\\ccare\\auth.py": "241e65aa37d29f2b174e764d4368b678301c4d21b74b2add2e38e9b1542c05e3",
+    "backend\\app\\ccare\\config.py": "1981a8625349f36e23b9186fef509f060b0085f1aef933e3f6c93643d3629abf",
+    "backend\\app\\ccare\\engine.py": "99b3e9f2dfcbab19f61658d46bb34b9aa85b98eb784608678ac68335909d66d7",
+    "backend\\app\\ccare\\policy.py": "3d8229bf43eb46ad8c7a9ea7e001758d2999ebee97032971ecfed80940d9277d",
+    "backend\\app\\ccare\\provider.py": "5dc31b2c3b05356296b9d18f54ed54b2dee32b1b483b2044305f0cee96b7d3b8",
+    "backend\\app\\ccare\\schemas.py": "d6ee214c8694efb6b6e63f5c86d25172e32941278a3e15d94e4d0d583eecd9ba",
+    "backend\\app\\ccare\\streaming.py": "5cf6fa22705ab284a54e10c9eaaf018b3036341120c4529e86cf9871b9bcaa6d",
+    "backend\\app\\ccare\\__init__.py": "526925502da213b08f5af12681de8ca5f6f4f4a5a7f31ab4ddc4ed5f408f030b",
+    "backend\\app\\ccare\\web\\app.js": "f6e9d654b2783942ed991cf977c863a83277a7d81e2778aae435f2aed56d0f58",
+    "backend\\app\\ccare\\web\\index.html": "d00485b6148b91742c4aac7d918438f1c81b9f44616607174735f65536f39973",
+    "backend\\app\\ccare\\web\\report.mjs": "362b6c019d32645a453ba4e7b77b90986249ccdc6ea7e9fa95976a63a6056e65",
+    "backend\\app\\ccare\\web\\responsive.css": "050f314603f60651d78aa84f9fe82bc47bc38555f658712fad61bff988a67940",
+    "backend\\app\\ccare\\web\\session.mjs": "07b0093eeadb41ffc42c4fdcb3e9020f3e452c8bd9737500110c7808af8bba19",
+    "backend\\app\\ccare\\web\\site.css": "da447dfd64b9118a418a507ffff8deabf7f94554f92e1e17f0f444a2d18e554a",
+    "backend\\app\\ccare\\web\\site.html": "3f9c4afdad197d1e26903ac4afd31fa4359e5b8fce37e64ca2623413522cf706",
+    "backend\\app\\ccare\\web\\site.js": "841981360f36c926e6b6f7d47e5b3f1a8d4dec94297c8e694078525f29b10b30",
+    "backend\\app\\ccare\\web\\stream.mjs": "6dae559fb8888bc3b400806783b3d554852c96294b090e1e46117ced24b47352",
+    "backend\\app\\ccare\\web\\style.css": "dba86385d76946d7b74017040394c7a0115d88d04552e0e370e794fdaacabea5"
+  }
+}
