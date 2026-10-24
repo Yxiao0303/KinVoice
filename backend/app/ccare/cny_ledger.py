@@ -1,9 +1,10 @@
-"""Durable OFFLINE fee-reservation guard; never a provider billing guarantee.
+"""Durable fee-reservation guard; never a provider billing guarantee.
 
 All cooperating attempts share one authorization ledger. Every dispatched attempt
 retains its full worst-case reservation, even after success; no usage-based refund.
 Missing/invalid usage, failed/cancelled attempts and expired dispatch leases halt
-further dispatch. Actual billing remains unknown. Live use is intentionally gated.
+further dispatch. Actual billing remains unknown. Only the fixed smoke entry point
+uses a reviewed public-contract policy for live dispatch; batch use stays blocked.
 """
 from contextlib import contextmanager, closing
 from dataclasses import dataclass, asdict
@@ -69,7 +70,8 @@ class FeePolicy:
     fx_verified: bool = False
     fx_expires_at: int | None = None
     provider_bound_verified: bool = False
-    # False above is intentional: no contractual bill ceiling or live verification.
+    # Default is offline. The single-smoke policy verifies public token/rate
+    # assumptions only, never a provider-side account spending lock.
 
     def validate(self, now):
         if self.model != 'deepseek-flash' or self.authorization != AUTHORIZATION:
@@ -292,7 +294,7 @@ class CNYLedger:
             held = sum(row['held_nano'] for row in rows)
             estimates = [int(row['estimate_nano']) if row['estimate_nano'] is not None else None for row in rows]
             return {'authorization':self.policy.authorization,'policy':json.loads(policy['snapshot']),
-                    'mode':'offline_validation_only','halted':policy['halted'],
+                    'mode':'public_bound_reservation' if self.policy.provider_bound_verified else 'offline_validation_only','halted':policy['halted'],
                     'reserved_cny':yuan(held),'remaining_reservable_cny':'0' if policy['halted'] else yuan(max(0,nano(self.policy.max_cny)-held)),
                     'unallocated_cny':yuan(max(0,nano(self.policy.max_cny)-held)),
                     'assumptions_breached':any(row['reason']=='bound_exceeded' for row in rows),

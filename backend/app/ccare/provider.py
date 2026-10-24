@@ -7,10 +7,11 @@ from .config import Settings
 
 
 class ProviderUnavailable(Exception):
-    def __init__(self, code="provider_unavailable", *, usage=None, model=None):
+    def __init__(self, code="provider_unavailable", *, usage=None, model=None, http_status=None):
         super().__init__()
         self.code = code
         self.usage, self.model = usage, model
+        self.http_status = http_status
 
 
 @dataclass
@@ -18,6 +19,7 @@ class Completion:
     text: str
     usage: dict | None = None
     model: str | None = None
+    http_status: int | None = None
 
 
 class RemoteProvider:
@@ -32,6 +34,7 @@ class RemoteProvider:
         if json_mode:
             payload["response_format"] = {"type": "json_object"}
         usage, returned_model = None, None
+        http_status = None
         try:
             async with httpx.AsyncClient(timeout=c.call_timeout, follow_redirects=False, trust_env=True) as client:
                 async with client.stream(
@@ -39,6 +42,7 @@ class RemoteProvider:
                     headers={"Authorization": "Bearer " + c.api_key},
                     json=payload,
                 ) as response:
+                    http_status = response.status_code
                     response.raise_for_status()
                     chunks, size = [], 0
                     async for chunk in response.aiter_bytes():
@@ -67,14 +71,17 @@ class RemoteProvider:
             finish = choice.get("finish_reason")
             if finish != "stop" and (c.provider_kind == "deepseek" or finish is not None):
                 raise ProviderUnavailable("incomplete_output", usage=usage, model=returned_model)
-            return Completion(content, usage, returned_model)
+            return Completion(content, usage, returned_model, http_status)
         except httpx.HTTPStatusError as exc:
             code = {401: "invalid_key", 402: "insufficient_balance", 429: "rate_limited", 400: "invalid_request", 422: "invalid_request"}.get(exc.response.status_code, "provider_http_error")
-            raise ProviderUnavailable(code) from None
+            raise ProviderUnavailable(code, http_status=http_status) from None
+        except ProviderUnavailable as exc:
+            exc.http_status = http_status
+            raise
         except httpx.TimeoutException:
-            raise ProviderUnavailable("provider_timeout") from None
+            raise ProviderUnavailable("provider_timeout", http_status=http_status) from None
         except httpx.HTTPError:
-            raise ProviderUnavailable("connection_error") from None
+            raise ProviderUnavailable("connection_error", http_status=http_status) from None
         except (ValueError, KeyError, IndexError, TypeError, AttributeError):
             # Never include provider bodies, credentials or user text in exceptions/logs.
-            raise ProviderUnavailable("invalid_response", usage=usage, model=returned_model) from None
+            raise ProviderUnavailable("invalid_response", usage=usage, model=returned_model, http_status=http_status) from None

@@ -1,5 +1,5 @@
 {
-  "purpose": "synthetic_connectivity_then_small_pilot_not_efficacy",
+  "purpose": "completed_single_synthetic_connectivity_not_efficacy_batch_disabled",
   "provider_kind": "deepseek",
   "api_base": "https://api.deepseek.com",
   "model": "deepseek-flash",
@@ -40,5 +40,17 @@
     "cumulative_max_attempts_with_current_assumptions": 4,
     "refund_after_dispatch": false,
     "provider_bill_cap_guaranteed": false
+  },
+  "single_smoke_result": {
+    "status": "completed",
+    "date_utc": "2026-10-24",
+    "entrypoint": "scripts/check_model.py --live",
+    "operation_id": "authorized-single-json-20261024",
+    "generation_calls": 1,
+    "http_status": 200,
+    "reserved_cny": "2.100352",
+    "remaining_reservable_cny": "7.899648",
+    "report": "docs/DEEPSEEK_SINGLE_SMOKE_2026-10-24.md",
+    "additional_calls_authorized": false
   }
 }
