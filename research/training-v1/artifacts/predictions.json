@@ -1,0 +1,866 @@
+[
+  {
+    "case_id": "home-0",
+    "split": "train",
+    "method": "majority",
+    "gold": "supported",
+    "prediction": "supported",
+    "error": false
+  },
+  {
+    "case_id": "home-1",
+    "split": "train",
+    "method": "majority",
+    "gold": "contradicted",
+    "prediction": "supported",
+    "error": true
+  },
+  {
+    "case_id": "home-2",
+    "split": "train",
+    "method": "majority",
+    "gold": "insufficient",
+    "prediction": "supported",
+    "error": true
+  },
+  {
+    "case_id": "major-0",
+    "split": "train",
+    "method": "majority",
+    "gold": "supported",
+    "prediction": "supported",
+    "error": false
+  },
+  {
+    "case_id": "major-1",
+    "split": "train",
+    "method": "majority",
+    "gold": "contradicted",
+    "prediction": "supported",
+    "error": true
+  },
+  {
+    "case_id": "major-2",
+    "split": "train",
+    "method": "majority",
+    "gold": "insufficient",
+    "prediction": "supported",
+    "error": true
+  },
+  {
+    "case_id": "privacy-0",
+    "split": "train",
+    "method": "majority",
+    "gold": "supported",
+    "prediction": "supported",
+    "error": false
+  },
+  {
+    "case_id": "privacy-1",
+    "split": "train",
+    "method": "majority",
+    "gold": "contradicted",
+    "prediction": "supported",
+    "error": true
+  },
+  {
+    "case_id": "privacy-2",
+    "split": "train",
+    "method": "majority",
+    "gold": "insufficient",
+    "prediction": "supported",
+    "error": true
+  },
+  {
+    "case_id": "holiday-0",
+    "split": "train",
+    "method": "majority",
+    "gold": "supported",
+    "prediction": "supported",
+    "error": false
+  },
+  {
+    "case_id": "holiday-1",
+    "split": "train",
+    "method": "majority",
+    "gold": "contradicted",
+    "prediction": "supported",
+    "error": true
+  },
+  {
+    "case_id": "holiday-2",
+    "split": "train",
+    "method": "majority",
+    "gold": "insufficient",
+    "prediction": "supported",
+    "error": true
+  },
+  {
+    "case_id": "grade-0",
+    "split": "train",
+    "method": "majority",
+    "gold": "supported",
+    "prediction": "supported",
+    "error": false
+  },
+  {
+    "case_id": "grade-1",
+    "split": "train",
+    "method": "majority",
+    "gold": "contradicted",
+    "prediction": "supported",
+    "error": true
+  },
+  {
+    "case_id": "grade-2",
+    "split": "train",
+    "method": "majority",
+    "gold": "insufficient",
+    "prediction": "supported",
+    "error": true
+  },
+  {
+    "case_id": "work-0",
+    "split": "train",
+    "method": "majority",
+    "gold": "supported",
+    "prediction": "supported",
+    "error": false
+  },
+  {
+    "case_id": "work-1",
+    "split": "train",
+    "method": "majority",
+    "gold": "contradicted",
+    "prediction": "supported",
+    "error": true
+  },
+  {
+    "case_id": "work-2",
+    "split": "train",
+    "method": "majority",
+    "gold": "insufficient",
+    "prediction": "supported",
+    "error": true
+  },
+  {
+    "case_id": "curfew-0",
+    "split": "train",
+    "method": "majority",
+    "gold": "supported",
+    "prediction": "supported",
+    "error": false
+  },
+  {
+    "case_id": "curfew-1",
+    "split": "train",
+    "method": "majority",
+    "gold": "contradicted",
+    "prediction": "supported",
+    "error": true
+  },
+  {
+    "case_id": "curfew-2",
+    "split": "train",
+    "method": "majority",
+    "gold": "insufficient",
+    "prediction": "supported",
+    "error": true
+  },
+  {
+    "case_id": "money-0",
+    "split": "train",
+    "method": "majority",
+    "gold": "supported",
+    "prediction": "supported",
+    "error": false
+  },
+  {
+    "case_id": "money-1",
+    "split": "train",
+    "method": "majority",
+    "gold": "contradicted",
+    "prediction": "supported",
+    "error": true
+  },
+  {
+    "case_id": "money-2",
+    "split": "train",
+    "method": "majority",
+    "gold": "insufficient",
+    "prediction": "supported",
+    "error": true
+  },
+  {
+    "case_id": "home-0",
+    "split": "train",
+    "method": "rule",
+    "gold": "supported",
+    "prediction": "supported",
+    "error": false
+  },
+  {
+    "case_id": "home-1",
+    "split": "train",
+    "method": "rule",
+    "gold": "contradicted",
+    "prediction": "insufficient",
+    "error": true
+  },
+  {
+    "case_id": "home-2",
+    "split": "train",
+    "method": "rule",
+    "gold": "insufficient",
+    "prediction": "insufficient",
+    "error": false
+  },
+  {
+    "case_id": "major-0",
+    "split": "train",
+    "method": "rule",
+    "gold": "supported",
+    "prediction": "insufficient",
+    "error": true
+  },
+  {
+    "case_id": "major-1",
+    "split": "train",
+    "method": "rule",
+    "gold": "contradicted",
+    "prediction": "insufficient",
+    "error": true
+  },
+  {
+    "case_id": "major-2",
+    "split": "train",
+    "method": "rule",
+    "gold": "insufficient",
+    "prediction": "insufficient",
+    "error": false
+  },
+  {
+    "case_id": "privacy-0",
+    "split": "train",
+    "method": "rule",
+    "gold": "supported",
+    "prediction": "insufficient",
+    "error": true
+  },
+  {
+    "case_id": "privacy-1",
+    "split": "train",
+    "method": "rule",
+    "gold": "contradicted",
+    "prediction": "insufficient",
+    "error": true
+  },
+  {
+    "case_id": "privacy-2",
+    "split": "train",
+    "method": "rule",
+    "gold": "insufficient",
+    "prediction": "insufficient",
+    "error": false
+  },
+  {
+    "case_id": "holiday-0",
+    "split": "train",
+    "method": "rule",
+    "gold": "supported",
+    "prediction": "insufficient",
+    "error": true
+  },
+  {
+    "case_id": "holiday-1",
+    "split": "train",
+    "method": "rule",
+    "gold": "contradicted",
+    "prediction": "insufficient",
+    "error": true
+  },
+  {
+    "case_id": "holiday-2",
+    "split": "train",
+    "method": "rule",
+    "gold": "insufficient",
+    "prediction": "insufficient",
+    "error": false
+  },
+  {
+    "case_id": "grade-0",
+    "split": "train",
+    "method": "rule",
+    "gold": "supported",
+    "prediction": "supported",
+    "error": false
+  },
+  {
+    "case_id": "grade-1",
+    "split": "train",
+    "method": "rule",
+    "gold": "contradicted",
+    "prediction": "insufficient",
+    "error": true
+  },
+  {
+    "case_id": "grade-2",
+    "split": "train",
+    "method": "rule",
+    "gold": "insufficient",
+    "prediction": "supported",
+    "error": true
+  },
+  {
+    "case_id": "work-0",
+    "split": "train",
+    "method": "rule",
+    "gold": "supported",
+    "prediction": "insufficient",
+    "error": true
+  },
+  {
+    "case_id": "work-1",
+    "split": "train",
+    "method": "rule",
+    "gold": "contradicted",
+    "prediction": "insufficient",
+    "error": true
+  },
+  {
+    "case_id": "work-2",
+    "split": "train",
+    "method": "rule",
+    "gold": "insufficient",
+    "prediction": "insufficient",
+    "error": false
+  },
+  {
+    "case_id": "curfew-0",
+    "split": "train",
+    "method": "rule",
+    "gold": "supported",
+    "prediction": "supported",
+    "error": false
+  },
+  {
+    "case_id": "curfew-1",
+    "split": "train",
+    "method": "rule",
+    "gold": "contradicted",
+    "prediction": "insufficient",
+    "error": true
+  },
+  {
+    "case_id": "curfew-2",
+    "split": "train",
+    "method": "rule",
+    "gold": "insufficient",
+    "prediction": "insufficient",
+    "error": false
+  },
+  {
+    "case_id": "money-0",
+    "split": "train",
+    "method": "rule",
+    "gold": "supported",
+    "prediction": "supported",
+    "error": false
+  },
+  {
+    "case_id": "money-1",
+    "split": "train",
+    "method": "rule",
+    "gold": "contradicted",
+    "prediction": "insufficient",
+    "error": true
+  },
+  {
+    "case_id": "money-2",
+    "split": "train",
+    "method": "rule",
+    "gold": "insufficient",
+    "prediction": "insufficient",
+    "error": false
+  },
+  {
+    "case_id": "home-0",
+    "split": "train",
+    "method": "trained_char2_nb",
+    "gold": "supported",
+    "prediction": "supported",
+    "error": false
+  },
+  {
+    "case_id": "home-1",
+    "split": "train",
+    "method": "trained_char2_nb",
+    "gold": "contradicted",
+    "prediction": "contradicted",
+    "error": false
+  },
+  {
+    "case_id": "home-2",
+    "split": "train",
+    "method": "trained_char2_nb",
+    "gold": "insufficient",
+    "prediction": "insufficient",
+    "error": false
+  },
+  {
+    "case_id": "major-0",
+    "split": "train",
+    "method": "trained_char2_nb",
+    "gold": "supported",
+    "prediction": "supported",
+    "error": false
+  },
+  {
+    "case_id": "major-1",
+    "split": "train",
+    "method": "trained_char2_nb",
+    "gold": "contradicted",
+    "prediction": "contradicted",
+    "error": false
+  },
+  {
+    "case_id": "major-2",
+    "split": "train",
+    "method": "trained_char2_nb",
+    "gold": "insufficient",
+    "prediction": "insufficient",
+    "error": false
+  },
+  {
+    "case_id": "privacy-0",
+    "split": "train",
+    "method": "trained_char2_nb",
+    "gold": "supported",
+    "prediction": "supported",
+    "error": false
+  },
+  {
+    "case_id": "privacy-1",
+    "split": "train",
+    "method": "trained_char2_nb",
+    "gold": "contradicted",
+    "prediction": "contradicted",
+    "error": false
+  },
+  {
+    "case_id": "privacy-2",
+    "split": "train",
+    "method": "trained_char2_nb",
+    "gold": "insufficient",
+    "prediction": "insufficient",
+    "error": false
+  },
+  {
+    "case_id": "holiday-0",
+    "split": "train",
+    "method": "trained_char2_nb",
+    "gold": "supported",
+    "prediction": "supported",
+    "error": false
+  },
+  {
+    "case_id": "holiday-1",
+    "split": "train",
+    "method": "trained_char2_nb",
+    "gold": "contradicted",
+    "prediction": "contradicted",
+    "error": false
+  },
+  {
+    "case_id": "holiday-2",
+    "split": "train",
+    "method": "trained_char2_nb",
+    "gold": "insufficient",
+    "prediction": "insufficient",
+    "error": false
+  },
+  {
+    "case_id": "grade-0",
+    "split": "train",
+    "method": "trained_char2_nb",
+    "gold": "supported",
+    "prediction": "supported",
+    "error": false
+  },
+  {
+    "case_id": "grade-1",
+    "split": "train",
+    "method": "trained_char2_nb",
+    "gold": "contradicted",
+    "prediction": "contradicted",
+    "error": false
+  },
+  {
+    "case_id": "grade-2",
+    "split": "train",
+    "method": "trained_char2_nb",
+    "gold": "insufficient",
+    "prediction": "insufficient",
+    "error": false
+  },
+  {
+    "case_id": "work-0",
+    "split": "train",
+    "method": "trained_char2_nb",
+    "gold": "supported",
+    "prediction": "supported",
+    "error": false
+  },
+  {
+    "case_id": "work-1",
+    "split": "train",
+    "method": "trained_char2_nb",
+    "gold": "contradicted",
+    "prediction": "contradicted",
+    "error": false
+  },
+  {
+    "case_id": "work-2",
+    "split": "train",
+    "method": "trained_char2_nb",
+    "gold": "insufficient",
+    "prediction": "insufficient",
+    "error": false
+  },
+  {
+    "case_id": "curfew-0",
+    "split": "train",
+    "method": "trained_char2_nb",
+    "gold": "supported",
+    "prediction": "supported",
+    "error": false
+  },
+  {
+    "case_id": "curfew-1",
+    "split": "train",
+    "method": "trained_char2_nb",
+    "gold": "contradicted",
+    "prediction": "contradicted",
+    "error": false
+  },
+  {
+    "case_id": "curfew-2",
+    "split": "train",
+    "method": "trained_char2_nb",
+    "gold": "insufficient",
+    "prediction": "insufficient",
+    "error": false
+  },
+  {
+    "case_id": "money-0",
+    "split": "train",
+    "method": "trained_char2_nb",
+    "gold": "supported",
+    "prediction": "supported",
+    "error": false
+  },
+  {
+    "case_id": "money-1",
+    "split": "train",
+    "method": "trained_char2_nb",
+    "gold": "contradicted",
+    "prediction": "contradicted",
+    "error": false
+  },
+  {
+    "case_id": "money-2",
+    "split": "train",
+    "method": "trained_char2_nb",
+    "gold": "insufficient",
+    "prediction": "insufficient",
+    "error": false
+  },
+  {
+    "case_id": "visit-0",
+    "split": "dev",
+    "method": "majority",
+    "gold": "supported",
+    "prediction": "supported",
+    "error": false
+  },
+  {
+    "case_id": "visit-1",
+    "split": "dev",
+    "method": "majority",
+    "gold": "contradicted",
+    "prediction": "supported",
+    "error": true
+  },
+  {
+    "case_id": "visit-2",
+    "split": "dev",
+    "method": "majority",
+    "gold": "insufficient",
+    "prediction": "supported",
+    "error": true
+  },
+  {
+    "case_id": "schedule-0",
+    "split": "dev",
+    "method": "majority",
+    "gold": "supported",
+    "prediction": "supported",
+    "error": false
+  },
+  {
+    "case_id": "schedule-1",
+    "split": "dev",
+    "method": "majority",
+    "gold": "contradicted",
+    "prediction": "supported",
+    "error": true
+  },
+  {
+    "case_id": "schedule-2",
+    "split": "dev",
+    "method": "majority",
+    "gold": "insufficient",
+    "prediction": "supported",
+    "error": true
+  },
+  {
+    "case_id": "visit-0",
+    "split": "dev",
+    "method": "rule",
+    "gold": "supported",
+    "prediction": "supported",
+    "error": false
+  },
+  {
+    "case_id": "visit-1",
+    "split": "dev",
+    "method": "rule",
+    "gold": "contradicted",
+    "prediction": "insufficient",
+    "error": true
+  },
+  {
+    "case_id": "visit-2",
+    "split": "dev",
+    "method": "rule",
+    "gold": "insufficient",
+    "prediction": "insufficient",
+    "error": false
+  },
+  {
+    "case_id": "schedule-0",
+    "split": "dev",
+    "method": "rule",
+    "gold": "supported",
+    "prediction": "insufficient",
+    "error": true
+  },
+  {
+    "case_id": "schedule-1",
+    "split": "dev",
+    "method": "rule",
+    "gold": "contradicted",
+    "prediction": "insufficient",
+    "error": true
+  },
+  {
+    "case_id": "schedule-2",
+    "split": "dev",
+    "method": "rule",
+    "gold": "insufficient",
+    "prediction": "insufficient",
+    "error": false
+  },
+  {
+    "case_id": "visit-0",
+    "split": "dev",
+    "method": "trained_char2_nb",
+    "gold": "supported",
+    "prediction": "supported",
+    "error": false
+  },
+  {
+    "case_id": "visit-1",
+    "split": "dev",
+    "method": "trained_char2_nb",
+    "gold": "contradicted",
+    "prediction": "contradicted",
+    "error": false
+  },
+  {
+    "case_id": "visit-2",
+    "split": "dev",
+    "method": "trained_char2_nb",
+    "gold": "insufficient",
+    "prediction": "insufficient",
+    "error": false
+  },
+  {
+    "case_id": "schedule-0",
+    "split": "dev",
+    "method": "trained_char2_nb",
+    "gold": "supported",
+    "prediction": "supported",
+    "error": false
+  },
+  {
+    "case_id": "schedule-1",
+    "split": "dev",
+    "method": "trained_char2_nb",
+    "gold": "contradicted",
+    "prediction": "contradicted",
+    "error": false
+  },
+  {
+    "case_id": "schedule-2",
+    "split": "dev",
+    "method": "trained_char2_nb",
+    "gold": "insufficient",
+    "prediction": "contradicted",
+    "error": true
+  },
+  {
+    "case_id": "hobby-0",
+    "split": "test",
+    "method": "majority",
+    "gold": "supported",
+    "prediction": "supported",
+    "error": false
+  },
+  {
+    "case_id": "hobby-1",
+    "split": "test",
+    "method": "majority",
+    "gold": "contradicted",
+    "prediction": "supported",
+    "error": true
+  },
+  {
+    "case_id": "hobby-2",
+    "split": "test",
+    "method": "majority",
+    "gold": "insufficient",
+    "prediction": "supported",
+    "error": true
+  },
+  {
+    "case_id": "friends-0",
+    "split": "test",
+    "method": "majority",
+    "gold": "supported",
+    "prediction": "supported",
+    "error": false
+  },
+  {
+    "case_id": "friends-1",
+    "split": "test",
+    "method": "majority",
+    "gold": "contradicted",
+    "prediction": "supported",
+    "error": true
+  },
+  {
+    "case_id": "friends-2",
+    "split": "test",
+    "method": "majority",
+    "gold": "insufficient",
+    "prediction": "supported",
+    "error": true
+  },
+  {
+    "case_id": "hobby-0",
+    "split": "test",
+    "method": "rule",
+    "gold": "supported",
+    "prediction": "insufficient",
+    "error": true
+  },
+  {
+    "case_id": "hobby-1",
+    "split": "test",
+    "method": "rule",
+    "gold": "contradicted",
+    "prediction": "insufficient",
+    "error": true
+  },
+  {
+    "case_id": "hobby-2",
+    "split": "test",
+    "method": "rule",
+    "gold": "insufficient",
+    "prediction": "insufficient",
+    "error": false
+  },
+  {
+    "case_id": "friends-0",
+    "split": "test",
+    "method": "rule",
+    "gold": "supported",
+    "prediction": "insufficient",
+    "error": true
+  },
+  {
+    "case_id": "friends-1",
+    "split": "test",
+    "method": "rule",
+    "gold": "contradicted",
+    "prediction": "insufficient",
+    "error": true
+  },
+  {
+    "case_id": "friends-2",
+    "split": "test",
+    "method": "rule",
+    "gold": "insufficient",
+    "prediction": "insufficient",
+    "error": false
+  },
+  {
+    "case_id": "hobby-0",
+    "split": "test",
+    "method": "trained_char2_nb",
+    "gold": "supported",
+    "prediction": "insufficient",
+    "error": true
+  },
+  {
+    "case_id": "hobby-1",
+    "split": "test",
+    "method": "trained_char2_nb",
+    "gold": "contradicted",
+    "prediction": "contradicted",
+    "error": false
+  },
+  {
+    "case_id": "hobby-2",
+    "split": "test",
+    "method": "trained_char2_nb",
+    "gold": "insufficient",
+    "prediction": "contradicted",
+    "error": true
+  },
+  {
+    "case_id": "friends-0",
+    "split": "test",
+    "method": "trained_char2_nb",
+    "gold": "supported",
+    "prediction": "supported",
+    "error": false
+  },
+  {
+    "case_id": "friends-1",
+    "split": "test",
+    "method": "trained_char2_nb",
+    "gold": "contradicted",
+    "prediction": "contradicted",
+    "error": false
+  },
+  {
+    "case_id": "friends-2",
+    "split": "test",
+    "method": "trained_char2_nb",
+    "gold": "insufficient",
+    "prediction": "supported",
+    "error": true
+  }
+]

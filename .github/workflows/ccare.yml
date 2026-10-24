@@ -26,6 +26,7 @@ jobs:
       - run: node --test tests/web-stream.test.mjs
       - run: python scripts/evaluate_ccare.py
       - run: python scripts/evaluate_policy_pairs.py
+      - run: python scripts/research_protocol.py --output experiments/frozen-research-mock
       - run: python scripts/benchmark_ccare.py --output experiments/benchmark-dry-run
       - run: python scripts/benchmark_ccare.py --mock --output experiments/benchmark-mock
       - run: python scripts/check_cny_budget.py --mock --ledger experiments/fee-ledger/offline.db --attempts 6
