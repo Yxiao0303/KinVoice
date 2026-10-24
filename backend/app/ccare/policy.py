@@ -50,6 +50,9 @@ def validate_state(req: TurnRequest, state: State, judge=None) -> list[EvidenceL
             # Safety is independent: uncertainty must never turn off the local guard.
             if field == "support_intent" or field == "emotion":
                 setattr(state, field, "unknown")
+            if field == "support_intent":
+                state.intent_evidence = []
+                links = [link for link in links if link.purpose != 'intent']
     return links
 
 

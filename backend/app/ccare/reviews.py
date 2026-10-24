@@ -71,6 +71,11 @@ def apply_reviews(req, state, links, guard):
             continue
         value = ('false' if entry.field == 'family_unsafe' else 'unknown') if entry.action == 'revoke' else entry.value
         setattr(state, entry.field, value == 'true' if entry.field == 'family_unsafe' else value)
+        if entry.field == 'support_intent':
+            # A confirmed/corrected review is its own provenance. Do not present
+            # a provider's unrelated quote as evidence of that reviewed intent.
+            state.intent_evidence = []
+            links[:] = [link for link in links if link.purpose != 'intent']
         state.assessments = [a for a in state.assessments if a.field != entry.field]
         message_id = entry.source_message_id or next(mid for mid, text in reversed(eligible) if digest(text) == entry.source_digest)
         state.assessments.append(FieldAssessment(field=entry.field, value=value,
