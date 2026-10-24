@@ -68,3 +68,21 @@ node --test tests/web-session.test.mjs tests/web-stream.test.mjs
 运行元数据随后更新为 spec_revision=19、observed_spec_revision=19、observations_current=true，source_config_id/version_id 与上表相同。网络仍为 restricted/enforced，目标域名未列入生效列表，未报告对应就绪 secret。这表明运行**已能观测到新的修订**，不能笼统把原因归为“完全没有刷新”；需要将界面截图的配置关联到同一个 source_config_id/version，并核对已发布修订 19 的 secret 与域名内容。当前工具仍不提供友好名称或重启/热刷新操作，未擅自重启实例。普通进程变量缺失仅是补充信息。费用与访问门禁都未被绕过，真实调用持续为 0。
 
 最终离线验收：115/115 后端测试通过（3.364 秒），前端 19/19 通过；12 个独立进程竞争仅 4 个成功预留，其余预算拒绝；前后两次 CLI 证明跨运行不归零。价格/FX 到期、模糊或冲突结算、存储错误、中断恢复和推理细分均覆盖。实际提交和最终 head 的 CI 另记原 PR，旧 head 成功不冒充本轮成功。
+
+## 配置版本差异的最终定位与预算复核
+
+父侧 `list_environments` 报告 KinVoice 最新已保存版本为：
+`6b7f8514-37b6-4a24-830d-c109b93d1cb9~cecfgver_6adc40ba32a081a0a08031af599c2838`。
+本任务直接 `environment_status` 的最新观测是 spec_revision=observed_spec_revision=20、observations_current=true，但 source_config_version_id 仍为：
+`6b7f8514-37b6-4a24-830d-c109b93d1cb9~cecfgver_6adbae2670ac81a0b7dc1cf7c0c59c7f`。
+环境 ID、source_config_id 不变；网络 restricted/enforced 未允许 api.deepseek.com，未报告对应就绪凭据。前者为父侧提供的最新配置元数据，后者为本任务直接观测，两种来源不混同。
+
+因此精确阻碍是**当前运行实例尚未使用已保存的新配置版本**，而不是已证实用户填错密钥，也不是仅凭进程变量推断代理 secret 不存在。运行修订 20 并不表示 source_config_version_id 已切到最新版本。
+
+已穷尽本任务可用环境工具：状态读取、诊断读取，以及仅用于 starting 状态的等待；没有配置应用、实例重绑、热刷新或重启调用。wait_for_environment 不能把运行中的实例升级到另一个配置版本。技能也明确运行上下文工具不是配置变更工作流。本轮没有调用未文档化管理接口、改代理/策略文件、创建新任务或猜测界面按钮。
+
+唯一下一步是由平台支持的原任务配置应用流程，将上述**新版本**关联并应用到当前实例，再复查 source_config_version_id、对应凭据 ready 和域名策略 enforced。当前工具无法验证哪个具体 UI 按钮能执行这一动作，不能把“刷新浏览器”“重复保存”或“重启某个进程”冒充已验证的操作。父侧可依所掌握的环境配置能力处理该版本关联；需要新的安全确认时由平台界面完成。成果已提交推送，不应通过新建替代任务来解决。
+
+官方文档本轮再次核对：peak 输入 2 元/百万、输出 8 元/百万，1M 上下文，max_tokens 限制生成 completion；thinking 默认开，应显式 disabled，JSON 要明确 response_format 及 JSON 指令。现有 2.100352 元预留按完整上下文收费而非短输入，且成功不退款，确实保守，会限制后续样本量；它不是要求再次扩展账本或提高授权的理由。人民币直接定价无需额外虚构汇率。现有单次预留按公开契约低于 10 元，不应将“获得服务商账单绝对保证”无限加码成单次小额烟测的前置条件；应明确公开费率/token 上界假设，并对本任务请求保守累计。
+
+当前网络与凭据前置条件尚未满足，故没有解锁离线专用适配器或绕过 live 门禁来发送请求，也不把此状态称为连通失败（没有尝试 HTTP 模型调用）。配置生效后才核验当时价格/有效期、同一规范账本剩余预留和单次限制，执行用户已授权的一条虚构 JSON 请求；不做额外付费重试。本轮新增源码为 0，不再扩大账本工程。既有后端115/115、前端19/19及原 head CI 成功记录保持；文档 head CI 单独在 PR 核对。真实模型请求累计仍为0，10元授权未动用。
