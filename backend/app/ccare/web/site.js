@@ -5,6 +5,7 @@ import { technicalReport } from './report.mjs';
 const $ = id => document.getElementById(id);
 const conversation = new Conversation();
 let token = '', mode = 'disabled', controller = null, register = false, requestTimeout = 55000, supportsProgress = false, supportsReviews = false;
+let offlineMock = false;
 let selectedCase = null, wantsInspector = false, toastTimer, expiryTimer, authVersion = 0;
 const liveStages = new Map();
 const cases = {
@@ -51,7 +52,7 @@ function renderMessages() {
     if (message.role === 'assistant') {
       const icon = document.createElement('img'); icon.src = '/assets/mark.svg'; icon.alt = ''; item.append(icon);
       const label = document.createElement('small'); label.className = 'message-label';
-      label.textContent = message.mode === 'demo' ? 'KinVoice · 固定示例，无模型调用' : message.mode === 'remote' ? 'KinVoice · AI 生成，可能有误' : 'KinVoice · 固定退回模板，待专业审阅'; body.append(label);
+      label.textContent = offlineMock ? 'KinVoice · 离线 mock，无模型调用' : message.mode === 'demo' ? 'KinVoice · 固定示例，无模型调用' : message.mode === 'remote' ? 'KinVoice · AI 生成，可能有误' : 'KinVoice · 固定退回模板，待专业审阅'; body.append(label);
     }
     const content = document.createElement('p'); content.className = 'message-content'; content.textContent = message.content; body.append(content);
     if (message.role === 'assistant' && message.strategy === 'draft' && ['remote','demo'].includes(message.mode)) {
@@ -138,8 +139,8 @@ function updateTrace(result = null) {
   $('trace-state').textContent = state.risk === 'urgent' ? '命中紧急线索。此判断不等于临床诊断。' : state.family_unsafe ? '检测到家庭不安全线索；无法据此还原完整关系。' : state.risk === 'ordinary' ? ((state.assessments || []).some(a => a.field === 'risk' && a.origin === 'confirmed') ? '本页确认的信息未表达急性危险；仍不代表专业安全结论。' : '模型估计为普通支持情境，仍可能误判。') : '风险状态仍为未知；未命中关键词不等于确认安全。';
   const decision = result.decision;
   $('trace-strategy').textContent = `${strategyNames[result.strategy] || result.strategy}。` + (result.mode === 'safe_fallback' ? `原定策略为${strategyNames[decision?.selected] || '未确定'}，本轮改用固定退回回应。` : (decision?.reasons || []).map(code => reasonNames[code] || code).join('；'));
-  $('trace-source').textContent = result.mode === 'demo' ? '固定示例。没有执行大模型状态估计或生成。' : result.mode === 'remote' ? '外部模型生成；具体服务商见本次同意说明。' : '固定安全或服务退回模板。';
-  $('trace-check').textContent = result.checks.includes('model_check_passed_unvalidated') ? '规则及模型检查通过；模型校验可靠性与专业审阅仍待验证。' : '本地线索检查已执行。本轮未通过模型校验流程；模板待专业审阅。';
+  $('trace-source').textContent = offlineMock ? '离线 mock：真实页面与本地流程，模型响应为桩。' : result.mode === 'demo' ? '固定示例。没有执行大模型状态估计或生成。' : result.mode === 'remote' ? '外部模型生成；具体服务商见本次同意说明。' : '固定安全或服务退回模板。';
+  $('trace-check').textContent = offlineMock ? '离线 mock：规则与本地桩校验，不代表真实模型或专业审核。' : result.checks.includes('model_check_passed_unvalidated') ? '规则及模型检查通过；模型校验可靠性与专业审阅仍待验证。' : '本地线索检查已执行。本轮未通过模型校验流程；模板待专业审阅。';
   $('trace-calls').textContent = String(result.model_calls);
   $('trace-allowed').textContent = '本轮允许：' + (decision?.allowed || []).map(s => strategyNames[s] || s).join('、');
   $('trace-evidence').replaceChildren();
@@ -150,7 +151,7 @@ function updateTrace(result = null) {
   renderStages(result.stages || []);
   const completeUsage = (result.usage || []).every(u => Number.isInteger(u?.total_tokens));
   const totalTokens = completeUsage ? (result.usage || []).reduce((sum,u) => sum+u.total_tokens,0) : '未知（服务商未完整返回）';
-  $('trace-cost').textContent = `后端耗时 ${result.elapsed_ms ?? '未知'} ms · 总 token ${totalTokens}${result.failure_code ? ' · '+(failureNames[result.failure_code] || '模型处理未完成') : ''}`;
+  $('trace-cost').textContent = offlineMock ? `本地桩调用 ${result.model_calls} 次 · 无真实 token 或模型费用` : `后端耗时 ${result.elapsed_ms ?? '未知'} ms · 总 token ${totalTokens}${result.failure_code ? ' · '+(failureNames[result.failure_code] || '模型处理未完成') : ''}`;
 }
 function inspector(open) { wantsInspector = open; $('inspector').hidden = !open; $('chat-view').classList.toggle('with-inspector', open); $('toggle-inspector').setAttribute('aria-pressed', String(open)); }
 function pause(silent = false) {
@@ -225,7 +226,7 @@ $('chat-form').addEventListener('submit', async event => {
   event.preventDefault(); if (conversation.pending !== null) return;
   if (!$('eligible').checked) { status('请先确认本次使用虚构大学生情境进行演示。', true); $('eligible').focus(); return; }
   const message = $('message').value.trim(); if (!message) return;
-  if (mode === 'remote' && !$('consent').checked) { status('请先阅读服务商隐私说明，并选择是否同意本轮外部处理。', true); return; }
+  if (mode === 'remote' && !offlineMock && !$('consent').checked) { status('请先阅读服务商隐私说明，并选择是否同意本轮外部处理。', true); return; }
   const history = conversation.context(), requestGoal = document.querySelector('input[name="goal"]:checked').value;
   const ticket = conversation.begin(message); const requestController = new AbortController(); controller = requestController;
   const timer = setTimeout(() => requestController.abort(), requestTimeout);
@@ -233,7 +234,7 @@ $('chat-form').addEventListener('submit', async event => {
   liveStages.clear(); updateTrace();
   renderMessages(); status(mode === 'demo' ? '本地固定示例，未调用模型。可点击暂停演示回复。' : '正在回应，你可以随时暂停。');
   try {
-    const result = await api(supportsProgress ? '/support/stream' : '/support/turn', {message, history: supportsReviews ? history : history.map(({role,content}) => ({role,content})), goal:requestGoal, eligible:true, external_consent:$('consent').checked, ...(supportsReviews ? {message_id:`u:${ticket}`, reviews:conversation.reviewsFor(history, message)} : {})}, 'POST', requestController.signal, supportsProgress ? event => {
+    const result = await api(supportsProgress ? '/support/stream' : '/support/turn', {message, history: supportsReviews ? history : history.map(({role,content}) => ({role,content})), goal:requestGoal, eligible:true, external_consent:offlineMock || $('consent').checked, ...(supportsReviews ? {message_id:`u:${ticket}`, reviews:conversation.reviewsFor(history, message)} : {})}, 'POST', requestController.signal, supportsProgress ? event => {
       if (!requestController.signal.aborted && conversation.pending === ticket) updateProgress(event);
     } : undefined);
     // Explicitly disclosed pacing for presentations, not simulated model latency.
@@ -281,7 +282,7 @@ window.addEventListener('hashchange', route);
 window.addEventListener('pagehide', () => { pause(true); conversation.clear(); token = ''; renderMessages(); });
 window.addEventListener('pageshow', event => { if (event.persisted) reset(); });
 api('/ping', undefined, 'GET').then(config => {
-  mode = config.mode;
+  mode = config.mode; offlineMock = config.offline_mock === true;
   supportsProgress = config.progress_stream === 'ccare-stream-v1';
   supportsReviews = config.review_protocol === 'ccare-review-v1';
   $('technology-status').textContent = mode === 'remote' ? '当前已配置模型模式；实际调用与检查结果见每轮技术面板。专业审阅待完成。' : '当前：本地规则与固定示例可演示；真实模型和专业评审待接入。';
@@ -290,6 +291,13 @@ api('/ping', undefined, 'GET').then(config => {
   $('chat-mode').textContent = mode === 'demo' ? '演示模式' : mode === 'remote' ? config.model || '模型模式' : '未接入模型';
   $('session-mode').textContent = mode === 'demo' ? '固定示例演示，没有模型调用。请勿输入真实咨询信息。' : '仅供内部评审。请使用虚构情境，不提供诊断或紧急救援。';
   $('remote-notice').hidden = mode !== 'remote'; $('provider').textContent = config.provider;
+  if (offlineMock) {
+    $('home-mode').textContent = '离线 mock · 无模型调用 · 仅虚构演示';
+    $('chat-mode').textContent = '离线 mock';
+    $('session-mode').textContent = '本地桩演示，不使用密钥、不外发；阶段调用数是桩调用。';
+    $('technology-status').textContent = '离线 mock 验证页面与工程流程，不代表模型或心理效果。';
+    $('remote-notice').hidden = true;
+  }
   if (config.provider_privacy_url && /^https:\/\//.test(config.provider_privacy_url)) $('privacy-link').href = config.provider_privacy_url;
 }).catch(() => { $('home-mode').textContent = '本地服务未连接，请启动后端后刷新。'; $('chat-mode').textContent = '服务未连接'; });
 route();
