@@ -2,7 +2,7 @@ from pathlib import Path
 from typing import Literal
 from urllib.parse import urlsplit
 
-from pydantic import Field, model_validator
+from pydantic import AliasChoices, Field, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 BACKEND = Path(__file__).resolve().parents[2]
@@ -11,11 +11,11 @@ BACKEND = Path(__file__).resolve().parents[2]
 class Settings(BaseSettings):
     # Deliberately never load the legacy, tracked .env file.
     model_config = SettingsConfigDict(
-        env_prefix="KINVOICE_", env_file=BACKEND / ".env.local", extra="ignore", hide_input_in_errors=True
+        env_prefix="KINVOICE_", env_file=BACKEND / ".env.local", extra="ignore", hide_input_in_errors=True, populate_by_name=True
     )
     mode: Literal["disabled", "demo", "remote"] = "disabled"
     auth_db: Path = BACKEND / "data" / "ccare_auth.db"
-    api_key: str = Field(default="", repr=False)
+    api_key: str = Field(default="", repr=False, validation_alias=AliasChoices("KINVOICE_API_KEY", "DEEPSEEK_API_KEY"))
     api_base: str = ""
     model: str = ""
     provider_label: str = ""

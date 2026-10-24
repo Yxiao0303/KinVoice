@@ -1,0 +1,16 @@
+{
+  "purpose": "synthetic_connectivity_then_small_pilot_not_efficacy",
+  "provider_kind": "deepseek",
+  "api_base": "https://api.deepseek.com",
+  "model": "deepseek-flash",
+  "thinking": {"type": "disabled"},
+  "authorized_cumulative_cny_cap": "10.00",
+  "live_enabled": false,
+  "first_check": {"synthetic_cases": 1, "max_calls": 5, "output_token_reservation": 2000},
+  "subsequent_pilot": {"max_synthetic_cases": 10, "conditions": ["strong_single", "ccare"], "max_calls": 60},
+  "tools_enabled": false,
+  "automatic_retries": 0,
+  "blocked": ["current_runtime_secret_and_destination_not_ready", "verified_pre_dispatch_cny_reservation_unavailable"],
+  "price_source": "https://api-docs.deepseek.com/quick_start/pricing/",
+  "price_version": "deepseek-flash-2026-10-24-peak-usd"
+}
