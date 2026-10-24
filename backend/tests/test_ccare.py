@@ -244,7 +244,7 @@ class PipelineTests(unittest.IsolatedAsyncioTestCase):
             captured.append(json.loads(request.content))
             return httpx.Response(200, json={"choices": [{"message": {"content": "reply"}}], "usage": {"total_tokens": 9}})
         original = httpx.AsyncClient
-        with patch("app.ccare.provider.httpx.AsyncClient", side_effect=lambda **kwargs: original(transport=httpx.MockTransport(handler), **kwargs)):
+        with patch("app.ccare.provider.httpx.AsyncClient", side_effect=lambda **kwargs: original(transport=httpx.MockTransport(handler), **{**kwargs, "trust_env":False})):
             result = await RemoteProvider(self.config).complete([{"role": "user", "content": "fixture"}], temperature=0.2, max_tokens=123)
         self.assertEqual(captured[0]["temperature"], 0.2)
         self.assertEqual(captured[0]["max_tokens"], 123)
@@ -272,7 +272,7 @@ class PipelineTests(unittest.IsolatedAsyncioTestCase):
         def handler(request):
             raise httpx.ReadTimeout("private input and credential must not escape")
         original = httpx.AsyncClient
-        with patch("app.ccare.provider.httpx.AsyncClient", side_effect=lambda **kwargs: original(transport=httpx.MockTransport(handler), **kwargs)):
+        with patch("app.ccare.provider.httpx.AsyncClient", side_effect=lambda **kwargs: original(transport=httpx.MockTransport(handler), **{**kwargs, "trust_env":False})):
             with self.assertRaises(ProviderUnavailable) as error:
                 await RemoteProvider(self.config).complete([], temperature=0, max_tokens=100)
         self.assertEqual(str(error.exception), "")

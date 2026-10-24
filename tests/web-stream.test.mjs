@@ -49,3 +49,10 @@ test('context truncation removes whole pairs and does not send receipt metadata'
   assert.ok(context.every((m,i)=>m.role===(i%2?'assistant':'user')));
   assert.ok(!JSON.stringify(context).includes('privateReceipt'));
 });
+
+test('technical export never includes review source text or user corrections', () => {
+  const report=technicalReport([{role:'assistant',result:{mode:'demo',strategy:'listen',model_calls:0,usage:[],checks:[],
+    review_targets:[{source_text:'PRIVATE_REVIEW_SOURCE',source_digest:'PRIVATE_HASH'}],
+    review_outcomes:[{value:'PRIVATE_CORRECTION'}],state:{assessments:[{source_text:'PRIVATE_ASSESSMENT'}]}}}]);
+  for (const marker of ['PRIVATE_REVIEW_SOURCE','PRIVATE_HASH','PRIVATE_CORRECTION','PRIVATE_ASSESSMENT']) assert.equal(report.includes(marker),false);
+});
