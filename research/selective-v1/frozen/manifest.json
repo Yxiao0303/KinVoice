@@ -1,0 +1,59 @@
+{
+  "created_utc": "2026-10-24T08:25:05.657180+00:00",
+  "python": "3.12.14",
+  "seed": 20261024,
+  "train_n": 24,
+  "dev_n": 6,
+  "old_exposed_diagnostic_n": 6,
+  "training_seconds": {
+    "nb": 0.000824230000944226,
+    "linear": 0.039883452000140096
+  },
+  "threshold": 0.25,
+  "threshold_search": [
+    {
+      "threshold": 0.0,
+      "accepted": 3,
+      "errors": 1,
+      "feasible": false
+    },
+    {
+      "threshold": 0.25,
+      "accepted": 2,
+      "errors": 0,
+      "feasible": true
+    },
+    {
+      "threshold": 0.5,
+      "accepted": 2,
+      "errors": 0,
+      "feasible": true
+    },
+    {
+      "threshold": 1.0,
+      "accepted": 0,
+      "errors": 0,
+      "feasible": false
+    },
+    {
+      "threshold": 2.0,
+      "accepted": 0,
+      "errors": 0,
+      "feasible": false
+    }
+  ],
+  "dev_constraint_feasible": true,
+  "hashes": {
+    "scripts/run_selective.py": "0a155965b144ed4638f78646693f8e00a2fdbe18f0ac7de656518360923cd89c",
+    "scripts/selective_evidence.py": "28dbb5839200d66890dd33e1321bb87a1bdb9d9a922ef81e55a5691d69a91b11",
+    "research/selective-v1/PLAN.md": "2fad382327b3b06a48c17871d54b78162da60f58b364d509d22158849d17e632",
+    "research/training-v1/data.jsonl": "ef60c07d5d260c8f634a98b91e0704316ac4c11f32e8c13270794c19d2ba60e6",
+    "backend/app/ccare/learned_evidence.py": "2fd05d574850a1544c5161769282369c6bd4ea90bc35853b7c693d375d44dcf0",
+    "scripts/train_evidence.py": "3260ad2ad8266ee2a1420a9ea9dbb57d38109324a458a34dd643e3abc9667260"
+  },
+  "models": {
+    "nb.json": "faa7095aa0a874ba4a98bdf090d9e6df7ca82dfead924fce039ecbb979b5274f",
+    "linear.json": "d64d7d87d304a235df37afc2c3a62babe5f35accfcbf3519b25be55eb7651685"
+  },
+  "external_calls": 0
+}
