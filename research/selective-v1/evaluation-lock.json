@@ -1,0 +1,11 @@
+{
+  "created_utc": "2026-10-24T08:26:49.092467+00:00",
+  "method_frozen_commit": "40c633f9eb9a652f438855da88009b763dad7cfa",
+  "frozen_manifest_sha256": "c59107323e125252ebbd79d21089daa48faf41d4a2d6d278cd93264b8f33839b",
+  "dataset_sha256": "b1df4029832732672c33f761c73781d294d44de12a82855293e8271074fdd463",
+  "n": 18,
+  "family_count": 6,
+  "author": "Same AI development assistant; no independent author or expert review",
+  "process": "Authored after method/model/threshold commit, labelled before predictions; no external model API.",
+  "evaluation_policy": "Run once, retain all outputs; no post-result tuning in this version"
+}
