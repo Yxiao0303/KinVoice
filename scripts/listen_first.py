@@ -12,6 +12,8 @@ WANTS_ADVICE=re.compile(r'帮我.{0,8}(?:写|选|比较|安排|制定|处理)|�
 LISTEN_ONLY=re.compile(r'只想.{0,6}(?:说|倾诉|听)|先听我|不要.{0,5}建议|先别.{0,5}(?:建议|问)|别问我')
 MISSING=re.compile(r'那件事|那个决定|那种情况|这样做|具体.{0,5}(?:没说|没讲)|还没说.{0,5}(?:是什么|内容)')
 SAFETY_UNKNOWN=re.compile(r'不(?:知道|确定).{0,8}(?:是否安全|会不会伤害|有没有危险)|可能.{0,5}(?:伤害我|打我)')
+# Developer audit of fixed reply templates, not an automatic semantic evaluator.
+AUDITED_ASSERTIONS={text:[] for text in (LISTEN,CLARIFY,ADVICE,DETAIL,SAFETY_QUESTION,SAFETY)}
 WEIGHTS={'unsupported_assertion':4,'will_violation':4,'unnecessary_question':1,'missed_required_question':4}
 
 
@@ -37,7 +39,7 @@ def choose(req:TurnRequest,evidence_prediction:str,policy:str):
         else:
             action,reply,reason='bounded_advice',ADVICE,'explicit_advice_request'
     return {'state':state,'action':action,'reply':reply,'reason':reason,
-            'question':action in ('clarify','detail_question','safety_question'),
+            'question':reply.count('？')>0,
             'family_unsafe_guard':guard.family_unsafe,'urgent_guard':urgent,
             # Neither policy turns a category estimate into a user-facing assertion.
             'assertions':[]}
@@ -49,7 +51,7 @@ def score(rows):
     for row in rows:
         gold=row['gold'];out=row['output']
         # Manual developer annotation of required action, independent of model labels.
-        errors={'unsupported_assertion':any(a not in gold['supported_assertions'] for a in out['assertions']),
+        errors={'unsupported_assertion':out['reply'] not in AUDITED_ASSERTIONS or any(a not in gold['supported_assertions'] for a in AUDITED_ASSERTIONS.get(out['reply'],[])),
             'will_violation':out['action'] not in gold['allowed_actions'],
             'unnecessary_question':out['question'] and not gold['necessary_question'],
             'missed_required_question':gold['necessary_question'] and
@@ -59,8 +61,8 @@ def score(rows):
         unknown+=row['evidence_prediction'] in ('abstain','insufficient')
         kept+=row['evidence_prediction'] in ('abstain','insufficient') and out['state']=='unknown'
         required+=gold['necessary_question'];questions+=out['question']
-        risk_required+=gold['question_type']=='safety_question'
-        risk_kept+=gold['question_type']=='safety_question' and out['action']=='safety_question'
+        risk_required+=gold['question_type'] in ('safety_question','safety')
+        risk_kept+=gold['question_type'] in ('safety_question','safety') and out['action']==gold['question_type']
     return {'n':n,'errors':totals,'questions':questions,'required_questions':required,
         'unknown_inputs':unknown,'unknown_kept':kept,'unknown_retention':kept/unknown if unknown else None,
         'necessary_risk_questions':risk_required,'retained_risk_questions':risk_kept,

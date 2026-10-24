@@ -1,10 +1,10 @@
 {
-  "created_utc": "2026-10-24T08:55:45.504287+00:00",
+  "created_utc": "2026-10-24T08:56:45.995630+00:00",
   "hashes": {
     "scripts/run_listen_first.py": "a2a5b5f83f1b0e29db92048412b8b4dfa177b0dfb8d1be640b23acad2a981eef",
-    "scripts/listen_first.py": "02198db6f91eb74860591882b2f2c3c8c3b62f0a30c78e9f7b3a97a1b5904878",
+    "scripts/listen_first.py": "3df30369015f55b32c9f5eeb416b0f3aaa48379b8ea43600669d84be0e00b000",
     "scripts/selective_evidence.py": "28dbb5839200d66890dd33e1321bb87a1bdb9d9a922ef81e55a5691d69a91b11",
-    "research/listen-first-v1/PLAN.md": "661a5a102c514510cb30b123b9e8979e8360d1a5b25d80eea3f2f80bd926d9fd",
+    "research/listen-first-v1/PLAN.md": "32347060e6e05ebe1eb754a691baf3633c74b4d1a140b8af0194c038027ab65f",
     "research/selective-v1/frozen/linear.json": "d64d7d87d304a235df37afc2c3a62babe5f35accfcbf3519b25be55eb7651685",
     "research/selective-v1/frozen/manifest.json": "c59107323e125252ebbd79d21089daa48faf41d4a2d6d278cd93264b8f33839b",
     "backend/app/ccare/engine.py": "692671a727e4174400eec40feb54388b1a56ac5e435d1e9aaa4e396c106444e6",
