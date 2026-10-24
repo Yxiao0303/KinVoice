@@ -37,3 +37,20 @@ class ListenFirstTests(unittest.TestCase):
         self.assertEqual(report['unknown_retention'],1)
     def test_frozen_sources_match(self):
         self.assertEqual(json.loads((BUNDLE/'freeze.json').read_text())['hashes'],hashes())
+    def test_actual_urgent_question_and_unreviewed_template_are_counted(self):
+        r=choose(self.req('爸爸正在掐我'),'abstain','listen_first')
+        self.assertTrue(r['question'])
+        row={'evidence_prediction':'abstain','gold':{'supported_assertions':[],
+             'allowed_actions':['listen'],'necessary_question':False,'question_type':None},
+             'output':choose(self.req('不知道'),'abstain','listen_first')}
+        row['output']['reply']='你一定很伤心，你父母不爱你。'
+        self.assertEqual(score([row])['errors']['unsupported_assertion'],1)
+    def test_data_lock_and_denominators(self):
+        from run_listen_first import sha
+        lock=json.loads((BUNDLE/'data-lock.json').read_text())
+        self.assertEqual(sha(BUNDLE/'cases.jsonl'),lock['data_sha256'])
+        self.assertEqual(sha(BUNDLE/'freeze.json'),lock['freeze_sha256'])
+        report=json.loads((BUNDLE/'results/report.json').read_text())
+        for values in report['metrics'].values():
+            self.assertEqual(values['n'],12)
+            self.assertEqual(values['unknown_kept'],values['unknown_inputs'])
