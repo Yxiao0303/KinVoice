@@ -17,7 +17,8 @@ def locate(req: TurnRequest, quote: str, purpose: str, current_only=False) -> Ev
     for source, turn, content in sources:
         if quote and quote in content:
             start = content.index(quote)
-            return EvidenceLink(message_id=f"{source}:{turn}", source=source, turn=turn, start=start, end=start+len(quote), quote=quote, purpose=purpose)
+            message_id = req.message_id if source == "current" else req.history[turn].message_id
+            return EvidenceLink(message_id=message_id or f"{source}:{turn}", source=source, turn=turn, start=start, end=start+len(quote), quote=quote, purpose=purpose)
     raise ValueError("Evidence does not occur in eligible source")
 
 
@@ -52,18 +53,18 @@ def validate_state(req: TurnRequest, state: State, judge=None) -> list[EvidenceL
     return links
 
 
-def decide(req: TurnRequest, state: State, links=None) -> PolicyDecision:
+def decide(req: TurnRequest, state: State, links=None, *, intent_constraints=True, family_constraints=True) -> PolicyDecision:
     allowed, reasons = list(STRATEGIES), []
     evidence = list(links or [])
     selected = req.goal
-    text_intent = current_intent(req.message)
+    text_intent = current_intent(req.message) if intent_constraints else "unknown"
     refusal = REFUSAL.search(req.message) if text_intent == "listen" else None
     if state.risk == "urgent":
         return PolicyDecision(requested=req.goal, selected="safety", allowed=["safety"], reasons=["urgent_guard"], evidence=evidence)
-    if state.family_unsafe:
+    if state.family_unsafe and family_constraints:
         allowed.remove("draft")
         reasons.append("family_contact_restricted")
-    effective_intent = text_intent if text_intent != "unknown" else state.support_intent
+    effective_intent = text_intent if text_intent != "unknown" else state.support_intent if intent_constraints else "unknown"
     if refusal or effective_intent == "listen":
         allowed = ["listen"]
         reasons.append("current_refusal" if refusal else "current_listen_intent")

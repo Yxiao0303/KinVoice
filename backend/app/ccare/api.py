@@ -122,7 +122,7 @@ def create_app(config=None, provider=None):
     @app.get("/ping")
     async def ping():
         return {"status": "ok", "version": "0.5.0", "mode": config.mode,
-                "progress_stream": "ccare-stream-v1",
+                "progress_stream": "ccare-stream-v1", "review_protocol": "ccare-review-v1",
                 "model": config.model if config.mode == "remote" else "",
                 "turn_timeout_seconds": config.turn_timeout,
                 "provider": config.provider_label if config.mode == "remote" else "",

@@ -4,7 +4,7 @@ import { technicalReport } from './report.mjs';
 
 const $ = id => document.getElementById(id);
 const conversation = new Conversation();
-let token = '', mode = 'disabled', controller = null, register = false, requestTimeout = 55000, supportsProgress = false;
+let token = '', mode = 'disabled', controller = null, register = false, requestTimeout = 55000, supportsProgress = false, supportsReviews = false;
 let selectedCase = null, wantsInspector = false, toastTimer, expiryTimer, authVersion = 0;
 const liveStages = new Map();
 const cases = {
@@ -22,6 +22,7 @@ function count() { $('char-count').textContent = `${$('message').value.length} /
 function setBusy() {
   const busy = conversation.pending !== null;
   $('send').disabled = busy; $('pause').disabled = !busy; $('thinking').hidden = !busy;
+  document.querySelectorAll('#review-controls button, #review-controls select').forEach(el => el.disabled = busy);
   $('message').disabled = busy; $('chat-form').setAttribute('aria-busy', String(busy));
 }
 async function api(path, data, method = 'POST', signal, onEvent) {
@@ -90,7 +91,43 @@ function updateProgress(event) {
     $('trace-allowed').textContent = '本轮允许：' + (event.allowed || []).map(s => strategyNames[s] || s).join('、');
   }
 }
+const reviewOptions = {
+  emotion: {label:'情绪理解', values:{unknown:'暂不判断',sad:'难过',angry:'生气',afraid:'害怕',mixed:'多种感受'}},
+  support_intent: {label:'希望得到的支持', values:{unknown:'暂不确定',listen:'倾听',clarify:'梳理',ground:'先缓一缓',draft:'准备草稿'}},
+  risk: {label:'风险线索理解', values:{unknown:'仍不确定',ordinary:'当前未表达急性危险',urgent:'有急性危险线索'}},
+  family_unsafe: {label:'家庭不安全线索', values:{false:'不认同此判断',true:'有不安全线索'}},
+};
+function renderReviews(result) {
+  $('review-controls').replaceChildren(); $('review-status').textContent = '';
+  $('state-review').hidden = !result?.review_targets?.length;
+  const ticket = conversation.version;
+  for (const target of result?.review_targets || []) {
+    const config = reviewOptions[target.field]; if (!config) continue;
+    const row = document.createElement('div'), label = document.createElement('label'), select = document.createElement('select');
+    label.textContent = config.label + '：';
+    for (const [value, text] of Object.entries(config.values)) {
+      const option = document.createElement('option'); option.value = value; option.textContent = text; select.append(option);
+    }
+    select.value = target.value; label.append(select); row.append(label);
+    for (const [action, caption] of [['confirm','确认原判断'],['correct','采用更正'],['revoke','撤销此判断']]) {
+      const button = document.createElement('button'); button.type = 'button'; button.textContent = caption;
+      button.addEventListener('click', () => {
+        const value = action === 'confirm' ? target.value : select.value;
+        const ok = conversation.review(target, action, value, ticket);
+        $('review-status').textContent = ok ? '已记录。下次发送时采用；新的明确意愿和独立安全线索仍优先。' : '此轮已过期或记录已满，请查看最新结果或清空后继续。';
+      }); row.append(button);
+    }
+    $('review-controls').append(row);
+  }
+  if (result?.review_outcomes?.length) {
+    $('review-status').textContent = result.review_outcomes.map(outcome =>
+      `${reviewOptions[outcome.field]?.label || '本轮理解'}：${outcome.status === 'superseded' ? '已由更新的表达取代' : outcome.status === 'revoke' ? '已撤销判断' : '已采用确认或更正'}${outcome.independent_guard_preserved ? '；独立安全保护仍保留' : ''}`
+    ).join('。');
+  }
+  setBusy();
+}
 function updateTrace(result = null) {
+  renderReviews(result);
   $('case-caption').textContent = selectedCase ? cases[selectedCase].caption : '观察用户选择怎样影响回应策略。显示内容来自实际接口返回。';
   if (!result) {
     $('trace-state').textContent = '等待本轮输入'; $('trace-strategy').textContent = '结合用户选择，检查沟通边界';
@@ -98,7 +135,7 @@ function updateTrace(result = null) {
     $('trace-allowed').textContent = '等待本轮决策'; $('trace-evidence').replaceChildren(); $('trace-stages').replaceChildren(); $('trace-cost').textContent = ''; return;
   }
   const state = result.state || {};
-  $('trace-state').textContent = state.risk === 'urgent' ? '命中紧急线索。此判断不等于临床诊断。' : state.family_unsafe ? '检测到家庭不安全线索；无法据此还原完整关系。' : state.risk === 'ordinary' ? '模型估计为普通支持情境，仍可能误判。' : '风险状态仍为未知；未命中关键词不等于确认安全。';
+  $('trace-state').textContent = state.risk === 'urgent' ? '命中紧急线索。此判断不等于临床诊断。' : state.family_unsafe ? '检测到家庭不安全线索；无法据此还原完整关系。' : state.risk === 'ordinary' ? ((state.assessments || []).some(a => a.field === 'risk' && a.origin === 'confirmed') ? '本页确认的信息未表达急性危险；仍不代表专业安全结论。' : '模型估计为普通支持情境，仍可能误判。') : '风险状态仍为未知；未命中关键词不等于确认安全。';
   const decision = result.decision;
   $('trace-strategy').textContent = `${strategyNames[result.strategy] || result.strategy}。` + (result.mode === 'safe_fallback' ? `原定策略为${strategyNames[decision?.selected] || '未确定'}，本轮改用固定退回回应。` : (decision?.reasons || []).map(code => reasonNames[code] || code).join('；'));
   $('trace-source').textContent = result.mode === 'demo' ? '固定示例。没有执行大模型状态估计或生成。' : result.mode === 'remote' ? '外部模型生成；具体服务商见本次同意说明。' : '固定安全或服务退回模板。';
@@ -196,7 +233,7 @@ $('chat-form').addEventListener('submit', async event => {
   liveStages.clear(); updateTrace();
   renderMessages(); status(mode === 'demo' ? '本地固定示例，未调用模型。可点击暂停演示回复。' : '正在回应，你可以随时暂停。');
   try {
-    const result = await api(supportsProgress ? '/support/stream' : '/support/turn', {message, history, goal:requestGoal, eligible:true, external_consent:$('consent').checked}, 'POST', requestController.signal, supportsProgress ? event => {
+    const result = await api(supportsProgress ? '/support/stream' : '/support/turn', {message, history: supportsReviews ? history : history.map(({role,content}) => ({role,content})), goal:requestGoal, eligible:true, external_consent:$('consent').checked, ...(supportsReviews ? {message_id:`u:${ticket}`, reviews:conversation.reviewsFor(history, message)} : {})}, 'POST', requestController.signal, supportsProgress ? event => {
       if (!requestController.signal.aborted && conversation.pending === ticket) updateProgress(event);
     } : undefined);
     // Explicitly disclosed pacing for presentations, not simulated model latency.
@@ -246,6 +283,7 @@ window.addEventListener('pageshow', event => { if (event.persisted) reset(); });
 api('/ping', undefined, 'GET').then(config => {
   mode = config.mode;
   supportsProgress = config.progress_stream === 'ccare-stream-v1';
+  supportsReviews = config.review_protocol === 'ccare-review-v1';
   $('technology-status').textContent = mode === 'remote' ? '当前已配置模型模式；实际调用与检查结果见每轮技术面板。专业审阅待完成。' : '当前：本地规则与固定示例可演示；真实模型和专业评审待接入。';
   requestTimeout = Math.min(105000, Math.max(15000, (config.turn_timeout_seconds || 45)*1000+10000));
   $('home-mode').textContent = mode === 'demo' ? '本地固定示例 · 未调用大模型 · 专业审阅待完成' : mode === 'remote' ? '外部模型已配置 · 明确同意后发送 · 专业审阅待完成' : '模型未启用 · 可浏览网站与账号流程';

@@ -65,6 +65,21 @@
     "HistoryMessage": {
       "additionalProperties": false,
       "properties": {
+        "message_id": {
+          "anyOf": [
+            {
+              "maxLength": 64,
+              "minLength": 1,
+              "pattern": "^[A-Za-z0-9:_-]+$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Message Id"
+        },
         "role": {
           "enum": [
             "user",
@@ -87,9 +102,95 @@
       "title": "HistoryMessage",
       "type": "object"
     },
+    "ReviewEntry": {
+      "additionalProperties": false,
+      "properties": {
+        "field": {
+          "enum": [
+            "emotion",
+            "support_intent",
+            "risk",
+            "family_unsafe"
+          ],
+          "title": "Field",
+          "type": "string"
+        },
+        "value": {
+          "maxLength": 16,
+          "title": "Value",
+          "type": "string"
+        },
+        "action": {
+          "enum": [
+            "confirm",
+            "correct",
+            "revoke"
+          ],
+          "title": "Action",
+          "type": "string"
+        },
+        "source_message_id": {
+          "anyOf": [
+            {
+              "maxLength": 64,
+              "minLength": 1,
+              "pattern": "^[A-Za-z0-9:_-]+$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Source Message Id"
+        },
+        "source_digest": {
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Source Digest",
+          "type": "string"
+        },
+        "source_text": {
+          "maxLength": 2000,
+          "minLength": 1,
+          "title": "Source Text",
+          "type": "string"
+        },
+        "revision": {
+          "maximum": 1000000,
+          "minimum": 0,
+          "title": "Revision",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "field",
+        "value",
+        "action",
+        "source_digest",
+        "source_text",
+        "revision"
+      ],
+      "title": "ReviewEntry",
+      "type": "object"
+    },
     "TurnRequest": {
       "additionalProperties": false,
       "properties": {
+        "message_id": {
+          "anyOf": [
+            {
+              "maxLength": 64,
+              "minLength": 1,
+              "pattern": "^[A-Za-z0-9:_-]+$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Message Id"
+        },
         "message": {
           "maxLength": 2000,
           "minLength": 1,
@@ -124,6 +225,14 @@
           "default": false,
           "title": "External Consent",
           "type": "boolean"
+        },
+        "reviews": {
+          "items": {
+            "$ref": "#/$defs/ReviewEntry"
+          },
+          "maxItems": 24,
+          "title": "Reviews",
+          "type": "array"
         }
       },
       "required": [
