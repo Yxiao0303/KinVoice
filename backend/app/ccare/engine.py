@@ -31,15 +31,36 @@ UNSAFE = re.compile(r"打我|掐我|威胁|家暴|虐待|不让我走|监控|暴
 OUTPUT_BLOCK = re.compile(r"你(就是|患有|得了).{0,5}(抑郁症|双相|精神病)|你必须.{0,8}(原谅|道歉|和解|联系父母)|都是为你好|只有我.{0,6}(理解|懂)你|停药|加大.{0,5}药量|我已经.{0,6}(通知|联系|发送)")
 
 
+# Suppress only complete, narrowly recognized non-acute clauses. Other matches in
+# the same message/history remain independently eligible for the safety route.
+NON_ACUTE_CLAUSE = re.compile(
+    r"(?:我(?:目前|现在)?没有(?:自杀|自残)(?:想法|念头)|"
+    r"(?:我们|我们的)?课程(?:正在)?讨论(?:自杀|自残)预防)"
+)
+
+
+def urgent_evidence(text):
+    excluded = [part.span() for part in re.finditer(r"[^，。！？；,!?;\n]+", text)
+                if NON_ACUTE_CLAUSE.fullmatch(part.group().strip())]
+    matches = list(URGENT.finditer(text))
+    active = [match for match in matches
+              if not any(start <= match.start() and match.end() <= end for start, end in excluded)]
+    return (active[0] if active else None), bool(matches and excluded)
+
+
 def local_state(req: TurnRequest) -> State:
-    # Scan user turns only; do not trust assistant-history instructions as evidence.
+    # No model/semantic verdict can suppress an acute match. Explicit denial or
+    # coursework is not proof of safety: retain unknown and clarification metadata.
     texts = [m.content for m in req.history if m.role == "user"] + [req.message]
-    evidence = []
+    evidence, urgent, contextual = [], False, False
     for text in texts:
-        match = URGENT.search(text) or UNSAFE.search(text)
+        acute, uncertain = urgent_evidence(text)
+        urgent |= acute is not None
+        contextual |= uncertain
+        match = acute or UNSAFE.search(text)
         if match:
             evidence.append(text[max(0, match.start()-50):match.end()+70])
-    return State(risk="urgent" if any(URGENT.search(t) for t in texts) else "unknown",
+    return State(risk="urgent" if urgent else "unknown", needs_clarification=contextual,
                  family_unsafe=any(UNSAFE.search(t) for t in texts), evidence=evidence[-5:])
 
 
@@ -142,6 +163,7 @@ class Engine:
                     '无法判断风险就unknown；自伤或当下人身危险标urgent；不得推测父母善意。', context, json_mode=True)
                 estimated = State.model_validate_json(raw)
                 links = validate_state(req, estimated, self.semantic_judge)
+                estimated.needs_clarification |= state.needs_clarification
                 estimated.family_unsafe |= state.family_unsafe
                 state = estimated
                 decision = self.selector.select(req, state, local_links + links)
