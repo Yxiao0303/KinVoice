@@ -1,0 +1,1458 @@
+[
+  {
+    "group": "old_exposed_diagnostic",
+    "method": "nb",
+    "case_id": "hobby-0",
+    "gold": "supported",
+    "raw_label": "insufficient",
+    "prediction": "insufficient",
+    "reasons": [],
+    "elapsed_ms": 0.0971709996520076
+  },
+  {
+    "group": "old_exposed_diagnostic",
+    "method": "nb",
+    "case_id": "hobby-1",
+    "gold": "contradicted",
+    "raw_label": "contradicted",
+    "prediction": "contradicted",
+    "reasons": [],
+    "elapsed_ms": 0.03245900006731972
+  },
+  {
+    "group": "old_exposed_diagnostic",
+    "method": "nb",
+    "case_id": "hobby-2",
+    "gold": "insufficient",
+    "raw_label": "contradicted",
+    "prediction": "contradicted",
+    "reasons": [],
+    "elapsed_ms": 0.05703200076823123
+  },
+  {
+    "group": "old_exposed_diagnostic",
+    "method": "nb",
+    "case_id": "friends-0",
+    "gold": "supported",
+    "raw_label": "supported",
+    "prediction": "supported",
+    "reasons": [],
+    "elapsed_ms": 0.0208549990929896
+  },
+  {
+    "group": "old_exposed_diagnostic",
+    "method": "nb",
+    "case_id": "friends-1",
+    "gold": "contradicted",
+    "raw_label": "contradicted",
+    "prediction": "contradicted",
+    "reasons": [],
+    "elapsed_ms": 0.018972999896504916
+  },
+  {
+    "group": "old_exposed_diagnostic",
+    "method": "nb",
+    "case_id": "friends-2",
+    "gold": "insufficient",
+    "raw_label": "supported",
+    "prediction": "supported",
+    "reasons": [],
+    "elapsed_ms": 0.020944000425515696
+  },
+  {
+    "group": "old_exposed_diagnostic",
+    "method": "linear",
+    "case_id": "hobby-0",
+    "gold": "supported",
+    "raw_label": "insufficient",
+    "prediction": "insufficient",
+    "margin": 0.27991488464624137,
+    "reasons": [],
+    "elapsed_ms": 0.10228400060441345
+  },
+  {
+    "group": "old_exposed_diagnostic",
+    "method": "linear",
+    "case_id": "hobby-1",
+    "gold": "contradicted",
+    "raw_label": "contradicted",
+    "prediction": "contradicted",
+    "margin": 1.3281655620023824,
+    "reasons": [],
+    "elapsed_ms": 0.060694999774568714
+  },
+  {
+    "group": "old_exposed_diagnostic",
+    "method": "linear",
+    "case_id": "hobby-2",
+    "gold": "insufficient",
+    "raw_label": "contradicted",
+    "prediction": "contradicted",
+    "margin": 0.3561837795683163,
+    "reasons": [],
+    "elapsed_ms": 0.11230400014028419
+  },
+  {
+    "group": "old_exposed_diagnostic",
+    "method": "linear",
+    "case_id": "friends-0",
+    "gold": "supported",
+    "raw_label": "supported",
+    "prediction": "supported",
+    "margin": 1.0395470660974482,
+    "reasons": [],
+    "elapsed_ms": 0.04184700082987547
+  },
+  {
+    "group": "old_exposed_diagnostic",
+    "method": "linear",
+    "case_id": "friends-1",
+    "gold": "contradicted",
+    "raw_label": "contradicted",
+    "prediction": "contradicted",
+    "margin": 0.20922261085118446,
+    "reasons": [],
+    "elapsed_ms": 0.019756000256165862
+  },
+  {
+    "group": "old_exposed_diagnostic",
+    "method": "linear",
+    "case_id": "friends-2",
+    "gold": "insufficient",
+    "raw_label": "supported",
+    "prediction": "supported",
+    "margin": 0.15277905046948792,
+    "reasons": [],
+    "elapsed_ms": 0.020724999558296986
+  },
+  {
+    "group": "old_exposed_diagnostic",
+    "method": "selective",
+    "case_id": "hobby-0",
+    "gold": "supported",
+    "raw_label": "insufficient",
+    "prediction": "insufficient",
+    "margin": 0.27991488464624137,
+    "reasons": [],
+    "action": "clarify",
+    "elapsed_ms": 0.755944000047748
+  },
+  {
+    "group": "old_exposed_diagnostic",
+    "method": "selective",
+    "case_id": "hobby-1",
+    "gold": "contradicted",
+    "raw_label": "contradicted",
+    "prediction": "contradicted",
+    "margin": 1.3281655620023824,
+    "reasons": [],
+    "action": "retain_candidate",
+    "elapsed_ms": 0.04083600106241647
+  },
+  {
+    "group": "old_exposed_diagnostic",
+    "method": "selective",
+    "case_id": "hobby-2",
+    "gold": "insufficient",
+    "raw_label": "contradicted",
+    "prediction": "abstain",
+    "margin": 0.3561837795683163,
+    "reasons": [
+      "time",
+      "missing_or_hypothetical"
+    ],
+    "action": "clarify",
+    "elapsed_ms": 0.10416599980089813
+  },
+  {
+    "group": "old_exposed_diagnostic",
+    "method": "selective",
+    "case_id": "friends-0",
+    "gold": "supported",
+    "raw_label": "supported",
+    "prediction": "supported",
+    "margin": 1.0395470660974482,
+    "reasons": [],
+    "action": "retain_candidate",
+    "elapsed_ms": 0.027254000087850727
+  },
+  {
+    "group": "old_exposed_diagnostic",
+    "method": "selective",
+    "case_id": "friends-1",
+    "gold": "contradicted",
+    "raw_label": "contradicted",
+    "prediction": "abstain",
+    "margin": 0.20922261085118446,
+    "reasons": [
+      "low_margin"
+    ],
+    "action": "clarify",
+    "elapsed_ms": 0.022129001081339084
+  },
+  {
+    "group": "old_exposed_diagnostic",
+    "method": "selective",
+    "case_id": "friends-2",
+    "gold": "insufficient",
+    "raw_label": "supported",
+    "prediction": "abstain",
+    "margin": 0.15277905046948792,
+    "reasons": [
+      "attribution",
+      "missing_or_hypothetical",
+      "low_margin"
+    ],
+    "action": "clarify",
+    "elapsed_ms": 0.02450099964335095
+  },
+  {
+    "group": "old_exposed_diagnostic",
+    "method": "cue_only",
+    "case_id": "hobby-0",
+    "gold": "supported",
+    "raw_label": "insufficient",
+    "prediction": "insufficient",
+    "margin": 0.27991488464624137,
+    "reasons": [],
+    "action": "clarify",
+    "elapsed_ms": 0.02262900125060696
+  },
+  {
+    "group": "old_exposed_diagnostic",
+    "method": "cue_only",
+    "case_id": "hobby-1",
+    "gold": "contradicted",
+    "raw_label": "contradicted",
+    "prediction": "contradicted",
+    "margin": 1.3281655620023824,
+    "reasons": [],
+    "action": "retain_candidate",
+    "elapsed_ms": 0.019843999325530604
+  },
+  {
+    "group": "old_exposed_diagnostic",
+    "method": "cue_only",
+    "case_id": "hobby-2",
+    "gold": "insufficient",
+    "raw_label": "contradicted",
+    "prediction": "abstain",
+    "margin": 0.3561837795683163,
+    "reasons": [
+      "time",
+      "missing_or_hypothetical"
+    ],
+    "action": "clarify",
+    "elapsed_ms": 0.018591999833006412
+  },
+  {
+    "group": "old_exposed_diagnostic",
+    "method": "cue_only",
+    "case_id": "friends-0",
+    "gold": "supported",
+    "raw_label": "supported",
+    "prediction": "supported",
+    "margin": 1.0395470660974482,
+    "reasons": [],
+    "action": "retain_candidate",
+    "elapsed_ms": 0.016588001017225906
+  },
+  {
+    "group": "old_exposed_diagnostic",
+    "method": "cue_only",
+    "case_id": "friends-1",
+    "gold": "contradicted",
+    "raw_label": "contradicted",
+    "prediction": "contradicted",
+    "margin": 0.20922261085118446,
+    "reasons": [],
+    "action": "retain_candidate",
+    "elapsed_ms": 0.01902899930428248
+  },
+  {
+    "group": "old_exposed_diagnostic",
+    "method": "cue_only",
+    "case_id": "friends-2",
+    "gold": "insufficient",
+    "raw_label": "supported",
+    "prediction": "abstain",
+    "margin": 0.15277905046948792,
+    "reasons": [
+      "attribution",
+      "missing_or_hypothetical"
+    ],
+    "action": "clarify",
+    "elapsed_ms": 0.021727000785176642
+  },
+  {
+    "group": "old_exposed_diagnostic",
+    "method": "margin_only",
+    "case_id": "hobby-0",
+    "gold": "supported",
+    "raw_label": "insufficient",
+    "prediction": "insufficient",
+    "margin": 0.27991488464624137,
+    "reasons": [],
+    "action": "clarify",
+    "elapsed_ms": 0.01790200076356996
+  },
+  {
+    "group": "old_exposed_diagnostic",
+    "method": "margin_only",
+    "case_id": "hobby-1",
+    "gold": "contradicted",
+    "raw_label": "contradicted",
+    "prediction": "contradicted",
+    "margin": 1.3281655620023824,
+    "reasons": [],
+    "action": "retain_candidate",
+    "elapsed_ms": 0.015790999896125868
+  },
+  {
+    "group": "old_exposed_diagnostic",
+    "method": "margin_only",
+    "case_id": "hobby-2",
+    "gold": "insufficient",
+    "raw_label": "contradicted",
+    "prediction": "contradicted",
+    "margin": 0.3561837795683163,
+    "reasons": [],
+    "action": "retain_candidate",
+    "elapsed_ms": 0.016181998944375664
+  },
+  {
+    "group": "old_exposed_diagnostic",
+    "method": "margin_only",
+    "case_id": "friends-0",
+    "gold": "supported",
+    "raw_label": "supported",
+    "prediction": "supported",
+    "margin": 1.0395470660974482,
+    "reasons": [],
+    "action": "retain_candidate",
+    "elapsed_ms": 0.015478000932489522
+  },
+  {
+    "group": "old_exposed_diagnostic",
+    "method": "margin_only",
+    "case_id": "friends-1",
+    "gold": "contradicted",
+    "raw_label": "contradicted",
+    "prediction": "abstain",
+    "margin": 0.20922261085118446,
+    "reasons": [
+      "low_margin"
+    ],
+    "action": "clarify",
+    "elapsed_ms": 0.016206999134737998
+  },
+  {
+    "group": "old_exposed_diagnostic",
+    "method": "margin_only",
+    "case_id": "friends-2",
+    "gold": "insufficient",
+    "raw_label": "supported",
+    "prediction": "abstain",
+    "margin": 0.15277905046948792,
+    "reasons": [
+      "low_margin"
+    ],
+    "action": "clarify",
+    "elapsed_ms": 0.017127000319305807
+  },
+  {
+    "group": "new_exploration",
+    "method": "nb",
+    "case_id": "wedding_v2-0",
+    "gold": "supported",
+    "raw_label": "contradicted",
+    "prediction": "contradicted",
+    "reasons": [],
+    "elapsed_ms": 0.03063400072278455
+  },
+  {
+    "group": "new_exploration",
+    "method": "nb",
+    "case_id": "wedding_v2-1",
+    "gold": "contradicted",
+    "raw_label": "contradicted",
+    "prediction": "contradicted",
+    "reasons": [],
+    "elapsed_ms": 0.10185199971601833
+  },
+  {
+    "group": "new_exploration",
+    "method": "nb",
+    "case_id": "wedding_v2-2",
+    "gold": "insufficient",
+    "raw_label": "supported",
+    "prediction": "supported",
+    "reasons": [],
+    "elapsed_ms": 0.024099001166177914
+  },
+  {
+    "group": "new_exploration",
+    "method": "nb",
+    "case_id": "diet_v2-0",
+    "gold": "supported",
+    "raw_label": "supported",
+    "prediction": "supported",
+    "reasons": [],
+    "elapsed_ms": 0.026468000214663334
+  },
+  {
+    "group": "new_exploration",
+    "method": "nb",
+    "case_id": "diet_v2-1",
+    "gold": "contradicted",
+    "raw_label": "contradicted",
+    "prediction": "contradicted",
+    "reasons": [],
+    "elapsed_ms": 0.04906399954052176
+  },
+  {
+    "group": "new_exploration",
+    "method": "nb",
+    "case_id": "diet_v2-2",
+    "gold": "insufficient",
+    "raw_label": "supported",
+    "prediction": "supported",
+    "reasons": [],
+    "elapsed_ms": 0.021410998670035042
+  },
+  {
+    "group": "new_exploration",
+    "method": "nb",
+    "case_id": "pet_v2-0",
+    "gold": "supported",
+    "raw_label": "supported",
+    "prediction": "supported",
+    "reasons": [],
+    "elapsed_ms": 0.019250999685027637
+  },
+  {
+    "group": "new_exploration",
+    "method": "nb",
+    "case_id": "pet_v2-1",
+    "gold": "contradicted",
+    "raw_label": "contradicted",
+    "prediction": "contradicted",
+    "reasons": [],
+    "elapsed_ms": 0.019068000256083906
+  },
+  {
+    "group": "new_exploration",
+    "method": "nb",
+    "case_id": "pet_v2-2",
+    "gold": "insufficient",
+    "raw_label": "contradicted",
+    "prediction": "contradicted",
+    "reasons": [],
+    "elapsed_ms": 0.019006998627446592
+  },
+  {
+    "group": "new_exploration",
+    "method": "nb",
+    "case_id": "renovation_v2-0",
+    "gold": "supported",
+    "raw_label": "supported",
+    "prediction": "supported",
+    "reasons": [],
+    "elapsed_ms": 0.019289000192657113
+  },
+  {
+    "group": "new_exploration",
+    "method": "nb",
+    "case_id": "renovation_v2-1",
+    "gold": "contradicted",
+    "raw_label": "contradicted",
+    "prediction": "contradicted",
+    "reasons": [],
+    "elapsed_ms": 0.018872000509873033
+  },
+  {
+    "group": "new_exploration",
+    "method": "nb",
+    "case_id": "renovation_v2-2",
+    "gold": "insufficient",
+    "raw_label": "supported",
+    "prediction": "supported",
+    "reasons": [],
+    "elapsed_ms": 0.017753000065567903
+  },
+  {
+    "group": "new_exploration",
+    "method": "nb",
+    "case_id": "religion_v2-0",
+    "gold": "supported",
+    "raw_label": "supported",
+    "prediction": "supported",
+    "reasons": [],
+    "elapsed_ms": 0.02013400080613792
+  },
+  {
+    "group": "new_exploration",
+    "method": "nb",
+    "case_id": "religion_v2-1",
+    "gold": "contradicted",
+    "raw_label": "contradicted",
+    "prediction": "contradicted",
+    "reasons": [],
+    "elapsed_ms": 0.039815999116399325
+  },
+  {
+    "group": "new_exploration",
+    "method": "nb",
+    "case_id": "religion_v2-2",
+    "gold": "insufficient",
+    "raw_label": "contradicted",
+    "prediction": "contradicted",
+    "reasons": [],
+    "elapsed_ms": 0.15975899987097364
+  },
+  {
+    "group": "new_exploration",
+    "method": "nb",
+    "case_id": "relocation_v2-0",
+    "gold": "supported",
+    "raw_label": "supported",
+    "prediction": "supported",
+    "reasons": [],
+    "elapsed_ms": 0.020442999812075868
+  },
+  {
+    "group": "new_exploration",
+    "method": "nb",
+    "case_id": "relocation_v2-1",
+    "gold": "contradicted",
+    "raw_label": "supported",
+    "prediction": "supported",
+    "reasons": [],
+    "elapsed_ms": 0.018754999473458156
+  },
+  {
+    "group": "new_exploration",
+    "method": "nb",
+    "case_id": "relocation_v2-2",
+    "gold": "insufficient",
+    "raw_label": "insufficient",
+    "prediction": "insufficient",
+    "reasons": [],
+    "elapsed_ms": 0.021173998902668245
+  },
+  {
+    "group": "new_exploration",
+    "method": "linear",
+    "case_id": "wedding_v2-0",
+    "gold": "supported",
+    "raw_label": "contradicted",
+    "prediction": "contradicted",
+    "margin": 0.7813973569933972,
+    "reasons": [],
+    "elapsed_ms": 0.028623999241972342
+  },
+  {
+    "group": "new_exploration",
+    "method": "linear",
+    "case_id": "wedding_v2-1",
+    "gold": "contradicted",
+    "raw_label": "contradicted",
+    "prediction": "contradicted",
+    "margin": 0.0960520768401732,
+    "reasons": [],
+    "elapsed_ms": 0.016897000023163855
+  },
+  {
+    "group": "new_exploration",
+    "method": "linear",
+    "case_id": "wedding_v2-2",
+    "gold": "insufficient",
+    "raw_label": "insufficient",
+    "prediction": "insufficient",
+    "margin": 0.025112067323498764,
+    "reasons": [],
+    "elapsed_ms": 0.018386001102044247
+  },
+  {
+    "group": "new_exploration",
+    "method": "linear",
+    "case_id": "diet_v2-0",
+    "gold": "supported",
+    "raw_label": "supported",
+    "prediction": "supported",
+    "margin": 0.7287892120817177,
+    "reasons": [],
+    "elapsed_ms": 0.02410300112387631
+  },
+  {
+    "group": "new_exploration",
+    "method": "linear",
+    "case_id": "diet_v2-1",
+    "gold": "contradicted",
+    "raw_label": "contradicted",
+    "prediction": "contradicted",
+    "margin": 0.024631991809547407,
+    "reasons": [],
+    "elapsed_ms": 0.017268001101911068
+  },
+  {
+    "group": "new_exploration",
+    "method": "linear",
+    "case_id": "diet_v2-2",
+    "gold": "insufficient",
+    "raw_label": "supported",
+    "prediction": "supported",
+    "margin": 0.8257522883172721,
+    "reasons": [],
+    "elapsed_ms": 0.018724000256042928
+  },
+  {
+    "group": "new_exploration",
+    "method": "linear",
+    "case_id": "pet_v2-0",
+    "gold": "supported",
+    "raw_label": "supported",
+    "prediction": "supported",
+    "margin": 0.21791356560005276,
+    "reasons": [],
+    "elapsed_ms": 0.017620999642531388
+  },
+  {
+    "group": "new_exploration",
+    "method": "linear",
+    "case_id": "pet_v2-1",
+    "gold": "contradicted",
+    "raw_label": "supported",
+    "prediction": "supported",
+    "margin": 0.05884617262435765,
+    "reasons": [],
+    "elapsed_ms": 0.016853000488481484
+  },
+  {
+    "group": "new_exploration",
+    "method": "linear",
+    "case_id": "pet_v2-2",
+    "gold": "insufficient",
+    "raw_label": "contradicted",
+    "prediction": "contradicted",
+    "margin": 0.607051309092541,
+    "reasons": [],
+    "elapsed_ms": 0.016523999875062145
+  },
+  {
+    "group": "new_exploration",
+    "method": "linear",
+    "case_id": "renovation_v2-0",
+    "gold": "supported",
+    "raw_label": "supported",
+    "prediction": "supported",
+    "margin": 0.46602825958729144,
+    "reasons": [],
+    "elapsed_ms": 0.016756999684730545
+  },
+  {
+    "group": "new_exploration",
+    "method": "linear",
+    "case_id": "renovation_v2-1",
+    "gold": "contradicted",
+    "raw_label": "contradicted",
+    "prediction": "contradicted",
+    "margin": 1.0220476409533428,
+    "reasons": [],
+    "elapsed_ms": 0.017558999388711527
+  },
+  {
+    "group": "new_exploration",
+    "method": "linear",
+    "case_id": "renovation_v2-2",
+    "gold": "insufficient",
+    "raw_label": "supported",
+    "prediction": "supported",
+    "margin": 0.5558361334443345,
+    "reasons": [],
+    "elapsed_ms": 0.01580500065756496
+  },
+  {
+    "group": "new_exploration",
+    "method": "linear",
+    "case_id": "religion_v2-0",
+    "gold": "supported",
+    "raw_label": "supported",
+    "prediction": "supported",
+    "margin": 0.40560955129843085,
+    "reasons": [],
+    "elapsed_ms": 0.017303000277024694
+  },
+  {
+    "group": "new_exploration",
+    "method": "linear",
+    "case_id": "religion_v2-1",
+    "gold": "contradicted",
+    "raw_label": "contradicted",
+    "prediction": "contradicted",
+    "margin": 0.6811207368414471,
+    "reasons": [],
+    "elapsed_ms": 0.019811999663943425
+  },
+  {
+    "group": "new_exploration",
+    "method": "linear",
+    "case_id": "religion_v2-2",
+    "gold": "insufficient",
+    "raw_label": "contradicted",
+    "prediction": "contradicted",
+    "margin": 0.3810571375415974,
+    "reasons": [],
+    "elapsed_ms": 0.018775999706122093
+  },
+  {
+    "group": "new_exploration",
+    "method": "linear",
+    "case_id": "relocation_v2-0",
+    "gold": "supported",
+    "raw_label": "supported",
+    "prediction": "supported",
+    "margin": 0.12960151940829656,
+    "reasons": [],
+    "elapsed_ms": 0.016193998817470856
+  },
+  {
+    "group": "new_exploration",
+    "method": "linear",
+    "case_id": "relocation_v2-1",
+    "gold": "contradicted",
+    "raw_label": "supported",
+    "prediction": "supported",
+    "margin": 0.15021486582709306,
+    "reasons": [],
+    "elapsed_ms": 0.015199999324977398
+  },
+  {
+    "group": "new_exploration",
+    "method": "linear",
+    "case_id": "relocation_v2-2",
+    "gold": "insufficient",
+    "raw_label": "supported",
+    "prediction": "supported",
+    "margin": 0.1778098594743825,
+    "reasons": [],
+    "elapsed_ms": 0.019658999008242972
+  },
+  {
+    "group": "new_exploration",
+    "method": "selective",
+    "case_id": "wedding_v2-0",
+    "gold": "supported",
+    "raw_label": "contradicted",
+    "prediction": "abstain",
+    "margin": 0.7813973569933972,
+    "reasons": [
+      "revision_or_negation_scope"
+    ],
+    "action": "clarify",
+    "elapsed_ms": 0.02932700044766534
+  },
+  {
+    "group": "new_exploration",
+    "method": "selective",
+    "case_id": "wedding_v2-1",
+    "gold": "contradicted",
+    "raw_label": "contradicted",
+    "prediction": "abstain",
+    "margin": 0.0960520768401732,
+    "reasons": [
+      "low_margin"
+    ],
+    "action": "clarify",
+    "elapsed_ms": 0.01999400046770461
+  },
+  {
+    "group": "new_exploration",
+    "method": "selective",
+    "case_id": "wedding_v2-2",
+    "gold": "insufficient",
+    "raw_label": "insufficient",
+    "prediction": "abstain",
+    "margin": 0.025112067323498764,
+    "reasons": [
+      "attribution",
+      "low_margin"
+    ],
+    "action": "clarify",
+    "elapsed_ms": 0.01997499930439517
+  },
+  {
+    "group": "new_exploration",
+    "method": "selective",
+    "case_id": "diet_v2-0",
+    "gold": "supported",
+    "raw_label": "supported",
+    "prediction": "abstain",
+    "margin": 0.7287892120817177,
+    "reasons": [
+      "time"
+    ],
+    "action": "clarify",
+    "elapsed_ms": 0.026886000341619365
+  },
+  {
+    "group": "new_exploration",
+    "method": "selective",
+    "case_id": "diet_v2-1",
+    "gold": "contradicted",
+    "raw_label": "contradicted",
+    "prediction": "abstain",
+    "margin": 0.024631991809547407,
+    "reasons": [
+      "time",
+      "low_margin"
+    ],
+    "action": "clarify",
+    "elapsed_ms": 0.019461000192677602
+  },
+  {
+    "group": "new_exploration",
+    "method": "selective",
+    "case_id": "diet_v2-2",
+    "gold": "insufficient",
+    "raw_label": "supported",
+    "prediction": "abstain",
+    "margin": 0.8257522883172721,
+    "reasons": [
+      "time",
+      "missing_or_hypothetical"
+    ],
+    "action": "clarify",
+    "elapsed_ms": 0.021736001144745387
+  },
+  {
+    "group": "new_exploration",
+    "method": "selective",
+    "case_id": "pet_v2-0",
+    "gold": "supported",
+    "raw_label": "supported",
+    "prediction": "abstain",
+    "margin": 0.21791356560005276,
+    "reasons": [
+      "revision_or_negation_scope",
+      "low_margin"
+    ],
+    "action": "clarify",
+    "elapsed_ms": 0.05903499913983978
+  },
+  {
+    "group": "new_exploration",
+    "method": "selective",
+    "case_id": "pet_v2-1",
+    "gold": "contradicted",
+    "raw_label": "supported",
+    "prediction": "abstain",
+    "margin": 0.05884617262435765,
+    "reasons": [
+      "revision_or_negation_scope",
+      "low_margin"
+    ],
+    "action": "clarify",
+    "elapsed_ms": 0.02211900027759839
+  },
+  {
+    "group": "new_exploration",
+    "method": "selective",
+    "case_id": "pet_v2-2",
+    "gold": "insufficient",
+    "raw_label": "contradicted",
+    "prediction": "abstain",
+    "margin": 0.607051309092541,
+    "reasons": [
+      "missing_or_hypothetical"
+    ],
+    "action": "clarify",
+    "elapsed_ms": 0.02087299981212709
+  },
+  {
+    "group": "new_exploration",
+    "method": "selective",
+    "case_id": "renovation_v2-0",
+    "gold": "supported",
+    "raw_label": "supported",
+    "prediction": "supported",
+    "margin": 0.46602825958729144,
+    "reasons": [],
+    "action": "retain_candidate",
+    "elapsed_ms": 0.019416998839005828
+  },
+  {
+    "group": "new_exploration",
+    "method": "selective",
+    "case_id": "renovation_v2-1",
+    "gold": "contradicted",
+    "raw_label": "contradicted",
+    "prediction": "contradicted",
+    "margin": 1.0220476409533428,
+    "reasons": [],
+    "action": "retain_candidate",
+    "elapsed_ms": 0.020458999642869458
+  },
+  {
+    "group": "new_exploration",
+    "method": "selective",
+    "case_id": "renovation_v2-2",
+    "gold": "insufficient",
+    "raw_label": "supported",
+    "prediction": "supported",
+    "margin": 0.5558361334443345,
+    "reasons": [],
+    "action": "retain_candidate",
+    "elapsed_ms": 0.019524000890669413
+  },
+  {
+    "group": "new_exploration",
+    "method": "selective",
+    "case_id": "religion_v2-0",
+    "gold": "supported",
+    "raw_label": "supported",
+    "prediction": "supported",
+    "margin": 0.40560955129843085,
+    "reasons": [],
+    "action": "retain_candidate",
+    "elapsed_ms": 0.020494000636972487
+  },
+  {
+    "group": "new_exploration",
+    "method": "selective",
+    "case_id": "religion_v2-1",
+    "gold": "contradicted",
+    "raw_label": "contradicted",
+    "prediction": "contradicted",
+    "margin": 0.6811207368414471,
+    "reasons": [],
+    "action": "retain_candidate",
+    "elapsed_ms": 0.02182200114475563
+  },
+  {
+    "group": "new_exploration",
+    "method": "selective",
+    "case_id": "religion_v2-2",
+    "gold": "insufficient",
+    "raw_label": "contradicted",
+    "prediction": "abstain",
+    "margin": 0.3810571375415974,
+    "reasons": [
+      "attribution"
+    ],
+    "action": "clarify",
+    "elapsed_ms": 0.020755000150529668
+  },
+  {
+    "group": "new_exploration",
+    "method": "selective",
+    "case_id": "relocation_v2-0",
+    "gold": "supported",
+    "raw_label": "supported",
+    "prediction": "abstain",
+    "margin": 0.12960151940829656,
+    "reasons": [
+      "low_margin"
+    ],
+    "action": "clarify",
+    "elapsed_ms": 0.018116999854100868
+  },
+  {
+    "group": "new_exploration",
+    "method": "selective",
+    "case_id": "relocation_v2-1",
+    "gold": "contradicted",
+    "raw_label": "supported",
+    "prediction": "abstain",
+    "margin": 0.15021486582709306,
+    "reasons": [
+      "low_margin"
+    ],
+    "action": "clarify",
+    "elapsed_ms": 0.019192999388906173
+  },
+  {
+    "group": "new_exploration",
+    "method": "selective",
+    "case_id": "relocation_v2-2",
+    "gold": "insufficient",
+    "raw_label": "supported",
+    "prediction": "abstain",
+    "margin": 0.1778098594743825,
+    "reasons": [
+      "missing_or_hypothetical",
+      "low_margin"
+    ],
+    "action": "clarify",
+    "elapsed_ms": 0.02166800004488323
+  },
+  {
+    "group": "new_exploration",
+    "method": "cue_only",
+    "case_id": "wedding_v2-0",
+    "gold": "supported",
+    "raw_label": "contradicted",
+    "prediction": "abstain",
+    "margin": 0.7813973569933972,
+    "reasons": [
+      "revision_or_negation_scope"
+    ],
+    "action": "clarify",
+    "elapsed_ms": 0.027943000532104634
+  },
+  {
+    "group": "new_exploration",
+    "method": "cue_only",
+    "case_id": "wedding_v2-1",
+    "gold": "contradicted",
+    "raw_label": "contradicted",
+    "prediction": "contradicted",
+    "margin": 0.0960520768401732,
+    "reasons": [],
+    "action": "retain_candidate",
+    "elapsed_ms": 0.14115900012257043
+  },
+  {
+    "group": "new_exploration",
+    "method": "cue_only",
+    "case_id": "wedding_v2-2",
+    "gold": "insufficient",
+    "raw_label": "insufficient",
+    "prediction": "abstain",
+    "margin": 0.025112067323498764,
+    "reasons": [
+      "attribution"
+    ],
+    "action": "clarify",
+    "elapsed_ms": 0.023481001335312612
+  },
+  {
+    "group": "new_exploration",
+    "method": "cue_only",
+    "case_id": "diet_v2-0",
+    "gold": "supported",
+    "raw_label": "supported",
+    "prediction": "abstain",
+    "margin": 0.7287892120817177,
+    "reasons": [
+      "time"
+    ],
+    "action": "clarify",
+    "elapsed_ms": 0.025895000362652354
+  },
+  {
+    "group": "new_exploration",
+    "method": "cue_only",
+    "case_id": "diet_v2-1",
+    "gold": "contradicted",
+    "raw_label": "contradicted",
+    "prediction": "abstain",
+    "margin": 0.024631991809547407,
+    "reasons": [
+      "time"
+    ],
+    "action": "clarify",
+    "elapsed_ms": 0.020094999854336493
+  },
+  {
+    "group": "new_exploration",
+    "method": "cue_only",
+    "case_id": "diet_v2-2",
+    "gold": "insufficient",
+    "raw_label": "supported",
+    "prediction": "abstain",
+    "margin": 0.8257522883172721,
+    "reasons": [
+      "time",
+      "missing_or_hypothetical"
+    ],
+    "action": "clarify",
+    "elapsed_ms": 0.21317200116754975
+  },
+  {
+    "group": "new_exploration",
+    "method": "cue_only",
+    "case_id": "pet_v2-0",
+    "gold": "supported",
+    "raw_label": "supported",
+    "prediction": "abstain",
+    "margin": 0.21791356560005276,
+    "reasons": [
+      "revision_or_negation_scope"
+    ],
+    "action": "clarify",
+    "elapsed_ms": 0.02422900070087053
+  },
+  {
+    "group": "new_exploration",
+    "method": "cue_only",
+    "case_id": "pet_v2-1",
+    "gold": "contradicted",
+    "raw_label": "supported",
+    "prediction": "abstain",
+    "margin": 0.05884617262435765,
+    "reasons": [
+      "revision_or_negation_scope"
+    ],
+    "action": "clarify",
+    "elapsed_ms": 0.019385000996408053
+  },
+  {
+    "group": "new_exploration",
+    "method": "cue_only",
+    "case_id": "pet_v2-2",
+    "gold": "insufficient",
+    "raw_label": "contradicted",
+    "prediction": "abstain",
+    "margin": 0.607051309092541,
+    "reasons": [
+      "missing_or_hypothetical"
+    ],
+    "action": "clarify",
+    "elapsed_ms": 0.03641100011009257
+  },
+  {
+    "group": "new_exploration",
+    "method": "cue_only",
+    "case_id": "renovation_v2-0",
+    "gold": "supported",
+    "raw_label": "supported",
+    "prediction": "supported",
+    "margin": 0.46602825958729144,
+    "reasons": [],
+    "action": "retain_candidate",
+    "elapsed_ms": 0.02022900116571691
+  },
+  {
+    "group": "new_exploration",
+    "method": "cue_only",
+    "case_id": "renovation_v2-1",
+    "gold": "contradicted",
+    "raw_label": "contradicted",
+    "prediction": "contradicted",
+    "margin": 1.0220476409533428,
+    "reasons": [],
+    "action": "retain_candidate",
+    "elapsed_ms": 0.019746999896597117
+  },
+  {
+    "group": "new_exploration",
+    "method": "cue_only",
+    "case_id": "renovation_v2-2",
+    "gold": "insufficient",
+    "raw_label": "supported",
+    "prediction": "supported",
+    "margin": 0.5558361334443345,
+    "reasons": [],
+    "action": "retain_candidate",
+    "elapsed_ms": 0.09425099960935768
+  },
+  {
+    "group": "new_exploration",
+    "method": "cue_only",
+    "case_id": "religion_v2-0",
+    "gold": "supported",
+    "raw_label": "supported",
+    "prediction": "supported",
+    "margin": 0.40560955129843085,
+    "reasons": [],
+    "action": "retain_candidate",
+    "elapsed_ms": 0.061220000134198926
+  },
+  {
+    "group": "new_exploration",
+    "method": "cue_only",
+    "case_id": "religion_v2-1",
+    "gold": "contradicted",
+    "raw_label": "contradicted",
+    "prediction": "contradicted",
+    "margin": 0.6811207368414471,
+    "reasons": [],
+    "action": "retain_candidate",
+    "elapsed_ms": 0.02420700002403464
+  },
+  {
+    "group": "new_exploration",
+    "method": "cue_only",
+    "case_id": "religion_v2-2",
+    "gold": "insufficient",
+    "raw_label": "contradicted",
+    "prediction": "abstain",
+    "margin": 0.3810571375415974,
+    "reasons": [
+      "attribution"
+    ],
+    "action": "clarify",
+    "elapsed_ms": 0.021421999917947687
+  },
+  {
+    "group": "new_exploration",
+    "method": "cue_only",
+    "case_id": "relocation_v2-0",
+    "gold": "supported",
+    "raw_label": "supported",
+    "prediction": "supported",
+    "margin": 0.12960151940829656,
+    "reasons": [],
+    "action": "retain_candidate",
+    "elapsed_ms": 0.01794700074242428
+  },
+  {
+    "group": "new_exploration",
+    "method": "cue_only",
+    "case_id": "relocation_v2-1",
+    "gold": "contradicted",
+    "raw_label": "supported",
+    "prediction": "supported",
+    "margin": 0.15021486582709306,
+    "reasons": [],
+    "action": "retain_candidate",
+    "elapsed_ms": 0.017451999156037346
+  },
+  {
+    "group": "new_exploration",
+    "method": "cue_only",
+    "case_id": "relocation_v2-2",
+    "gold": "insufficient",
+    "raw_label": "supported",
+    "prediction": "abstain",
+    "margin": 0.1778098594743825,
+    "reasons": [
+      "missing_or_hypothetical"
+    ],
+    "action": "clarify",
+    "elapsed_ms": 0.020870000298600644
+  },
+  {
+    "group": "new_exploration",
+    "method": "margin_only",
+    "case_id": "wedding_v2-0",
+    "gold": "supported",
+    "raw_label": "contradicted",
+    "prediction": "contradicted",
+    "margin": 0.7813973569933972,
+    "reasons": [],
+    "action": "retain_candidate",
+    "elapsed_ms": 0.021869998818146996
+  },
+  {
+    "group": "new_exploration",
+    "method": "margin_only",
+    "case_id": "wedding_v2-1",
+    "gold": "contradicted",
+    "raw_label": "contradicted",
+    "prediction": "abstain",
+    "margin": 0.0960520768401732,
+    "reasons": [
+      "low_margin"
+    ],
+    "action": "clarify",
+    "elapsed_ms": 0.01578599949425552
+  },
+  {
+    "group": "new_exploration",
+    "method": "margin_only",
+    "case_id": "wedding_v2-2",
+    "gold": "insufficient",
+    "raw_label": "insufficient",
+    "prediction": "abstain",
+    "margin": 0.025112067323498764,
+    "reasons": [
+      "low_margin"
+    ],
+    "action": "clarify",
+    "elapsed_ms": 0.017275000573135912
+  },
+  {
+    "group": "new_exploration",
+    "method": "margin_only",
+    "case_id": "diet_v2-0",
+    "gold": "supported",
+    "raw_label": "supported",
+    "prediction": "supported",
+    "margin": 0.7287892120817177,
+    "reasons": [],
+    "action": "retain_candidate",
+    "elapsed_ms": 0.02216600114479661
+  },
+  {
+    "group": "new_exploration",
+    "method": "margin_only",
+    "case_id": "diet_v2-1",
+    "gold": "contradicted",
+    "raw_label": "contradicted",
+    "prediction": "abstain",
+    "margin": 0.024631991809547407,
+    "reasons": [
+      "low_margin"
+    ],
+    "action": "clarify",
+    "elapsed_ms": 0.017923999621416442
+  },
+  {
+    "group": "new_exploration",
+    "method": "margin_only",
+    "case_id": "diet_v2-2",
+    "gold": "insufficient",
+    "raw_label": "supported",
+    "prediction": "supported",
+    "margin": 0.8257522883172721,
+    "reasons": [],
+    "action": "retain_candidate",
+    "elapsed_ms": 0.019353001334820874
+  },
+  {
+    "group": "new_exploration",
+    "method": "margin_only",
+    "case_id": "pet_v2-0",
+    "gold": "supported",
+    "raw_label": "supported",
+    "prediction": "abstain",
+    "margin": 0.21791356560005276,
+    "reasons": [
+      "low_margin"
+    ],
+    "action": "clarify",
+    "elapsed_ms": 0.07047599865472876
+  },
+  {
+    "group": "new_exploration",
+    "method": "margin_only",
+    "case_id": "pet_v2-1",
+    "gold": "contradicted",
+    "raw_label": "supported",
+    "prediction": "abstain",
+    "margin": 0.05884617262435765,
+    "reasons": [
+      "low_margin"
+    ],
+    "action": "clarify",
+    "elapsed_ms": 0.018044000171357766
+  },
+  {
+    "group": "new_exploration",
+    "method": "margin_only",
+    "case_id": "pet_v2-2",
+    "gold": "insufficient",
+    "raw_label": "contradicted",
+    "prediction": "contradicted",
+    "margin": 0.607051309092541,
+    "reasons": [],
+    "action": "retain_candidate",
+    "elapsed_ms": 0.016973001038422808
+  },
+  {
+    "group": "new_exploration",
+    "method": "margin_only",
+    "case_id": "renovation_v2-0",
+    "gold": "supported",
+    "raw_label": "supported",
+    "prediction": "supported",
+    "margin": 0.46602825958729144,
+    "reasons": [],
+    "action": "retain_candidate",
+    "elapsed_ms": 0.016318999769282527
+  },
+  {
+    "group": "new_exploration",
+    "method": "margin_only",
+    "case_id": "renovation_v2-1",
+    "gold": "contradicted",
+    "raw_label": "contradicted",
+    "prediction": "contradicted",
+    "margin": 1.0220476409533428,
+    "reasons": [],
+    "action": "retain_candidate",
+    "elapsed_ms": 0.016710000636521727
+  },
+  {
+    "group": "new_exploration",
+    "method": "margin_only",
+    "case_id": "renovation_v2-2",
+    "gold": "insufficient",
+    "raw_label": "supported",
+    "prediction": "supported",
+    "margin": 0.5558361334443345,
+    "reasons": [],
+    "action": "retain_candidate",
+    "elapsed_ms": 0.01639400034036953
+  },
+  {
+    "group": "new_exploration",
+    "method": "margin_only",
+    "case_id": "religion_v2-0",
+    "gold": "supported",
+    "raw_label": "supported",
+    "prediction": "supported",
+    "margin": 0.40560955129843085,
+    "reasons": [],
+    "action": "retain_candidate",
+    "elapsed_ms": 0.11157800145156216
+  },
+  {
+    "group": "new_exploration",
+    "method": "margin_only",
+    "case_id": "religion_v2-1",
+    "gold": "contradicted",
+    "raw_label": "contradicted",
+    "prediction": "contradicted",
+    "margin": 0.6811207368414471,
+    "reasons": [],
+    "action": "retain_candidate",
+    "elapsed_ms": 0.024871000277926214
+  },
+  {
+    "group": "new_exploration",
+    "method": "margin_only",
+    "case_id": "religion_v2-2",
+    "gold": "insufficient",
+    "raw_label": "contradicted",
+    "prediction": "contradicted",
+    "margin": 0.3810571375415974,
+    "reasons": [],
+    "action": "retain_candidate",
+    "elapsed_ms": 0.020805000531254336
+  },
+  {
+    "group": "new_exploration",
+    "method": "margin_only",
+    "case_id": "relocation_v2-0",
+    "gold": "supported",
+    "raw_label": "supported",
+    "prediction": "abstain",
+    "margin": 0.12960151940829656,
+    "reasons": [
+      "low_margin"
+    ],
+    "action": "clarify",
+    "elapsed_ms": 0.01727599919831846
+  },
+  {
+    "group": "new_exploration",
+    "method": "margin_only",
+    "case_id": "relocation_v2-1",
+    "gold": "contradicted",
+    "raw_label": "supported",
+    "prediction": "abstain",
+    "margin": 0.15021486582709306,
+    "reasons": [
+      "low_margin"
+    ],
+    "action": "clarify",
+    "elapsed_ms": 0.016044999938458204
+  },
+  {
+    "group": "new_exploration",
+    "method": "margin_only",
+    "case_id": "relocation_v2-2",
+    "gold": "insufficient",
+    "raw_label": "supported",
+    "prediction": "abstain",
+    "margin": 0.1778098594743825,
+    "reasons": [
+      "low_margin"
+    ],
+    "action": "clarify",
+    "elapsed_ms": 0.025474999347352423
+  }
+]

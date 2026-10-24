@@ -45,3 +45,11 @@ class SelectiveEvidenceTests(unittest.TestCase):
         m=json.loads((BUNDLE/'frozen/manifest.json').read_text())
         self.assertEqual(m['hashes'],hashes())
         for name,digest in m['models'].items():self.assertEqual(sha(BUNDLE/'frozen'/name),digest)
+    def test_locked_evaluation_and_report_preserve_denominators(self):
+        lock=json.loads((BUNDLE/'evaluation-lock.json').read_text())
+        self.assertEqual(sha(BUNDLE/'evaluation.jsonl'),lock['dataset_sha256'])
+        self.assertEqual(sha(BUNDLE/'frozen/manifest.json'),lock['frozen_manifest_sha256'])
+        report=json.loads((BUNDLE/'results/report.json').read_text())
+        for method in report['metrics']['new_exploration'].values():
+            self.assertEqual(method['final']['n'],18)
+            self.assertEqual(sum(sum(row.values()) for row in method['final']['confusion_gold_rows'].values()),18)
