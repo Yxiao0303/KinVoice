@@ -1,0 +1,11 @@
+{
+  "created_utc": "2026-10-24T08:57:46.855544+00:00",
+  "method_commit": "dde3f4505fd85fd69d0fd27b2aa8bc8af922fc60",
+  "freeze_sha256": "cf861df47c2171c8058c6692fc87abc63515e8f1277e2a7a80bf7b2035c4a07e",
+  "data_sha256": "ad1d0ce0e3c0afb16c9945d71971871933bfc0d22c7c2d667d2b534fec09fd95",
+  "n": 12,
+  "families": 6,
+  "author": "Same AI development assistant; synthetic/unreviewed; not independent",
+  "construction": "All texts contain uncertainty language to isolate action choice. Labels written before outputs. Same gold for both policies.",
+  "policy": "One paired evaluation, no post-result tuning"
+}
