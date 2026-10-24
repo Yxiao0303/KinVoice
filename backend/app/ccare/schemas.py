@@ -32,7 +32,20 @@ class TurnRequest(StrictModel):
         return value
 
 
+class FieldAssessment(StrictModel):
+    field: str
+    value: str
+    origin: Literal["explicit", "confirmed", "inferred", "unknown"] = "inferred"
+    verdict: Literal["supported", "contradicted", "insufficient"]
+    message_id: str
+    role: Literal["user"] = "user"
+    current: bool
+    supersedes: str | None = None
+
+
 class State(StrictModel):
+    assessments: list[FieldAssessment] = Field(default_factory=list, max_length=30)
+    needs_clarification: bool = False
     risk: Literal["unknown", "ordinary", "urgent"] = "unknown"
     family_unsafe: bool = Field(default=False, strict=True)
     emotion: Literal["unknown", "sad", "angry", "afraid", "mixed"] = "unknown"
@@ -43,6 +56,8 @@ class State(StrictModel):
 
 
 class EvidenceLink(StrictModel):
+    message_id: str = ""
+    role: Literal["user"] = "user"
     source: Literal["current", "history"]
     turn: int
     start: int
@@ -63,6 +78,7 @@ class StageRecord(StrictModel):
     stage: str
     status: Literal["completed", "failed", "cancelled"]
     elapsed_ms: int
+    requested_model: str | None = None
     model: str | None = None
     usage: dict | None = None
     error_code: str | None = None
@@ -81,7 +97,7 @@ class TurnResponse(StrictModel):
     checks: list[str]
     model_calls: int
     usage: list[dict | None]
-    policy_version: str = "ccare-prototype-0.2"
+    policy_version: str = "ccare-prototype-0.3"
     decision: PolicyDecision | None = None
     stages: list[StageRecord] = Field(default_factory=list)
     failure_code: str | None = None

@@ -8,7 +8,7 @@ from pydantic import ValidationError
 from .config import Settings
 from .provider import Completion, ProviderUnavailable
 from .schemas import Check, StageRecord, State, TurnRequest, TurnResponse
-from .policy import decide, locate, validate_state
+from .policy import decide, locate, validate_state, RuleStrategySelector
 
 SAFETY = (
     "你提到的情况需要优先关注当下安全。如果已经受伤、服药过量或有人正在伤害你，"
@@ -59,8 +59,10 @@ def output_violations(text, decision, state):
 
 
 class Engine:
-    def __init__(self, config: Settings, provider=None):
+    def __init__(self, config: Settings, provider=None, *, semantic_judge=None, selector=None):
         self.config, self.provider = config, provider
+        self.semantic_judge = semantic_judge
+        self.selector = selector or RuleStrategySelector()
 
     async def respond(self, req: TurnRequest, on_event=None) -> TurnResponse:
         started = perf_counter()
@@ -68,7 +70,7 @@ class Engine:
         calls, usage, checks = 0, [], ["local_guard"]
         stages, failure_code = [], None
         local_links = [locate(req, q, "local_guard") for q in state.evidence]
-        decision = decide(req, state, local_links)
+        decision = self.selector.select(req, state, local_links)
 
         def emit(event):
             if on_event:
@@ -99,10 +101,12 @@ class Engine:
 
         async def call(stage, system, data, temperature=0, json_mode=False):
             nonlocal calls
+            if calls >= 5:
+                raise ProviderUnavailable("call_budget_exhausted")
             calls += 1
             usage.append(None)  # failed calls and missing usage are never counted as zero tokens
             tick = perf_counter()
-            record = StageRecord(stage=stage, status="failed", elapsed_ms=0)
+            record = StageRecord(stage=stage, status="failed", elapsed_ms=0, requested_model=self.config.model)
             stages.append(record)
             emit({"type": "stage", "event": "started", "index": calls,
                   "stage": stage, "status": "running"})
@@ -137,10 +141,10 @@ class Engine:
                     '想梳理标clarify；要求短暂稳定标ground；明确需要沟通措辞标draft；无法判断标unknown。'
                     '无法判断风险就unknown；自伤或当下人身危险标urgent；不得推测父母善意。', context, json_mode=True)
                 estimated = State.model_validate_json(raw)
-                links = validate_state(req, estimated)
+                links = validate_state(req, estimated, self.semantic_judge)
                 estimated.family_unsafe |= state.family_unsafe
                 state = estimated
-                decision = decide(req, state, local_links + links)
+                decision = self.selector.select(req, state, local_links + links)
                 checks.append("state_schema_and_evidence")
                 policy_event()
                 if state.risk == "urgent":
