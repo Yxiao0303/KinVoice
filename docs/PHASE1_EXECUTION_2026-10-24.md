@@ -90,3 +90,19 @@ Provider 现有实现使用 trust_env=False，真实连接还需核验与部署�
 | 提交、PR、可复制命令、隐私扫描与真实状态披露 | 原分支提交与 PR 更新；不合并、不部署、不调用真实模型 |
 
 因此结论是“第一阶段已有可运行离线增量并修复两个已知误报”，**不是全部第一阶段细项或研究验收已完成**。剩余代码范围内的完整确认/撤销交互、可配置重试、严格预算与完整消融仍需后续原阶段迭代；正式专业评测还依赖审阅者及冻结协议，真实模型调用依赖配置和明确预算。本轮按复核要求只修复已定位缺陷，不新增凭据或扩展阶段。
+
+### 核心目标完成映射（中期结论）
+
+核心机制已有可运行工程实现；“更合适的支持策略”这一研究主张仍待真实模型对照与专业验证，不能将第一阶段离线验收替代整个研究目标。
+
+| 原始核心目标 | 实际代码与测试 | 完成状态 / 验证方式 | 缺失证据 |
+|---|---|---|---|
+| 原话事实转为可追溯结构化状态 | schemas.FieldAssessment/EvidenceLink；policy.locate/validate_state；SemanticTests | 部分；规则+mock | 完整确认/撤销交互、逐字段专业标注及校准 |
+| 可替换语义证据校验，区分定位和支持 | semantics.SemanticJudge/RuleSemanticJudge；SemanticTests | 已有接口和狭窄三态规则基线；未接语义模型 | 广泛语义覆盖、独立专家标签、NLI/LLM 对照 |
+| 当前意愿和家庭边界约束策略 | policy.decide/RuleStrategySelector、semantics.current_intent；EvidencePolicyTests、SemanticTests | 确定性实现并离线验证；没有学习算法 | 真实模型下的适切性、意愿变更覆盖及纠错交互 |
+| 独立安全保护及输出验证 | engine.local_state/urgent_evidence/output_violations/respond；ContextualSafetyTests、StreamContractTests | 已有安全路径、有限重写、回退；本地+mock | 专业审阅、漏报/误拒率的独立评估；仍非临床系统 |
+| 公平强基线和隔离消融 | benchmark_ccare.execute/BudgetProvider、summarize_benchmark.aggregate；BenchmarkTests、AggregationTests | 部分；七条件 mock 与 dry-run | 严格总 token 对齐、完整消融、冻结模型/协议、真实输出及盲评 |
+| 数据和隐私可复现性 | BenchCase/load_cases、FamilyStressBench schema/指南；DatasetIsolationTests、AccountIsolationTests、现有取消/导出测试 | 开发契约及离线回归已有 | 独立专家测试集、一致性统计、生产部署验证 |
+| 核心创新是否带来更合适的支持 | 本轮没有可支持该结论的真实对照数据 | 未验证 | 同模型强基线/多步/消融实验、专业盲评；心理改善还需另行获批研究 |
+
+本轮补充修复提交 `ffe6625`：窄范围区分两个非急性分句、保留同条其他急性线索和历史风险。后端 74/74、前端 15/15；20 条开发诊断无差异，8/8 对配对诊断符合暂定标签；63 条 dry-run，零模型调用。所有开发测试数字都不代表创新成立或心理支持效果。
