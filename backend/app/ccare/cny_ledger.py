@@ -7,7 +7,7 @@ further dispatch. Actual billing remains unknown. Only the fixed smoke entry poi
 uses a reviewed public-contract policy for live dispatch; batch use stays blocked.
 """
 from contextlib import contextmanager, closing
-from dataclasses import dataclass, asdict
+from dataclasses import dataclass, asdict, replace
 from decimal import Decimal, InvalidOperation, ROUND_CEILING
 import hashlib
 import json
@@ -23,6 +23,7 @@ from .provider import ProviderUnavailable
 
 SCALE = 10**9  # integer nanoyuan: no binary floating-point money arithmetic
 AUTHORIZATION = 'kinvoice-deepseek-first-10cny-20261024'
+LIMIT_APPROVAL = 'user-approved-cumulative-50cny-20261024'
 DEFAULT_LEDGER = Path(__file__).resolve().parents[2] / 'data' / 'deepseek_first_run_budget.db'
 
 class BudgetError(Exception):
@@ -76,7 +77,7 @@ class FeePolicy:
     def validate(self, now):
         if self.model != 'deepseek-flash' or self.authorization != AUTHORIZATION:
             raise BudgetError('unsupported_authorization')
-        if self.currency not in ('CNY', 'USD') or not 0 < number(self.max_cny) <= 10:
+        if self.currency not in ('CNY', 'USD') or not (0 < number(self.max_cny) <= 10 or number(self.max_cny) == 50):
             raise BudgetError('invalid_policy')
         if type(self.max_prompt_tokens) is not int or not 1048576 <= self.max_prompt_tokens <= 2097152:
             raise BudgetError('invalid_policy')
@@ -109,6 +110,8 @@ class FeePolicy:
 class CNYLedger:
     def __init__(self, path, policy=None, *, clock=time.time):
         self.path, self.policy, self.clock = Path(path), policy or FeePolicy(), clock
+        if number(self.policy.max_cny) == 50 and not self.path.exists():
+            raise BudgetError('limit_increase_requires_existing_ledger')
         try:
             self.policy.validate(self.clock())
         except BudgetError as exc:
@@ -135,7 +138,34 @@ class CNYLedger:
                 db.execute('INSERT INTO policy VALUES (1, ?, NULL)', (self.policy.serialized(),))
             elif row[0] != self.policy.serialized():
                 raise BudgetError('ledger_policy_mismatch')
+            if number(self.policy.max_cny) == 50:
+                exists = db.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='authorization_changes'").fetchone()
+                if not exists or not db.execute('SELECT 1 FROM authorization_changes WHERE approval=? AND new_snapshot=?',
+                    (LIMIT_APPROVAL,self.policy.serialized())).fetchone():
+                    raise BudgetError('limit_increase_audit_missing')
             self.recover(db)
+
+    def approve_cumulative_50(self, approval_reference):
+        """Explicit operator action after user approval; retain all prior attempts.
+
+        The approval reference is an audit label, not an authentication secret.
+        No CLI or network request can silently invoke this transition.
+        """
+        if approval_reference != LIMIT_APPROVAL or number(self.policy.max_cny) != 10:
+            raise BudgetError('limit_increase_not_authorized')
+        revised = replace(self.policy,max_cny='50.00')
+        with self.transaction() as db:
+            self.admit(db)
+            if db.execute("SELECT 1 FROM attempts WHERE phase NOT IN ('completed','cancelled_before_dispatch')").fetchone():
+                raise BudgetError('limit_increase_requires_settled_attempts')
+            if not db.execute('SELECT 1 FROM attempts').fetchone():
+                raise BudgetError('limit_increase_requires_history')
+            db.execute('CREATE TABLE IF NOT EXISTS authorization_changes (approval TEXT PRIMARY KEY, old_snapshot TEXT NOT NULL, new_snapshot TEXT NOT NULL, at REAL NOT NULL)')
+            db.execute('INSERT INTO authorization_changes VALUES (?,?,?,?)',
+                (approval_reference,self.policy.serialized(),revised.serialized(),self.clock()))
+            db.execute('UPDATE policy SET snapshot=? WHERE id=1',(revised.serialized(),))
+            self.event(db,None,'approved_cumulative_limit_50')
+        self.policy=revised
 
     @contextmanager
     def transaction(self):
