@@ -31,6 +31,17 @@ DEMO = {
 URGENT = re.compile(r"自杀|自残|不想活|想死|结束生命|吞药|割腕|跳楼|正在.{0,6}(打我|掐我|伤害我)|(?:刚|已经).{0,4}(?:吃|吞|服).{0,4}(?:一整瓶|过量).{0,5}(?:药|片)|(?:今晚|现在).{0,8}从这个世界消失|kill myself|suicid|hurt myself", re.I)
 UNSAFE = re.compile(r"打我|掐我|威胁|家暴|虐待|不让我走|监控|暴力|abuse", re.I)
 OUTPUT_BLOCK = re.compile(r"你(就是|患有|得了).{0,5}(抑郁症|双相|精神病)|你必须.{0,8}(原谅|道歉|和解|联系父母)|都是为你好|只有我.{0,6}(理解|懂)你|停药|加大.{0,5}药量|我已经.{0,6}(通知|联系|发送)")
+REVOKED_EMOTION = re.compile('|'.join(PATTERNS[k] for k in ('sad', 'angry', 'afraid'))
+    + r'|悲伤|失落|低落|沮丧|委屈|气愤|恼火|恐慌|难受|不好受|心里堵得慌')
+# Only a whole, narrowly recognized meta-acknowledgement is exempt. Negating
+# the user's emotion ("你并不伤心") is still an unsupported emotional judgment.
+REVOCATION_ACK = re.compile(r'我不会再用[“「](?:' + REVOKED_EMOTION.pattern + r')[”」]描述你')
+
+
+def refers_to_revoked_emotion(text):
+    clauses = re.split(r'[，。！？；,!?;\n]', text)
+    return any(REVOKED_EMOTION.search(clause) and not REVOCATION_ACK.fullmatch(clause.strip())
+               for clause in clauses)
 
 
 # Suppress only complete, narrowly recognized non-acute clauses. Other matches in
@@ -74,11 +85,11 @@ def output_violations(text, decision, state):
     violations = []
     # Narrow lexical guard discovered by the fixed real smoke: a revoked emotion
     # must not be reasserted by generation even when the model checker accepts it.
-    # Conservative (including quoted/conditional mentions); not semantic entailment.
+    # Conservative for ambiguous quotations/conditions; not semantic entailment.
     emotion_revoked = state.emotion == 'unknown' and any(
         a.field == 'emotion' and a.origin == 'unknown' and a.supersedes
         for a in state.assessments)
-    if emotion_revoked and re.search('|'.join(PATTERNS[k] for k in ('sad', 'angry', 'afraid')), text):
+    if emotion_revoked and refers_to_revoked_emotion(text):
         violations.append('revoked_emotion_reference')
     if OUTPUT_BLOCK.search(text) or len(text) > 2000:
         violations.append("blocked_content")
