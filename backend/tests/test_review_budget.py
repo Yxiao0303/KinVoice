@@ -312,7 +312,7 @@ class BillingReadinessTests(unittest.IsolatedAsyncioTestCase):
                 'usage':{'prompt_tokens':3,'completion_tokens':2,'total_tokens':5,
                          'completion_tokens_details':{'reasoning_tokens':1,'private_text':'NOT_RETURNED'}}})
         original=httpx.AsyncClient
-        with patch('app.ccare.provider.httpx.AsyncClient',side_effect=lambda **kw:original(transport=httpx.MockTransport(handler),**kw)):
+        with patch('app.ccare.provider.httpx.AsyncClient',side_effect=lambda **kw:original(transport=httpx.MockTransport(handler),**{**kw, "trust_env":False})):
             result=await RemoteProvider(config).complete([{'role':'user','content':'Return JSON'}],temperature=0,max_tokens=400,json_mode=True)
         self.assertEqual(captures[0]['thinking'],{'type':'disabled'})
         self.assertEqual(captures[0]['response_format'],{'type':'json_object'})
@@ -343,7 +343,7 @@ class FailedUsageTests(unittest.IsolatedAsyncioTestCase):
         config=test_ccare.configuration('/tmp/unused','remote').model_copy(update={
             'provider_kind':'deepseek','api_base':'https://api.deepseek.com','model':'deepseek-flash'})
         original=httpx.AsyncClient
-        with patch('app.ccare.provider.httpx.AsyncClient',side_effect=lambda **kw:original(transport=httpx.MockTransport(handler),**kw)):
+        with patch('app.ccare.provider.httpx.AsyncClient',side_effect=lambda **kw:original(transport=httpx.MockTransport(handler),**{**kw, "trust_env":False})):
             sample=SampleProvider(BudgetProvider(RemoteProvider(config),5),SampleLimits())
             result=await Engine(config.model_copy(update={'max_tokens':400}),sample).respond(TurnRequest(message='虚构普通冲突',external_consent=True))
         self.assertEqual(result.mode,'safe_fallback')

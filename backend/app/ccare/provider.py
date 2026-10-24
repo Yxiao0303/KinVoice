@@ -33,7 +33,7 @@ class RemoteProvider:
             payload["response_format"] = {"type": "json_object"}
         usage, returned_model = None, None
         try:
-            async with httpx.AsyncClient(timeout=c.call_timeout, follow_redirects=False, trust_env=False) as client:
+            async with httpx.AsyncClient(timeout=c.call_timeout, follow_redirects=False, trust_env=True) as client:
                 async with client.stream(
                     "POST", c.api_base.rstrip("/") + "/chat/completions",
                     headers={"Authorization": "Bearer " + c.api_key},

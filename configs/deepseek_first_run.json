@@ -3,14 +3,42 @@
   "provider_kind": "deepseek",
   "api_base": "https://api.deepseek.com",
   "model": "deepseek-flash",
-  "thinking": {"type": "disabled"},
+  "thinking": {
+    "type": "disabled"
+  },
   "authorized_cumulative_cny_cap": "10.00",
   "live_enabled": false,
-  "first_check": {"synthetic_cases": 1, "max_calls": 5, "output_token_reservation": 2000},
-  "subsequent_pilot": {"max_synthetic_cases": 10, "conditions": ["strong_single", "ccare"], "max_calls": 60},
+  "first_check": {
+    "synthetic_cases": 1,
+    "max_calls": 1,
+    "output_token_reservation": 400
+  },
+  "subsequent_pilot": {
+    "max_synthetic_cases": 10,
+    "conditions": [
+      "strong_single",
+      "ccare"
+    ],
+    "max_calls": 3
+  },
   "tools_enabled": false,
   "automatic_retries": 0,
-  "blocked": ["current_runtime_secret_and_destination_not_ready", "verified_pre_dispatch_cny_reservation_unavailable"],
+  "blocked": [
+    "runtime_secret_readiness_unverified",
+    "destination_access_not_verified",
+    "provider_billing_bounds_not_verified"
+  ],
   "price_source": "https://api-docs.deepseek.com/quick_start/pricing/",
-  "price_version": "deepseek-flash-2026-10-24-peak-usd"
+  "price_version": "deepseek-flash-2026-10-24-peak-usd",
+  "offline_ledger": {
+    "authorization": "kinvoice-deepseek-first-10cny-20261024",
+    "canonical_future_path": "backend/data/deepseek_first_run_budget.db",
+    "policy_version": "deepseek-flash-20261024-peak-cny-context-reserve-v1",
+    "max_prompt_tokens_reserved": 1048576,
+    "max_completion_tokens_including_reasoning": 400,
+    "cny_reserved_per_attempt": "2.100352",
+    "cumulative_max_attempts_with_current_assumptions": 4,
+    "refund_after_dispatch": false,
+    "provider_bill_cap_guaranteed": false
+  }
 }

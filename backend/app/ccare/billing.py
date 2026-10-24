@@ -32,7 +32,9 @@ def live_readiness():
     # Explicitly fail closed. Token/call ceilings and post-hoc USD accounting do
     # not establish a verified pre-dispatch total billable token bound or CNY reserve.
     present = {name: bool(os.environ.get(name)) for name in ('DEEPSEEK_API_KEY', 'KINVOICE_API_KEY')}
-    blocked = ([] if any(present.values()) else ['credential_binding_not_present_in_process']) + ['destination_access_not_verified', 'verified_pre_dispatch_cny_reservation_unavailable']
-    return {'live_enabled': False, 'variables_present': present, 'authorized_cny_cap': '10.00', 'external_model_calls': 0,
+    blocked = ['runtime_secret_readiness_unverified', 'destination_access_not_verified', 'provider_billing_bounds_not_verified']
+    return {'live_enabled': False, 'process_variables_present': present,
+            'credential_observation': 'Process presence is not proxy-injection readiness; consult current runtime metadata.',
+            'offline_reservation_ledger_implemented': True, 'provider_bill_cap_guaranteed': False, 'authorized_cny_cap': '10.00', 'external_model_calls': 0,
             'blocked': blocked,
             'cny_cap_enforced': False, 'price_version': PRICE_VERSION}

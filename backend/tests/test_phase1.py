@@ -84,7 +84,7 @@ class ProviderEdgeTests(unittest.IsolatedAsyncioTestCase):
         original=httpx.AsyncClient
         responses=[httpx.Response(200,text='private invalid json'),httpx.Response(200,json={'choices':[{'message':{'content':''}}]})]
         for response in responses:
-            with patch('app.ccare.provider.httpx.AsyncClient',side_effect=lambda **kw: original(transport=httpx.MockTransport(lambda r:response),**kw)):
+            with patch('app.ccare.provider.httpx.AsyncClient',side_effect=lambda **kw: original(transport=httpx.MockTransport(lambda r:response),**{**kw, "trust_env":False})):
                 with self.assertRaises(ProviderUnavailable) as caught:
                     await RemoteProvider(self.config()).complete([],temperature=0,max_tokens=100)
                 self.assertEqual(caught.exception.code,'invalid_response')
@@ -134,7 +134,7 @@ class TransportFailureTests(unittest.IsolatedAsyncioTestCase):
         async def cancelled(request): raise asyncio.CancelledError()
         config=test_policy_integration.ProviderContractTests.config(self)
         for handler, expected in ((timeout,ProviderUnavailable),(cancelled,asyncio.CancelledError)):
-            with patch('app.ccare.provider.httpx.AsyncClient',side_effect=lambda **kw: original(transport=httpx.MockTransport(handler),**kw)):
+            with patch('app.ccare.provider.httpx.AsyncClient',side_effect=lambda **kw: original(transport=httpx.MockTransport(handler),**{**kw, "trust_env":False})):
                 with self.assertRaises(expected) as caught:
                     await RemoteProvider(config).complete([],temperature=0,max_tokens=100)
                 self.assertNotIn('private',str(caught.exception))

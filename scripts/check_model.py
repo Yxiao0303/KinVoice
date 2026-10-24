@@ -18,7 +18,7 @@ def preflight():
                'KINVOICE_API_BASE': bool(c.api_base), 'KINVOICE_PROVIDER_KIND': c.provider_kind == 'deepseek',
                'KINVOICE_PROVIDER_LABEL': bool(c.provider_label), 'KINVOICE_PROVIDER_PRIVACY_URL': bool(c.provider_privacy_url)}
     missing = [name for name, value in present.items() if not value]
-    return c, {'kind':'configuration_check_only', 'variables_present':present,
+    return c, {'kind':'configuration_check_only', 'credential_scope':'process/env-file settings only; proxy credential injection is not probed', 'variables_present':present,
                'missing':missing, 'key_present':present['KINVOICE_API_KEY_or_DEEPSEEK_API_KEY'], 'external_model_calls':0}
 
 
