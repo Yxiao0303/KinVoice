@@ -133,6 +133,8 @@ def respond_student(req, *, judge=None):
         failure='student_judgment_invalid'
         judgment=StudentJudgment(stage=req.student.stage,events=[],uncertainties=['本轮判断未通过结构或来源检查；不展示未经核对的结论。'])
     apply_student_reviews(req,judgment)
+    from .student_corrections import apply_natural_subject_corrections
+    apply_natural_subject_corrections(req,judgment)
     decision=decide(req,state,local_links)
     current=scoped_current_intent(req.message)
     action=decision.selected if decision.allowed in (['safety'],['clarify'],['listen']) or current.value!='unknown' or 'current_text_intent' in decision.reasons else req.support

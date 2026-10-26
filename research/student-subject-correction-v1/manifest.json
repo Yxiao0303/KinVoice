@@ -1,0 +1,12 @@
+{
+  "base": "beb6bf7ee49bba1d0e0a308ec36e047d40d56e01",
+  "kind": "seen_development_fix_no_new_model_evaluation",
+  "hashes": {
+    "backend/app/ccare/student.py": "11d992b822667631d84a1e81106cc0d3b268f07b2946724e7f4e15c5a6474b1d",
+    "backend/app/ccare/student_corrections.py": "e8edefe8b8a030492da6d3cc9f14909acfc9b3e13549d7d5db6e2cf154b2c7eb",
+    "backend/tests/test_student_corrections.py": "87549941b502c7a8d2a54efdc0ffc8a82a8998b33387a87f4a7efe2bfe0c12e9",
+    "scripts/check_web_e2e.py": "a1cb886e66f5cfc34991b4535c4520f7edde30effd8144e6d05e769038294fe5",
+    "research/student-subject-correction-v1/seen-replay.json": "bc2b7bda1ad362cc8e73dc1179bd331ca0353a37b78cd649bf96e341ce21897a",
+    "research/student-subject-correction-v1/README.md": "e092eece330e37a317cc071d987b3a0865b0a3edd72d946aaad0773267c55ce4"
+  }
+}
