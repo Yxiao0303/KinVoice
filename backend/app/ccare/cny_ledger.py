@@ -110,6 +110,8 @@ class FeePolicy:
 class CNYLedger:
     def __init__(self, path, policy=None, *, clock=time.time):
         self.path, self.policy, self.clock = Path(path), policy or FeePolicy(), clock
+        if number(self.policy.max_cny) > 50:
+            raise BudgetError('use_scoped_audited_batch_ledger')
         if number(self.policy.max_cny) == 50 and not self.path.exists():
             raise BudgetError('limit_increase_requires_existing_ledger')
         try:

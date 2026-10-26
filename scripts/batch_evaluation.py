@@ -10,9 +10,9 @@ from app.ccare.config import Settings
 from app.ccare.provider import Completion,RemoteProvider,ProviderUnavailable
 from app.ccare.schemas import State,Check,TurnRequest
 from app.ccare.cny_ledger import DEFAULT_LEDGER,BudgetError,nano
-from price_refresh import RefreshedLedger
+from development_budget import DevelopmentLedger
 from validate_evaluation_pack import validate as validate_pack
-BUNDLE=ROOT/'research/batch-evaluation-v4'
+BUNDLE=ROOT/'research/batch-evaluation-v5'
 PACK=ROOT/'research/evaluation-pack-v1'
 ARMS=('strong_single','strong_multi','ccare')
 SEED=2601026
@@ -49,7 +49,7 @@ def save(path,value):
     tmp.replace(path)
 
 def source_hashes():
-    paths=[Path(__file__),ROOT/'scripts/three_arm.py',ROOT/'scripts/listen_first.py',ROOT/'scripts/listen_first_v2.py',ROOT/'scripts/price_refresh.py',ROOT/'scripts/validate_evaluation_pack.py',PACK/'freeze.json',BUNDLE/'PROTOCOL.md']
+    paths=[Path(__file__),ROOT/'scripts/three_arm.py',ROOT/'scripts/listen_first.py',ROOT/'scripts/listen_first_v2.py',ROOT/'scripts/price_refresh.py',ROOT/'scripts/development_budget.py',ROOT/'scripts/validate_evaluation_pack.py',PACK/'freeze.json',BUNDLE/'PROTOCOL.md']
     paths+=sorted((ROOT/'backend/app/ccare').glob('*.py'))
     return {str(p.relative_to(ROOT)):hashlib.sha256(p.read_bytes()).hexdigest() for p in paths}
 
@@ -75,6 +75,7 @@ def reserve_all(ledger,run_id,planned):
     Actual request hash/messages are durably journaled before dispatch.
     """
     if not re.fullmatch(r'[A-Za-z0-9_.:-]{1,64}',run_id):raise BudgetError('invalid_run')
+    if hasattr(ledger,'authorize_batch'):ledger.authorize_batch(planned,run_id)
     slots=[]
     for row in planned['items']:
         for n in range(row['max_calls']):
@@ -163,7 +164,7 @@ async def run_batch(cases,planned,out,mode,ledger=None,transport=None,fail_first
     if mode not in ('live','mock'):raise ValueError('invalid_mode')
     if mode=='mock' and planned['split']!='development':raise ValueError('candidate_mock_prohibited')
     out.mkdir(parents=True,exist_ok=False)
-    run_id=f"batch-v4-{planned['split']}-{digest(planned)[:8]}"
+    run_id=f"batch-v5-{planned['split']}-{digest(planned)[:8]}"
     rows=[dict(x,mode=mode,status='not_run',failure=None,reply='',calls=[],elapsed_ms=0) for x in planned['items']]
     save(out/'plan.json',planned);save(out/'outputs.json',rows)
     if mode=='live':
@@ -190,7 +191,7 @@ async def run_batch(cases,planned,out,mode,ledger=None,transport=None,fail_first
         except Exception as exc:row.update(status='failed',failure=getattr(exc,'code',type(exc).__name__))
         finally:
             row.update(calls=p.records,elapsed_ms=round((time.perf_counter()-start)*1000))
-            if row.get('failure') or any(c['status']=='failed' for c in p.records):stopped=True
+            if any(c['status']=='failed' for c in p.records) or row['status']=='failed':stopped=True
             save(out/'outputs.json',rows)
     save(out/'outputs.json',rows);save(out/'summary.json',summarize(rows,mode));export_blind(cases,rows,out,mode)
     return rows
@@ -198,8 +199,9 @@ async def run_batch(cases,planned,out,mode,ledger=None,transport=None,fail_first
 def main():
     p=argparse.ArgumentParser(description=__doc__);p.add_argument('--mode',choices=['mock','live'],default='mock');p.add_argument('--split',choices=['development','candidate_holdout'],default='development');p.add_argument('--output',type=Path,required=True);args=p.parse_args()
     if args.mode=='mock' and args.split!='development':raise ValueError('candidate_mock_prohibited')
+    if args.mode=='live' and args.split!='development':raise BudgetError('development_only')
     verify_freeze();cases=load_cases(args.split);planned=plan(cases,args.split)
-    ledger=RefreshedLedger(DEFAULT_LEDGER) if args.mode=='live' else None
+    ledger=DevelopmentLedger(DEFAULT_LEDGER) if args.mode=='live' else None
     asyncio.run(run_batch(cases,planned,args.output,args.mode,ledger))
     print(json.dumps({'mode':args.mode,'planned_outputs':len(planned['items']),'output':str(args.output)}))
 if __name__=='__main__':main()

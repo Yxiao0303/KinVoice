@@ -54,3 +54,16 @@ class BatchEvaluationTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             rows=asyncio.run(run_batch([case],plan([case],'development'),Path(tmp)/'run','mock'))
             self.assertTrue(all(r['status']=='mock_safety_template' and not r['calls'] for r in rows))
+    def test_known_content_rejection_is_retained_without_stopping_other_arms(self):
+        from app.ccare.provider import Completion
+        class RejectContent(MockTransport):
+            async def complete(self,messages,**params):
+                if params.get('json_mode') and '识别成人亲子冲突' not in messages[0]['content']:
+                    return Completion('{"safe":false,"violations":["development_fixture"]}',None,'offline-fixture',None)
+                return await super().complete(messages,**params)
+        with tempfile.TemporaryDirectory() as tmp:
+            rows=asyncio.run(run_batch([CASE],plan([CASE],'development'),Path(tmp)/'run','mock',transport=RejectContent()))
+            self.assertEqual(len(rows),3)
+            self.assertTrue(all(not r['status'].startswith('not_run') for r in rows))
+            self.assertTrue(any(r['status']=='mock_safe_fallback' for r in rows))
+            self.assertTrue(all(c['status']=='completed' for r in rows for c in r['calls']))
