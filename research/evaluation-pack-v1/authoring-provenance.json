@@ -1,0 +1,10 @@
+{
+  "base_commit": "2c04bb07cc372273979cf8238c4e719592d6992d",
+  "authored_date": "2026-10-26",
+  "author": "Same AI development assistant",
+  "construction": "60 manually composed synthetic examples in 30 situation/template families; two examples per family, no paid API or algorithm predictions used",
+  "split_rule": "D01-D12 development (24); T01-T18 candidate holdout (36); no family or declared template family shared",
+  "independence": "Author saw all examples; candidate holdout is not independent/unseen; semantic mechanisms intentionally overlap across families",
+  "review": "unreviewed; all require professional review before confirmatory use",
+  "old_seen_examples": "not copied into candidate holdout; lexical audit and qualitative family review only, not a semantic non-leakage guarantee"
+}

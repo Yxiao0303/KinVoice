@@ -1,0 +1,19 @@
+{
+  "version": "evaluation-pack-v1",
+  "base_commit": "2c04bb07cc372273979cf8238c4e719592d6992d",
+  "frozen_date": "2026-10-26",
+  "status": "AI synthetic; developer labels; unreviewed; candidate holdout not independent",
+  "validator_sha256": "cf612caee4087f24a9d19943e9fa9ee3b12f95fe0e3f2dfe85a99db7e8ac7cda",
+  "sha256": {
+    "DUPLICATE_REVIEW.md": "f5ba5895520f4e10c2b1bd77f29779e9a44d005cae619f84c1e061898e955cbb",
+    "README.md": "db45c958d1cf527d0752dbbb810c705110e3b85efdb77cf9a3db7e8e3389152d",
+    "RUBRIC.md": "0d022508c3ac0afbd6a94d3a473b25193bb33fa1b9509ad950b8a6835b7b2f86",
+    "authoring-provenance.json": "500fa4d7fa7d5a5a0c06ffac977881eedd11d9d2984401139b66f184fa90c871",
+    "blind-key-blank.csv": "9e2cba2b145d8630db32afcb44fb15af9647b97c3fd913c193a3e1df8b952598",
+    "blind-review-blank.csv": "67c8acb019ed0a0db79f23bf65b43e615742fc13e4805111a4dd8838b7d23919",
+    "candidate_holdout.jsonl": "551ed5e5e468499988917b3cc961b82a40ad7ce4e7d86590a3179bd7ca0fefdc",
+    "case-index.csv": "d5e5e49a69b52f66116c7854bb79784cdff70e951893f670c8e5a09beaa8256a",
+    "development.jsonl": "d4cc4c592379796600c7df22f1f5f388f8381909ca85704d4bcc7ccc6f27b00a",
+    "duplicate-audit.json": "8265ecb62472e80e1bf4d5c36e09f621c77fe67bcf16abad3e3a2e89619dde41"
+  }
+}
