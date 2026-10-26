@@ -1,0 +1,44 @@
+{
+  "mode": "mock",
+  "planned_outputs": 72,
+  "professional_ratings": "unavailable",
+  "external_calls": 0,
+  "per_arm": {
+    "strong_single": {
+      "planned": 24,
+      "status_counts": {
+        "mock_remote": 24
+      },
+      "with_text": 24,
+      "calls": 24,
+      "usage_known_calls": 0,
+      "prompt_tokens_known": 0,
+      "completion_tokens_known": 0,
+      "elapsed_ms": 116
+    },
+    "strong_multi": {
+      "planned": 24,
+      "status_counts": {
+        "mock_remote": 24
+      },
+      "with_text": 24,
+      "calls": 72,
+      "usage_known_calls": 0,
+      "prompt_tokens_known": 0,
+      "completion_tokens_known": 0,
+      "elapsed_ms": 619
+    },
+    "ccare": {
+      "planned": 24,
+      "status_counts": {
+        "mock_remote": 24
+      },
+      "with_text": 24,
+      "calls": 72,
+      "usage_known_calls": 0,
+      "prompt_tokens_known": 0,
+      "completion_tokens_known": 0,
+      "elapsed_ms": 329
+    }
+  }
+}
