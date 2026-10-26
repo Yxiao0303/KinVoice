@@ -1,7 +1,8 @@
 """Evidence links and deterministic support policy, not a clinical classifier."""
 import re
 from typing import Protocol
-from .semantics import RuleSemanticJudge, current_intent
+from .semantics import RuleSemanticJudge
+from .intent_scope import scoped_current_intent
 from .schemas import FieldAssessment
 from .schemas import EvidenceLink, PolicyDecision, State, TurnRequest
 
@@ -60,19 +61,23 @@ def decide(req: TurnRequest, state: State, links=None, *, intent_constraints=Tru
     allowed, reasons = list(STRATEGIES), []
     evidence = list(links or [])
     selected = req.goal
-    text_intent = current_intent(req.message) if intent_constraints else "unknown"
-    refusal = REFUSAL.search(req.message) if text_intent == "listen" else None
+    scope = scoped_current_intent(req.message)
+    text_intent = scope.value if intent_constraints else "unknown"
+    quote = req.message[scope.start:scope.end] if text_intent != "unknown" else ""
+    refusal = REFUSAL.search(quote) if text_intent == "listen" else None
     if state.risk == "urgent":
         return PolicyDecision(requested=req.goal, selected="safety", allowed=["safety"], reasons=["urgent_guard"], evidence=evidence)
     if state.family_unsafe and family_constraints:
         allowed.remove("draft")
         reasons.append("family_contact_restricted")
-    effective_intent = text_intent if text_intent != "unknown" else state.support_intent if intent_constraints else "unknown"
+    effective_intent = text_intent if text_intent != "unknown" else state.support_intent if intent_constraints and not scope.blocks_inferred else "unknown"
     if refusal or effective_intent == "listen":
         allowed = ["listen"]
         reasons.append("current_refusal" if refusal else "current_listen_intent")
-        if refusal:
-            evidence.append(locate(req, refusal.group(), "intent", current_only=True))
+        if text_intent == "listen":
+            evidence.append(EvidenceLink(message_id=req.message_id or f"current:{len(req.history)}",
+                source="current",turn=len(req.history),start=scope.start,end=scope.end,
+                quote=quote,purpose="intent"))
     elif effective_intent != "unknown":
         # Explicit current words may refine the UI choice; never infer a durable profile.
         selected = effective_intent

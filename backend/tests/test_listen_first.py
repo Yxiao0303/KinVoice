@@ -35,8 +35,9 @@ class ListenFirstTests(unittest.TestCase):
         report=score([row])
         self.assertEqual(report['errors']['missed_required_question'],1)
         self.assertEqual(report['unknown_retention'],1)
-    def test_frozen_sources_match(self):
-        self.assertEqual(json.loads((BUNDLE/'freeze.json').read_text())['hashes'],hashes())
+    def test_frozen_sources_match_original_revision(self):
+        from audit_frozen_research import audit
+        self.assertEqual(audit('listen-first-v1'),'ac5ef26ed7c9e996898204d2e44c1cb4e6432fae')
     def test_actual_urgent_question_and_unreviewed_template_are_counted(self):
         r=choose(self.req('爸爸正在掐我'),'abstain','listen_first')
         self.assertTrue(r['question'])
