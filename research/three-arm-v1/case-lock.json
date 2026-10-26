@@ -1,0 +1,8 @@
+{
+  "created_utc": "2026-10-26T01:53:19.221476+00:00",
+  "method_commit": "d9a7352e8fabc5086e9d618f54988dfbafa288ec",
+  "sha256": "a91a1c7f89f159de44364aacc64200c8ef7c38cb2f4d29e1b01ac71cfb530336",
+  "freeze_sha256": "a82841d144cc760f5835b6774717c286d65025ce9a6f668f6e8e670e546bcebf",
+  "evaluation": "one case, all three arms, no post-output tuning",
+  "new_family_no_old_paraphrase": true
+}
