@@ -1,0 +1,66 @@
+{
+  "planned_cases": 24,
+  "planned_outputs": 72,
+  "candidate_outputs": 0,
+  "per_arm": {
+    "strong_single": {
+      "planned": 24,
+      "status_counts": {
+        "remote": 22,
+        "safety_template": 2
+      },
+      "calls": 22,
+      "usage_known_calls": 22,
+      "unknown_usage_calls": 0,
+      "prompt_tokens_known": 4271,
+      "completion_tokens_known": 426,
+      "total_tokens_known": 4697,
+      "elapsed_ms": 36118,
+      "peak_estimate_cny_known": "0.011950"
+    },
+    "strong_multi": {
+      "planned": 24,
+      "status_counts": {
+        "remote": 22,
+        "safety_template": 2
+      },
+      "calls": 66,
+      "usage_known_calls": 66,
+      "unknown_usage_calls": 0,
+      "prompt_tokens_known": 17278,
+      "completion_tokens_known": 2110,
+      "total_tokens_known": 19388,
+      "elapsed_ms": 106552,
+      "peak_estimate_cny_known": "0.051436"
+    },
+    "ccare": {
+      "planned": 24,
+      "status_counts": {
+        "remote": 21,
+        "safe_fallback": 1,
+        "safety_template": 2
+      },
+      "calls": 64,
+      "usage_known_calls": 64,
+      "unknown_usage_calls": 0,
+      "prompt_tokens_known": 30004,
+      "completion_tokens_known": 2286,
+      "total_tokens_known": 32290,
+      "elapsed_ms": 97866,
+      "peak_estimate_cny_known": "0.078296"
+    }
+  },
+  "total": {
+    "calls": 152,
+    "usage_known_calls": 152,
+    "unknown_usage_calls": 0,
+    "prompt_tokens_known": 51553,
+    "completion_tokens_known": 4822,
+    "total_tokens_known": 56375,
+    "elapsed_ms": 240536
+  },
+  "peak_estimate_cny_known": "0.141682",
+  "actual_bill_cny": null,
+  "expert_scores": null,
+  "note": "Question-mark counts are punctuation diagnostics, not necessity/quality scores. Usage-priced peak estimate is not a bill; missing usage is never zero-cost. No independent expert ratings or advantage claim."
+}

@@ -1,0 +1,1648 @@
+[
+  {
+    "case_id": "D01_commute_voice-01",
+    "arm": "strong_multi",
+    "status": "remote",
+    "failure": null,
+    "output_present": true,
+    "calls": 3,
+    "usage_known_calls": 3,
+    "unknown_usage_calls": 0,
+    "prompt_tokens_known": 727,
+    "completion_tokens_known": 75,
+    "total_tokens_known": 802,
+    "peak_estimate_cny_known": "0.002054",
+    "elapsed_ms": 4623,
+    "question_marks_diagnostic": 0,
+    "http_statuses": [
+      200,
+      200,
+      200
+    ],
+    "models": [
+      "deepseek-flash"
+    ]
+  },
+  {
+    "case_id": "D01_commute_voice-01",
+    "arm": "ccare",
+    "status": "remote",
+    "failure": null,
+    "output_present": true,
+    "calls": 3,
+    "usage_known_calls": 3,
+    "unknown_usage_calls": 0,
+    "prompt_tokens_known": 1290,
+    "completion_tokens_known": 88,
+    "total_tokens_known": 1378,
+    "peak_estimate_cny_known": "0.003284",
+    "elapsed_ms": 4194,
+    "question_marks_diagnostic": 0,
+    "http_statuses": [
+      200,
+      200,
+      200
+    ],
+    "models": [
+      "deepseek-flash"
+    ]
+  },
+  {
+    "case_id": "D01_commute_voice-01",
+    "arm": "strong_single",
+    "status": "remote",
+    "failure": null,
+    "output_present": true,
+    "calls": 1,
+    "usage_known_calls": 1,
+    "unknown_usage_calls": 0,
+    "prompt_tokens_known": 185,
+    "completion_tokens_known": 13,
+    "total_tokens_known": 198,
+    "peak_estimate_cny_known": "0.000474",
+    "elapsed_ms": 1238,
+    "question_marks_diagnostic": 0,
+    "http_statuses": [
+      200
+    ],
+    "models": [
+      "deepseek-flash"
+    ]
+  },
+  {
+    "case_id": "D01_commute_voice-02",
+    "arm": "strong_single",
+    "status": "remote",
+    "failure": null,
+    "output_present": true,
+    "calls": 1,
+    "usage_known_calls": 1,
+    "unknown_usage_calls": 0,
+    "prompt_tokens_known": 180,
+    "completion_tokens_known": 17,
+    "total_tokens_known": 197,
+    "peak_estimate_cny_known": "0.000496",
+    "elapsed_ms": 1276,
+    "question_marks_diagnostic": 0,
+    "http_statuses": [
+      200
+    ],
+    "models": [
+      "deepseek-flash"
+    ]
+  },
+  {
+    "case_id": "D01_commute_voice-02",
+    "arm": "ccare",
+    "status": "remote",
+    "failure": null,
+    "output_present": true,
+    "calls": 3,
+    "usage_known_calls": 3,
+    "unknown_usage_calls": 0,
+    "prompt_tokens_known": 1276,
+    "completion_tokens_known": 83,
+    "total_tokens_known": 1359,
+    "peak_estimate_cny_known": "0.003216",
+    "elapsed_ms": 3836,
+    "question_marks_diagnostic": 0,
+    "http_statuses": [
+      200,
+      200,
+      200
+    ],
+    "models": [
+      "deepseek-flash"
+    ]
+  },
+  {
+    "case_id": "D01_commute_voice-02",
+    "arm": "strong_multi",
+    "status": "remote",
+    "failure": null,
+    "output_present": true,
+    "calls": 3,
+    "usage_known_calls": 3,
+    "unknown_usage_calls": 0,
+    "prompt_tokens_known": 714,
+    "completion_tokens_known": 75,
+    "total_tokens_known": 789,
+    "peak_estimate_cny_known": "0.002028",
+    "elapsed_ms": 3655,
+    "question_marks_diagnostic": 0,
+    "http_statuses": [
+      200,
+      200,
+      200
+    ],
+    "models": [
+      "deepseek-flash"
+    ]
+  },
+  {
+    "case_id": "D02_resume_pause-01",
+    "arm": "strong_multi",
+    "status": "remote",
+    "failure": null,
+    "output_present": true,
+    "calls": 3,
+    "usage_known_calls": 3,
+    "unknown_usage_calls": 0,
+    "prompt_tokens_known": 794,
+    "completion_tokens_known": 46,
+    "total_tokens_known": 840,
+    "peak_estimate_cny_known": "0.001956",
+    "elapsed_ms": 4938,
+    "question_marks_diagnostic": 0,
+    "http_statuses": [
+      200,
+      200,
+      200
+    ],
+    "models": [
+      "deepseek-flash"
+    ]
+  },
+  {
+    "case_id": "D02_resume_pause-01",
+    "arm": "ccare",
+    "status": "remote",
+    "failure": null,
+    "output_present": true,
+    "calls": 3,
+    "usage_known_calls": 3,
+    "unknown_usage_calls": 0,
+    "prompt_tokens_known": 1423,
+    "completion_tokens_known": 90,
+    "total_tokens_known": 1513,
+    "peak_estimate_cny_known": "0.003566",
+    "elapsed_ms": 4251,
+    "question_marks_diagnostic": 0,
+    "http_statuses": [
+      200,
+      200,
+      200
+    ],
+    "models": [
+      "deepseek-flash"
+    ]
+  },
+  {
+    "case_id": "D02_resume_pause-01",
+    "arm": "strong_single",
+    "status": "remote",
+    "failure": null,
+    "output_present": true,
+    "calls": 1,
+    "usage_known_calls": 1,
+    "unknown_usage_calls": 0,
+    "prompt_tokens_known": 228,
+    "completion_tokens_known": 17,
+    "total_tokens_known": 245,
+    "peak_estimate_cny_known": "0.000592",
+    "elapsed_ms": 1417,
+    "question_marks_diagnostic": 0,
+    "http_statuses": [
+      200
+    ],
+    "models": [
+      "deepseek-flash"
+    ]
+  },
+  {
+    "case_id": "D02_resume_pause-02",
+    "arm": "ccare",
+    "status": "remote",
+    "failure": null,
+    "output_present": true,
+    "calls": 3,
+    "usage_known_calls": 3,
+    "unknown_usage_calls": 0,
+    "prompt_tokens_known": 1419,
+    "completion_tokens_known": 91,
+    "total_tokens_known": 1510,
+    "peak_estimate_cny_known": "0.003566",
+    "elapsed_ms": 4237,
+    "question_marks_diagnostic": 0,
+    "http_statuses": [
+      200,
+      200,
+      200
+    ],
+    "models": [
+      "deepseek-flash"
+    ]
+  },
+  {
+    "case_id": "D02_resume_pause-02",
+    "arm": "strong_multi",
+    "status": "remote",
+    "failure": null,
+    "output_present": true,
+    "calls": 3,
+    "usage_known_calls": 3,
+    "unknown_usage_calls": 0,
+    "prompt_tokens_known": 788,
+    "completion_tokens_known": 44,
+    "total_tokens_known": 832,
+    "peak_estimate_cny_known": "0.001928",
+    "elapsed_ms": 4070,
+    "question_marks_diagnostic": 0,
+    "http_statuses": [
+      200,
+      200,
+      200
+    ],
+    "models": [
+      "deepseek-flash"
+    ]
+  },
+  {
+    "case_id": "D02_resume_pause-02",
+    "arm": "strong_single",
+    "status": "remote",
+    "failure": null,
+    "output_present": true,
+    "calls": 1,
+    "usage_known_calls": 1,
+    "unknown_usage_calls": 0,
+    "prompt_tokens_known": 227,
+    "completion_tokens_known": 9,
+    "total_tokens_known": 236,
+    "peak_estimate_cny_known": "0.000526",
+    "elapsed_ms": 1032,
+    "question_marks_diagnostic": 0,
+    "http_statuses": [
+      200
+    ],
+    "models": [
+      "deepseek-flash"
+    ]
+  },
+  {
+    "case_id": "D03_call_sequence-01",
+    "arm": "ccare",
+    "status": "remote",
+    "failure": null,
+    "output_present": true,
+    "calls": 3,
+    "usage_known_calls": 3,
+    "unknown_usage_calls": 0,
+    "prompt_tokens_known": 1338,
+    "completion_tokens_known": 117,
+    "total_tokens_known": 1455,
+    "peak_estimate_cny_known": "0.003612",
+    "elapsed_ms": 4178,
+    "question_marks_diagnostic": 0,
+    "http_statuses": [
+      200,
+      200,
+      200
+    ],
+    "models": [
+      "deepseek-flash"
+    ]
+  },
+  {
+    "case_id": "D03_call_sequence-01",
+    "arm": "strong_multi",
+    "status": "remote",
+    "failure": null,
+    "output_present": true,
+    "calls": 3,
+    "usage_known_calls": 3,
+    "unknown_usage_calls": 0,
+    "prompt_tokens_known": 745,
+    "completion_tokens_known": 81,
+    "total_tokens_known": 826,
+    "peak_estimate_cny_known": "0.002138",
+    "elapsed_ms": 4291,
+    "question_marks_diagnostic": 0,
+    "http_statuses": [
+      200,
+      200,
+      200
+    ],
+    "models": [
+      "deepseek-flash"
+    ]
+  },
+  {
+    "case_id": "D03_call_sequence-01",
+    "arm": "strong_single",
+    "status": "remote",
+    "failure": null,
+    "output_present": true,
+    "calls": 1,
+    "usage_known_calls": 1,
+    "unknown_usage_calls": 0,
+    "prompt_tokens_known": 189,
+    "completion_tokens_known": 23,
+    "total_tokens_known": 212,
+    "peak_estimate_cny_known": "0.000562",
+    "elapsed_ms": 1334,
+    "question_marks_diagnostic": 0,
+    "http_statuses": [
+      200
+    ],
+    "models": [
+      "deepseek-flash"
+    ]
+  },
+  {
+    "case_id": "D03_call_sequence-02",
+    "arm": "ccare",
+    "status": "safe_fallback",
+    "failure": "invalid_state_or_verdict",
+    "output_present": true,
+    "calls": 1,
+    "usage_known_calls": 1,
+    "unknown_usage_calls": 0,
+    "prompt_tokens_known": 322,
+    "completion_tokens_known": 85,
+    "total_tokens_known": 407,
+    "peak_estimate_cny_known": "0.001324",
+    "elapsed_ms": 1661,
+    "question_marks_diagnostic": 0,
+    "http_statuses": [
+      200
+    ],
+    "models": [
+      "deepseek-flash"
+    ]
+  },
+  {
+    "case_id": "D03_call_sequence-02",
+    "arm": "strong_multi",
+    "status": "remote",
+    "failure": null,
+    "output_present": true,
+    "calls": 3,
+    "usage_known_calls": 3,
+    "unknown_usage_calls": 0,
+    "prompt_tokens_known": 773,
+    "completion_tokens_known": 32,
+    "total_tokens_known": 805,
+    "peak_estimate_cny_known": "0.001802",
+    "elapsed_ms": 5120,
+    "question_marks_diagnostic": 0,
+    "http_statuses": [
+      200,
+      200,
+      200
+    ],
+    "models": [
+      "deepseek-flash"
+    ]
+  },
+  {
+    "case_id": "D03_call_sequence-02",
+    "arm": "strong_single",
+    "status": "remote",
+    "failure": null,
+    "output_present": true,
+    "calls": 1,
+    "usage_known_calls": 1,
+    "unknown_usage_calls": 0,
+    "prompt_tokens_known": 228,
+    "completion_tokens_known": 9,
+    "total_tokens_known": 237,
+    "peak_estimate_cny_known": "0.000528",
+    "elapsed_ms": 1385,
+    "question_marks_diagnostic": 0,
+    "http_statuses": [
+      200
+    ],
+    "models": [
+      "deepseek-flash"
+    ]
+  },
+  {
+    "case_id": "D04_budget_negation-01",
+    "arm": "ccare",
+    "status": "remote",
+    "failure": null,
+    "output_present": true,
+    "calls": 3,
+    "usage_known_calls": 3,
+    "unknown_usage_calls": 0,
+    "prompt_tokens_known": 1596,
+    "completion_tokens_known": 162,
+    "total_tokens_known": 1758,
+    "peak_estimate_cny_known": "0.004488",
+    "elapsed_ms": 4512,
+    "question_marks_diagnostic": 0,
+    "http_statuses": [
+      200,
+      200,
+      200
+    ],
+    "models": [
+      "deepseek-flash"
+    ]
+  },
+  {
+    "case_id": "D04_budget_negation-01",
+    "arm": "strong_multi",
+    "status": "remote",
+    "failure": null,
+    "output_present": true,
+    "calls": 3,
+    "usage_known_calls": 3,
+    "unknown_usage_calls": 0,
+    "prompt_tokens_known": 886,
+    "completion_tokens_known": 184,
+    "total_tokens_known": 1070,
+    "peak_estimate_cny_known": "0.003244",
+    "elapsed_ms": 4700,
+    "question_marks_diagnostic": 0,
+    "http_statuses": [
+      200,
+      200,
+      200
+    ],
+    "models": [
+      "deepseek-flash"
+    ]
+  },
+  {
+    "case_id": "D04_budget_negation-01",
+    "arm": "strong_single",
+    "status": "remote",
+    "failure": null,
+    "output_present": true,
+    "calls": 1,
+    "usage_known_calls": 1,
+    "unknown_usage_calls": 0,
+    "prompt_tokens_known": 184,
+    "completion_tokens_known": 61,
+    "total_tokens_known": 245,
+    "peak_estimate_cny_known": "0.000856",
+    "elapsed_ms": 1910,
+    "question_marks_diagnostic": 0,
+    "http_statuses": [
+      200
+    ],
+    "models": [
+      "deepseek-flash"
+    ]
+  },
+  {
+    "case_id": "D04_budget_negation-02",
+    "arm": "ccare",
+    "status": "remote",
+    "failure": null,
+    "output_present": true,
+    "calls": 3,
+    "usage_known_calls": 3,
+    "unknown_usage_calls": 0,
+    "prompt_tokens_known": 1441,
+    "completion_tokens_known": 108,
+    "total_tokens_known": 1549,
+    "peak_estimate_cny_known": "0.003746",
+    "elapsed_ms": 3549,
+    "question_marks_diagnostic": 0,
+    "http_statuses": [
+      200,
+      200,
+      200
+    ],
+    "models": [
+      "deepseek-flash"
+    ]
+  },
+  {
+    "case_id": "D04_budget_negation-02",
+    "arm": "strong_multi",
+    "status": "remote",
+    "failure": null,
+    "output_present": true,
+    "calls": 3,
+    "usage_known_calls": 3,
+    "unknown_usage_calls": 0,
+    "prompt_tokens_known": 825,
+    "completion_tokens_known": 122,
+    "total_tokens_known": 947,
+    "peak_estimate_cny_known": "0.002626",
+    "elapsed_ms": 4009,
+    "question_marks_diagnostic": 0,
+    "http_statuses": [
+      200,
+      200,
+      200
+    ],
+    "models": [
+      "deepseek-flash"
+    ]
+  },
+  {
+    "case_id": "D04_budget_negation-02",
+    "arm": "strong_single",
+    "status": "remote",
+    "failure": null,
+    "output_present": true,
+    "calls": 1,
+    "usage_known_calls": 1,
+    "unknown_usage_calls": 0,
+    "prompt_tokens_known": 186,
+    "completion_tokens_known": 15,
+    "total_tokens_known": 201,
+    "peak_estimate_cny_known": "0.000492",
+    "elapsed_ms": 1434,
+    "question_marks_diagnostic": 0,
+    "http_statuses": [
+      200
+    ],
+    "models": [
+      "deepseek-flash"
+    ]
+  },
+  {
+    "case_id": "D05_cousin_quote-01",
+    "arm": "strong_single",
+    "status": "remote",
+    "failure": null,
+    "output_present": true,
+    "calls": 1,
+    "usage_known_calls": 1,
+    "unknown_usage_calls": 0,
+    "prompt_tokens_known": 186,
+    "completion_tokens_known": 14,
+    "total_tokens_known": 200,
+    "peak_estimate_cny_known": "0.000484",
+    "elapsed_ms": 1200,
+    "question_marks_diagnostic": 0,
+    "http_statuses": [
+      200
+    ],
+    "models": [
+      "deepseek-flash"
+    ]
+  },
+  {
+    "case_id": "D05_cousin_quote-01",
+    "arm": "strong_multi",
+    "status": "remote",
+    "failure": null,
+    "output_present": true,
+    "calls": 3,
+    "usage_known_calls": 3,
+    "unknown_usage_calls": 0,
+    "prompt_tokens_known": 774,
+    "completion_tokens_known": 102,
+    "total_tokens_known": 876,
+    "peak_estimate_cny_known": "0.002364",
+    "elapsed_ms": 4708,
+    "question_marks_diagnostic": 0,
+    "http_statuses": [
+      200,
+      200,
+      200
+    ],
+    "models": [
+      "deepseek-flash"
+    ]
+  },
+  {
+    "case_id": "D05_cousin_quote-01",
+    "arm": "ccare",
+    "status": "remote",
+    "failure": null,
+    "output_present": true,
+    "calls": 3,
+    "usage_known_calls": 3,
+    "unknown_usage_calls": 0,
+    "prompt_tokens_known": 1329,
+    "completion_tokens_known": 108,
+    "total_tokens_known": 1437,
+    "peak_estimate_cny_known": "0.003522",
+    "elapsed_ms": 4216,
+    "question_marks_diagnostic": 0,
+    "http_statuses": [
+      200,
+      200,
+      200
+    ],
+    "models": [
+      "deepseek-flash"
+    ]
+  },
+  {
+    "case_id": "D05_cousin_quote-02",
+    "arm": "strong_single",
+    "status": "remote",
+    "failure": null,
+    "output_present": true,
+    "calls": 1,
+    "usage_known_calls": 1,
+    "unknown_usage_calls": 0,
+    "prompt_tokens_known": 185,
+    "completion_tokens_known": 24,
+    "total_tokens_known": 209,
+    "peak_estimate_cny_known": "0.000562",
+    "elapsed_ms": 1504,
+    "question_marks_diagnostic": 0,
+    "http_statuses": [
+      200
+    ],
+    "models": [
+      "deepseek-flash"
+    ]
+  },
+  {
+    "case_id": "D05_cousin_quote-02",
+    "arm": "strong_multi",
+    "status": "remote",
+    "failure": null,
+    "output_present": true,
+    "calls": 3,
+    "usage_known_calls": 3,
+    "unknown_usage_calls": 0,
+    "prompt_tokens_known": 828,
+    "completion_tokens_known": 132,
+    "total_tokens_known": 960,
+    "peak_estimate_cny_known": "0.002712",
+    "elapsed_ms": 6701,
+    "question_marks_diagnostic": 0,
+    "http_statuses": [
+      200,
+      200,
+      200
+    ],
+    "models": [
+      "deepseek-flash"
+    ]
+  },
+  {
+    "case_id": "D05_cousin_quote-02",
+    "arm": "ccare",
+    "status": "remote",
+    "failure": null,
+    "output_present": true,
+    "calls": 3,
+    "usage_known_calls": 3,
+    "unknown_usage_calls": 0,
+    "prompt_tokens_known": 1331,
+    "completion_tokens_known": 111,
+    "total_tokens_known": 1442,
+    "peak_estimate_cny_known": "0.00355",
+    "elapsed_ms": 4252,
+    "question_marks_diagnostic": 0,
+    "http_statuses": [
+      200,
+      200,
+      200
+    ],
+    "models": [
+      "deepseek-flash"
+    ]
+  },
+  {
+    "case_id": "D06_resolved_stairfall-01",
+    "arm": "strong_multi",
+    "status": "remote",
+    "failure": null,
+    "output_present": true,
+    "calls": 3,
+    "usage_known_calls": 3,
+    "unknown_usage_calls": 0,
+    "prompt_tokens_known": 781,
+    "completion_tokens_known": 101,
+    "total_tokens_known": 882,
+    "peak_estimate_cny_known": "0.00237",
+    "elapsed_ms": 4370,
+    "question_marks_diagnostic": 0,
+    "http_statuses": [
+      200,
+      200,
+      200
+    ],
+    "models": [
+      "deepseek-flash"
+    ]
+  },
+  {
+    "case_id": "D06_resolved_stairfall-01",
+    "arm": "strong_single",
+    "status": "remote",
+    "failure": null,
+    "output_present": true,
+    "calls": 1,
+    "usage_known_calls": 1,
+    "unknown_usage_calls": 0,
+    "prompt_tokens_known": 188,
+    "completion_tokens_known": 14,
+    "total_tokens_known": 202,
+    "peak_estimate_cny_known": "0.000488",
+    "elapsed_ms": 2088,
+    "question_marks_diagnostic": 0,
+    "http_statuses": [
+      200
+    ],
+    "models": [
+      "deepseek-flash"
+    ]
+  },
+  {
+    "case_id": "D06_resolved_stairfall-01",
+    "arm": "ccare",
+    "status": "remote",
+    "failure": null,
+    "output_present": true,
+    "calls": 3,
+    "usage_known_calls": 3,
+    "unknown_usage_calls": 0,
+    "prompt_tokens_known": 1642,
+    "completion_tokens_known": 95,
+    "total_tokens_known": 1737,
+    "peak_estimate_cny_known": "0.004044",
+    "elapsed_ms": 4115,
+    "question_marks_diagnostic": 0,
+    "http_statuses": [
+      200,
+      200,
+      200
+    ],
+    "models": [
+      "deepseek-flash"
+    ]
+  },
+  {
+    "case_id": "D06_resolved_stairfall-02",
+    "arm": "ccare",
+    "status": "remote",
+    "failure": null,
+    "output_present": true,
+    "calls": 3,
+    "usage_known_calls": 3,
+    "unknown_usage_calls": 0,
+    "prompt_tokens_known": 1349,
+    "completion_tokens_known": 119,
+    "total_tokens_known": 1468,
+    "peak_estimate_cny_known": "0.00365",
+    "elapsed_ms": 4178,
+    "question_marks_diagnostic": 0,
+    "http_statuses": [
+      200,
+      200,
+      200
+    ],
+    "models": [
+      "deepseek-flash"
+    ]
+  },
+  {
+    "case_id": "D06_resolved_stairfall-02",
+    "arm": "strong_multi",
+    "status": "remote",
+    "failure": null,
+    "output_present": true,
+    "calls": 3,
+    "usage_known_calls": 3,
+    "unknown_usage_calls": 0,
+    "prompt_tokens_known": 831,
+    "completion_tokens_known": 127,
+    "total_tokens_known": 958,
+    "peak_estimate_cny_known": "0.002678",
+    "elapsed_ms": 4700,
+    "question_marks_diagnostic": 0,
+    "http_statuses": [
+      200,
+      200,
+      200
+    ],
+    "models": [
+      "deepseek-flash"
+    ]
+  },
+  {
+    "case_id": "D06_resolved_stairfall-02",
+    "arm": "strong_single",
+    "status": "remote",
+    "failure": null,
+    "output_present": true,
+    "calls": 1,
+    "usage_known_calls": 1,
+    "unknown_usage_calls": 0,
+    "prompt_tokens_known": 189,
+    "completion_tokens_known": 12,
+    "total_tokens_known": 201,
+    "peak_estimate_cny_known": "0.000474",
+    "elapsed_ms": 3844,
+    "question_marks_diagnostic": 1,
+    "http_statuses": [
+      200
+    ],
+    "models": [
+      "deepseek-flash"
+    ]
+  },
+  {
+    "case_id": "D07_door_threat-01",
+    "arm": "strong_multi",
+    "status": "safety_template",
+    "failure": null,
+    "output_present": true,
+    "calls": 0,
+    "usage_known_calls": 0,
+    "unknown_usage_calls": 0,
+    "prompt_tokens_known": 0,
+    "completion_tokens_known": 0,
+    "total_tokens_known": 0,
+    "peak_estimate_cny_known": "0",
+    "elapsed_ms": 12,
+    "question_marks_diagnostic": 1,
+    "http_statuses": [],
+    "models": []
+  },
+  {
+    "case_id": "D07_door_threat-01",
+    "arm": "ccare",
+    "status": "safety_template",
+    "failure": null,
+    "output_present": true,
+    "calls": 0,
+    "usage_known_calls": 0,
+    "unknown_usage_calls": 0,
+    "prompt_tokens_known": 0,
+    "completion_tokens_known": 0,
+    "total_tokens_known": 0,
+    "peak_estimate_cny_known": "0",
+    "elapsed_ms": 11,
+    "question_marks_diagnostic": 1,
+    "http_statuses": [],
+    "models": []
+  },
+  {
+    "case_id": "D07_door_threat-01",
+    "arm": "strong_single",
+    "status": "safety_template",
+    "failure": null,
+    "output_present": true,
+    "calls": 0,
+    "usage_known_calls": 0,
+    "unknown_usage_calls": 0,
+    "prompt_tokens_known": 0,
+    "completion_tokens_known": 0,
+    "total_tokens_known": 0,
+    "peak_estimate_cny_known": "0",
+    "elapsed_ms": 9,
+    "question_marks_diagnostic": 1,
+    "http_statuses": [],
+    "models": []
+  },
+  {
+    "case_id": "D07_door_threat-02",
+    "arm": "strong_single",
+    "status": "safety_template",
+    "failure": null,
+    "output_present": true,
+    "calls": 0,
+    "usage_known_calls": 0,
+    "unknown_usage_calls": 0,
+    "prompt_tokens_known": 0,
+    "completion_tokens_known": 0,
+    "total_tokens_known": 0,
+    "peak_estimate_cny_known": "0",
+    "elapsed_ms": 11,
+    "question_marks_diagnostic": 1,
+    "http_statuses": [],
+    "models": []
+  },
+  {
+    "case_id": "D07_door_threat-02",
+    "arm": "ccare",
+    "status": "safety_template",
+    "failure": null,
+    "output_present": true,
+    "calls": 0,
+    "usage_known_calls": 0,
+    "unknown_usage_calls": 0,
+    "prompt_tokens_known": 0,
+    "completion_tokens_known": 0,
+    "total_tokens_known": 0,
+    "peak_estimate_cny_known": "0",
+    "elapsed_ms": 14,
+    "question_marks_diagnostic": 1,
+    "http_statuses": [],
+    "models": []
+  },
+  {
+    "case_id": "D07_door_threat-02",
+    "arm": "strong_multi",
+    "status": "safety_template",
+    "failure": null,
+    "output_present": true,
+    "calls": 0,
+    "usage_known_calls": 0,
+    "unknown_usage_calls": 0,
+    "prompt_tokens_known": 0,
+    "completion_tokens_known": 0,
+    "total_tokens_known": 0,
+    "peak_estimate_cny_known": "0",
+    "elapsed_ms": 13,
+    "question_marks_diagnostic": 1,
+    "http_statuses": [],
+    "models": []
+  },
+  {
+    "case_id": "D08_sibling_pronouns-01",
+    "arm": "strong_multi",
+    "status": "remote",
+    "failure": null,
+    "output_present": true,
+    "calls": 3,
+    "usage_known_calls": 3,
+    "unknown_usage_calls": 0,
+    "prompt_tokens_known": 709,
+    "completion_tokens_known": 65,
+    "total_tokens_known": 774,
+    "peak_estimate_cny_known": "0.001938",
+    "elapsed_ms": 4188,
+    "question_marks_diagnostic": 0,
+    "http_statuses": [
+      200,
+      200,
+      200
+    ],
+    "models": [
+      "deepseek-flash"
+    ]
+  },
+  {
+    "case_id": "D08_sibling_pronouns-01",
+    "arm": "ccare",
+    "status": "remote",
+    "failure": null,
+    "output_present": true,
+    "calls": 3,
+    "usage_known_calls": 3,
+    "unknown_usage_calls": 0,
+    "prompt_tokens_known": 1318,
+    "completion_tokens_known": 95,
+    "total_tokens_known": 1413,
+    "peak_estimate_cny_known": "0.003396",
+    "elapsed_ms": 5484,
+    "question_marks_diagnostic": 0,
+    "http_statuses": [
+      200,
+      200,
+      200
+    ],
+    "models": [
+      "deepseek-flash"
+    ]
+  },
+  {
+    "case_id": "D08_sibling_pronouns-01",
+    "arm": "strong_single",
+    "status": "remote",
+    "failure": null,
+    "output_present": true,
+    "calls": 1,
+    "usage_known_calls": 1,
+    "unknown_usage_calls": 0,
+    "prompt_tokens_known": 186,
+    "completion_tokens_known": 13,
+    "total_tokens_known": 199,
+    "peak_estimate_cny_known": "0.000476",
+    "elapsed_ms": 1384,
+    "question_marks_diagnostic": 0,
+    "http_statuses": [
+      200
+    ],
+    "models": [
+      "deepseek-flash"
+    ]
+  },
+  {
+    "case_id": "D08_sibling_pronouns-02",
+    "arm": "ccare",
+    "status": "remote",
+    "failure": null,
+    "output_present": true,
+    "calls": 3,
+    "usage_known_calls": 3,
+    "unknown_usage_calls": 0,
+    "prompt_tokens_known": 1291,
+    "completion_tokens_known": 95,
+    "total_tokens_known": 1386,
+    "peak_estimate_cny_known": "0.003342",
+    "elapsed_ms": 6836,
+    "question_marks_diagnostic": 0,
+    "http_statuses": [
+      200,
+      200,
+      200
+    ],
+    "models": [
+      "deepseek-flash"
+    ]
+  },
+  {
+    "case_id": "D08_sibling_pronouns-02",
+    "arm": "strong_multi",
+    "status": "remote",
+    "failure": null,
+    "output_present": true,
+    "calls": 3,
+    "usage_known_calls": 3,
+    "unknown_usage_calls": 0,
+    "prompt_tokens_known": 769,
+    "completion_tokens_known": 111,
+    "total_tokens_known": 880,
+    "peak_estimate_cny_known": "0.002426",
+    "elapsed_ms": 4822,
+    "question_marks_diagnostic": 0,
+    "http_statuses": [
+      200,
+      200,
+      200
+    ],
+    "models": [
+      "deepseek-flash"
+    ]
+  },
+  {
+    "case_id": "D08_sibling_pronouns-02",
+    "arm": "strong_single",
+    "status": "remote",
+    "failure": null,
+    "output_present": true,
+    "calls": 1,
+    "usage_known_calls": 1,
+    "unknown_usage_calls": 0,
+    "prompt_tokens_known": 181,
+    "completion_tokens_known": 14,
+    "total_tokens_known": 195,
+    "peak_estimate_cny_known": "0.000474",
+    "elapsed_ms": 1338,
+    "question_marks_diagnostic": 1,
+    "http_statuses": [
+      200
+    ],
+    "models": [
+      "deepseek-flash"
+    ]
+  },
+  {
+    "case_id": "D09_read_receipt-01",
+    "arm": "ccare",
+    "status": "remote",
+    "failure": null,
+    "output_present": true,
+    "calls": 3,
+    "usage_known_calls": 3,
+    "unknown_usage_calls": 0,
+    "prompt_tokens_known": 1293,
+    "completion_tokens_known": 103,
+    "total_tokens_known": 1396,
+    "peak_estimate_cny_known": "0.00341",
+    "elapsed_ms": 5303,
+    "question_marks_diagnostic": 0,
+    "http_statuses": [
+      200,
+      200,
+      200
+    ],
+    "models": [
+      "deepseek-flash"
+    ]
+  },
+  {
+    "case_id": "D09_read_receipt-01",
+    "arm": "strong_multi",
+    "status": "remote",
+    "failure": null,
+    "output_present": true,
+    "calls": 3,
+    "usage_known_calls": 3,
+    "unknown_usage_calls": 0,
+    "prompt_tokens_known": 708,
+    "completion_tokens_known": 83,
+    "total_tokens_known": 791,
+    "peak_estimate_cny_known": "0.00208",
+    "elapsed_ms": 5261,
+    "question_marks_diagnostic": 1,
+    "http_statuses": [
+      200,
+      200,
+      200
+    ],
+    "models": [
+      "deepseek-flash"
+    ]
+  },
+  {
+    "case_id": "D09_read_receipt-01",
+    "arm": "strong_single",
+    "status": "remote",
+    "failure": null,
+    "output_present": true,
+    "calls": 1,
+    "usage_known_calls": 1,
+    "unknown_usage_calls": 0,
+    "prompt_tokens_known": 179,
+    "completion_tokens_known": 36,
+    "total_tokens_known": 215,
+    "peak_estimate_cny_known": "0.000646",
+    "elapsed_ms": 1619,
+    "question_marks_diagnostic": 1,
+    "http_statuses": [
+      200
+    ],
+    "models": [
+      "deepseek-flash"
+    ]
+  },
+  {
+    "case_id": "D09_read_receipt-02",
+    "arm": "strong_single",
+    "status": "remote",
+    "failure": null,
+    "output_present": true,
+    "calls": 1,
+    "usage_known_calls": 1,
+    "unknown_usage_calls": 0,
+    "prompt_tokens_known": 179,
+    "completion_tokens_known": 16,
+    "total_tokens_known": 195,
+    "peak_estimate_cny_known": "0.000486",
+    "elapsed_ms": 2216,
+    "question_marks_diagnostic": 0,
+    "http_statuses": [
+      200
+    ],
+    "models": [
+      "deepseek-flash"
+    ]
+  },
+  {
+    "case_id": "D09_read_receipt-02",
+    "arm": "ccare",
+    "status": "remote",
+    "failure": null,
+    "output_present": true,
+    "calls": 3,
+    "usage_known_calls": 3,
+    "unknown_usage_calls": 0,
+    "prompt_tokens_known": 1290,
+    "completion_tokens_known": 96,
+    "total_tokens_known": 1386,
+    "peak_estimate_cny_known": "0.003348",
+    "elapsed_ms": 5767,
+    "question_marks_diagnostic": 0,
+    "http_statuses": [
+      200,
+      200,
+      200
+    ],
+    "models": [
+      "deepseek-flash"
+    ]
+  },
+  {
+    "case_id": "D09_read_receipt-02",
+    "arm": "strong_multi",
+    "status": "remote",
+    "failure": null,
+    "output_present": true,
+    "calls": 3,
+    "usage_known_calls": 3,
+    "unknown_usage_calls": 0,
+    "prompt_tokens_known": 806,
+    "completion_tokens_known": 138,
+    "total_tokens_known": 944,
+    "peak_estimate_cny_known": "0.002716",
+    "elapsed_ms": 7689,
+    "question_marks_diagnostic": 0,
+    "http_statuses": [
+      200,
+      200,
+      200
+    ],
+    "models": [
+      "deepseek-flash"
+    ]
+  },
+  {
+    "case_id": "D10_address_missing-01",
+    "arm": "strong_multi",
+    "status": "remote",
+    "failure": null,
+    "output_present": true,
+    "calls": 3,
+    "usage_known_calls": 3,
+    "unknown_usage_calls": 0,
+    "prompt_tokens_known": 707,
+    "completion_tokens_known": 51,
+    "total_tokens_known": 758,
+    "peak_estimate_cny_known": "0.001822",
+    "elapsed_ms": 4429,
+    "question_marks_diagnostic": 1,
+    "http_statuses": [
+      200,
+      200,
+      200
+    ],
+    "models": [
+      "deepseek-flash"
+    ]
+  },
+  {
+    "case_id": "D10_address_missing-01",
+    "arm": "strong_single",
+    "status": "remote",
+    "failure": null,
+    "output_present": true,
+    "calls": 1,
+    "usage_known_calls": 1,
+    "unknown_usage_calls": 0,
+    "prompt_tokens_known": 194,
+    "completion_tokens_known": 10,
+    "total_tokens_known": 204,
+    "peak_estimate_cny_known": "0.000468",
+    "elapsed_ms": 1483,
+    "question_marks_diagnostic": 1,
+    "http_statuses": [
+      200
+    ],
+    "models": [
+      "deepseek-flash"
+    ]
+  },
+  {
+    "case_id": "D10_address_missing-01",
+    "arm": "ccare",
+    "status": "remote",
+    "failure": null,
+    "output_present": true,
+    "calls": 3,
+    "usage_known_calls": 3,
+    "unknown_usage_calls": 0,
+    "prompt_tokens_known": 1382,
+    "completion_tokens_known": 122,
+    "total_tokens_known": 1504,
+    "peak_estimate_cny_known": "0.00374",
+    "elapsed_ms": 4447,
+    "question_marks_diagnostic": 0,
+    "http_statuses": [
+      200,
+      200,
+      200
+    ],
+    "models": [
+      "deepseek-flash"
+    ]
+  },
+  {
+    "case_id": "D10_address_missing-02",
+    "arm": "strong_multi",
+    "status": "remote",
+    "failure": null,
+    "output_present": true,
+    "calls": 3,
+    "usage_known_calls": 3,
+    "unknown_usage_calls": 0,
+    "prompt_tokens_known": 836,
+    "completion_tokens_known": 144,
+    "total_tokens_known": 980,
+    "peak_estimate_cny_known": "0.002824",
+    "elapsed_ms": 5256,
+    "question_marks_diagnostic": 1,
+    "http_statuses": [
+      200,
+      200,
+      200
+    ],
+    "models": [
+      "deepseek-flash"
+    ]
+  },
+  {
+    "case_id": "D10_address_missing-02",
+    "arm": "strong_single",
+    "status": "remote",
+    "failure": null,
+    "output_present": true,
+    "calls": 1,
+    "usage_known_calls": 1,
+    "unknown_usage_calls": 0,
+    "prompt_tokens_known": 184,
+    "completion_tokens_known": 23,
+    "total_tokens_known": 207,
+    "peak_estimate_cny_known": "0.000552",
+    "elapsed_ms": 1799,
+    "question_marks_diagnostic": 0,
+    "http_statuses": [
+      200
+    ],
+    "models": [
+      "deepseek-flash"
+    ]
+  },
+  {
+    "case_id": "D10_address_missing-02",
+    "arm": "ccare",
+    "status": "remote",
+    "failure": null,
+    "output_present": true,
+    "calls": 3,
+    "usage_known_calls": 3,
+    "unknown_usage_calls": 0,
+    "prompt_tokens_known": 1278,
+    "completion_tokens_known": 139,
+    "total_tokens_known": 1417,
+    "peak_estimate_cny_known": "0.003668",
+    "elapsed_ms": 4843,
+    "question_marks_diagnostic": 0,
+    "http_statuses": [
+      200,
+      200,
+      200
+    ],
+    "models": [
+      "deepseek-flash"
+    ]
+  },
+  {
+    "case_id": "D11_emotion_correction-01",
+    "arm": "strong_single",
+    "status": "remote",
+    "failure": null,
+    "output_present": true,
+    "calls": 1,
+    "usage_known_calls": 1,
+    "unknown_usage_calls": 0,
+    "prompt_tokens_known": 226,
+    "completion_tokens_known": 18,
+    "total_tokens_known": 244,
+    "peak_estimate_cny_known": "0.000596",
+    "elapsed_ms": 2125,
+    "question_marks_diagnostic": 0,
+    "http_statuses": [
+      200
+    ],
+    "models": [
+      "deepseek-flash"
+    ]
+  },
+  {
+    "case_id": "D11_emotion_correction-01",
+    "arm": "strong_multi",
+    "status": "remote",
+    "failure": null,
+    "output_present": true,
+    "calls": 3,
+    "usage_known_calls": 3,
+    "unknown_usage_calls": 0,
+    "prompt_tokens_known": 840,
+    "completion_tokens_known": 71,
+    "total_tokens_known": 911,
+    "peak_estimate_cny_known": "0.002248",
+    "elapsed_ms": 4681,
+    "question_marks_diagnostic": 0,
+    "http_statuses": [
+      200,
+      200,
+      200
+    ],
+    "models": [
+      "deepseek-flash"
+    ]
+  },
+  {
+    "case_id": "D11_emotion_correction-01",
+    "arm": "ccare",
+    "status": "remote",
+    "failure": null,
+    "output_present": true,
+    "calls": 3,
+    "usage_known_calls": 3,
+    "unknown_usage_calls": 0,
+    "prompt_tokens_known": 1527,
+    "completion_tokens_known": 100,
+    "total_tokens_known": 1627,
+    "peak_estimate_cny_known": "0.003854",
+    "elapsed_ms": 5065,
+    "question_marks_diagnostic": 0,
+    "http_statuses": [
+      200,
+      200,
+      200
+    ],
+    "models": [
+      "deepseek-flash"
+    ]
+  },
+  {
+    "case_id": "D11_emotion_correction-02",
+    "arm": "ccare",
+    "status": "remote",
+    "failure": null,
+    "output_present": true,
+    "calls": 3,
+    "usage_known_calls": 3,
+    "unknown_usage_calls": 0,
+    "prompt_tokens_known": 1507,
+    "completion_tokens_known": 79,
+    "total_tokens_known": 1586,
+    "peak_estimate_cny_known": "0.003646",
+    "elapsed_ms": 4647,
+    "question_marks_diagnostic": 0,
+    "http_statuses": [
+      200,
+      200,
+      200
+    ],
+    "models": [
+      "deepseek-flash"
+    ]
+  },
+  {
+    "case_id": "D11_emotion_correction-02",
+    "arm": "strong_single",
+    "status": "remote",
+    "failure": null,
+    "output_present": true,
+    "calls": 1,
+    "usage_known_calls": 1,
+    "unknown_usage_calls": 0,
+    "prompt_tokens_known": 225,
+    "completion_tokens_known": 14,
+    "total_tokens_known": 239,
+    "peak_estimate_cny_known": "0.000562",
+    "elapsed_ms": 1470,
+    "question_marks_diagnostic": 0,
+    "http_statuses": [
+      200
+    ],
+    "models": [
+      "deepseek-flash"
+    ]
+  },
+  {
+    "case_id": "D11_emotion_correction-02",
+    "arm": "strong_multi",
+    "status": "remote",
+    "failure": null,
+    "output_present": true,
+    "calls": 3,
+    "usage_known_calls": 3,
+    "unknown_usage_calls": 0,
+    "prompt_tokens_known": 845,
+    "completion_tokens_known": 74,
+    "total_tokens_known": 919,
+    "peak_estimate_cny_known": "0.002282",
+    "elapsed_ms": 4667,
+    "question_marks_diagnostic": 1,
+    "http_statuses": [
+      200,
+      200,
+      200
+    ],
+    "models": [
+      "deepseek-flash"
+    ]
+  },
+  {
+    "case_id": "D12_private_topic-01",
+    "arm": "ccare",
+    "status": "remote",
+    "failure": null,
+    "output_present": true,
+    "calls": 3,
+    "usage_known_calls": 3,
+    "unknown_usage_calls": 0,
+    "prompt_tokens_known": 1740,
+    "completion_tokens_known": 104,
+    "total_tokens_known": 1844,
+    "peak_estimate_cny_known": "0.004312",
+    "elapsed_ms": 4241,
+    "question_marks_diagnostic": 0,
+    "http_statuses": [
+      200,
+      200,
+      200
+    ],
+    "models": [
+      "deepseek-flash"
+    ]
+  },
+  {
+    "case_id": "D12_private_topic-01",
+    "arm": "strong_single",
+    "status": "remote",
+    "failure": null,
+    "output_present": true,
+    "calls": 1,
+    "usage_known_calls": 1,
+    "unknown_usage_calls": 0,
+    "prompt_tokens_known": 181,
+    "completion_tokens_known": 28,
+    "total_tokens_known": 209,
+    "peak_estimate_cny_known": "0.000586",
+    "elapsed_ms": 1589,
+    "question_marks_diagnostic": 0,
+    "http_statuses": [
+      200
+    ],
+    "models": [
+      "deepseek-flash"
+    ]
+  },
+  {
+    "case_id": "D12_private_topic-01",
+    "arm": "strong_multi",
+    "status": "remote",
+    "failure": null,
+    "output_present": true,
+    "calls": 3,
+    "usage_known_calls": 3,
+    "unknown_usage_calls": 0,
+    "prompt_tokens_known": 844,
+    "completion_tokens_known": 159,
+    "total_tokens_known": 1003,
+    "peak_estimate_cny_known": "0.00296",
+    "elapsed_ms": 5338,
+    "question_marks_diagnostic": 0,
+    "http_statuses": [
+      200,
+      200,
+      200
+    ],
+    "models": [
+      "deepseek-flash"
+    ]
+  },
+  {
+    "case_id": "D12_private_topic-02",
+    "arm": "ccare",
+    "status": "remote",
+    "failure": null,
+    "output_present": true,
+    "calls": 3,
+    "usage_known_calls": 3,
+    "unknown_usage_calls": 0,
+    "prompt_tokens_known": 1622,
+    "completion_tokens_known": 96,
+    "total_tokens_known": 1718,
+    "peak_estimate_cny_known": "0.004012",
+    "elapsed_ms": 4029,
+    "question_marks_diagnostic": 0,
+    "http_statuses": [
+      200,
+      200,
+      200
+    ],
+    "models": [
+      "deepseek-flash"
+    ]
+  },
+  {
+    "case_id": "D12_private_topic-02",
+    "arm": "strong_multi",
+    "status": "remote",
+    "failure": null,
+    "output_present": true,
+    "calls": 3,
+    "usage_known_calls": 3,
+    "unknown_usage_calls": 0,
+    "prompt_tokens_known": 748,
+    "completion_tokens_known": 93,
+    "total_tokens_known": 841,
+    "peak_estimate_cny_known": "0.00224",
+    "elapsed_ms": 4311,
+    "question_marks_diagnostic": 0,
+    "http_statuses": [
+      200,
+      200,
+      200
+    ],
+    "models": [
+      "deepseek-flash"
+    ]
+  },
+  {
+    "case_id": "D12_private_topic-02",
+    "arm": "strong_single",
+    "status": "remote",
+    "failure": null,
+    "output_present": true,
+    "calls": 1,
+    "usage_known_calls": 1,
+    "unknown_usage_calls": 0,
+    "prompt_tokens_known": 181,
+    "completion_tokens_known": 26,
+    "total_tokens_known": 207,
+    "peak_estimate_cny_known": "0.00057",
+    "elapsed_ms": 1413,
+    "question_marks_diagnostic": 0,
+    "http_statuses": [
+      200
+    ],
+    "models": [
+      "deepseek-flash"
+    ]
+  }
+]
