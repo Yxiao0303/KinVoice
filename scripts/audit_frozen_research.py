@@ -5,6 +5,7 @@ import argparse,hashlib,io,json,subprocess,sys,tarfile,tempfile
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1]
 ARCHIVES={
+ 'batch-evaluation-v2':'58f6580e771f85cfb8e9b8e1c333d7b14c8ae482',
  'batch-evaluation-v1':'5ced9b1f4c8120ea4c5bd42eeb96096eb20f2256',
  'exploratory-v1':'0291b769db79ef3468fec850853107fbed756cc1',
  'listen-first-v1':'ac5ef26ed7c9e996898204d2e44c1cb4e6432fae',
@@ -22,7 +23,7 @@ def audit(name):
     for path,digest in expected.items():
         if hashlib.sha256(git_bytes(revision,path)).hexdigest()!=digest:
             raise ValueError('Historical source hash mismatch')
-    if name in ('three-arm-v1','batch-evaluation-v1'):
+    if name in ('three-arm-v1','batch-evaluation-v1','batch-evaluation-v2'):
         original_paths=set(subprocess.check_output(['git','ls-tree','-r','--name-only',revision,
             '--',f'research/{name}'],cwd=ROOT,text=True).splitlines())
         current_paths={str(p.relative_to(ROOT)) for p in (ROOT/f'research/{name}').rglob('*') if p.is_file()}

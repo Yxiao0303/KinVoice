@@ -12,6 +12,7 @@ from .policy import decide, locate, validate_state, RuleStrategySelector
 from .reviews import apply_reviews, review_targets
 from .semantics import PATTERNS
 from .current_threat import current_threat_state
+from .threat_scope import physical_resolution_excludes
 
 SAFETY = (
     "你提到的情况需要优先关注当下安全。如果已经受伤、服药过量或有人正在伤害你，"
@@ -57,9 +58,10 @@ def urgent_evidence(text):
     excluded = [part.span() for part in re.finditer(r"[^，。！？；,!?;\n]+", text)
                 if NON_ACUTE_CLAUSE.fullmatch(part.group().strip())]
     matches = list(URGENT.finditer(text))
+    resolved = [m for m in matches if physical_resolution_excludes(text, m)]
     active = [match for match in matches
-              if not any(start <= match.start() and match.end() <= end for start, end in excluded)]
-    return (active[0] if active else None), bool(matches and excluded)
+              if match not in resolved and not any(start <= match.start() and match.end() <= end for start, end in excluded)]
+    return (active[0] if active else None), bool(matches and (excluded or resolved))
 
 
 def local_state(req: TurnRequest) -> State:

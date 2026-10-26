@@ -1,0 +1,66 @@
+[
+  {
+    "id": "quoted_attacker_words",
+    "message": "我现在被堵在门口，对方说“我要打你”。",
+    "before_risk": "unknown",
+    "after_risk": "urgent",
+    "developer_expected": "urgent",
+    "matches_developer_expectation": true,
+    "synthetic": true,
+    "review_status": "unreviewed"
+  },
+  {
+    "id": "time_after_event",
+    "message": "有人砸东西并拦住我，这就发生在现在。",
+    "before_risk": "unknown",
+    "after_risk": "urgent",
+    "developer_expected": "urgent",
+    "matches_developer_expectation": true,
+    "synthetic": true,
+    "review_status": "unreviewed"
+  },
+  {
+    "id": "legacy_quoted_resolved",
+    "message": "朋友说“爸爸正在掐我”，她已经安全到家。",
+    "before_risk": "urgent",
+    "after_risk": "unknown",
+    "developer_expected": "unknown",
+    "matches_developer_expectation": true,
+    "synthetic": true,
+    "review_status": "unreviewed"
+  },
+  {
+    "id": "cross_sentence_resolution",
+    "message": "朋友说“爸爸正在掐我”。她已经安全到家。",
+    "after_risk": "unknown",
+    "developer_expected": "unknown",
+    "matches_developer_expectation": true,
+    "synthetic": true,
+    "review_status": "unreviewed",
+    "limitation": null
+  },
+  {
+    "id": "cross_turn_resolution",
+    "request": {
+      "message_id": null,
+      "message": "朋友已经安全到家。",
+      "history": [
+        {
+          "message_id": null,
+          "role": "user",
+          "content": "朋友说“爸爸正在掐我”。"
+        }
+      ],
+      "goal": "listen",
+      "eligible": false,
+      "external_consent": false,
+      "reviews": []
+    },
+    "after_risk": "urgent",
+    "developer_expected": "unknown",
+    "matches_developer_expectation": false,
+    "synthetic": true,
+    "review_status": "unreviewed",
+    "limitation": "No event identity links across turns for legacy reported physical danger; retained conservatively"
+  }
+]
