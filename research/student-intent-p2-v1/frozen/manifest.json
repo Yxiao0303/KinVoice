@@ -1,0 +1,309 @@
+{
+  "created_utc": "2026-10-26T11:37:21.304644+00:00",
+  "python": "3.12.14",
+  "platform": "Linux-6.18.55-x86_64-with-glibc2.41",
+  "seed": 20261026,
+  "train_n": 32,
+  "dev_n": 12,
+  "training_seconds": 0.08895779199519893,
+  "threshold": 0.25,
+  "threshold_grid": [
+    {
+      "threshold": 0.0,
+      "loss": 1.5,
+      "feasible": true,
+      "n": 12,
+      "accepted": 10,
+      "coverage": 0.8333333333333334,
+      "abstentions": 2,
+      "selective_errors": 1,
+      "selective_error_rate": 0.1,
+      "correct_over_all": 0.75,
+      "confusion_gold_rows": {
+        "listen": {
+          "listen": 3,
+          "draft": 0,
+          "clarify": 0,
+          "unknown": 0,
+          "abstain": 0
+        },
+        "draft": {
+          "listen": 0,
+          "draft": 3,
+          "clarify": 0,
+          "unknown": 0,
+          "abstain": 0
+        },
+        "clarify": {
+          "listen": 0,
+          "draft": 0,
+          "clarify": 3,
+          "unknown": 0,
+          "abstain": 0
+        },
+        "unknown": {
+          "listen": 1,
+          "draft": 0,
+          "clarify": 0,
+          "unknown": 0,
+          "abstain": 2
+        }
+      },
+      "unknown_correct": 0,
+      "unknown_n": 3,
+      "explicit_requests_abstained": 0
+    },
+    {
+      "threshold": 0.25,
+      "loss": 0.75,
+      "feasible": true,
+      "n": 12,
+      "accepted": 9,
+      "coverage": 0.75,
+      "abstentions": 3,
+      "selective_errors": 0,
+      "selective_error_rate": 0.0,
+      "correct_over_all": 0.75,
+      "confusion_gold_rows": {
+        "listen": {
+          "listen": 3,
+          "draft": 0,
+          "clarify": 0,
+          "unknown": 0,
+          "abstain": 0
+        },
+        "draft": {
+          "listen": 0,
+          "draft": 3,
+          "clarify": 0,
+          "unknown": 0,
+          "abstain": 0
+        },
+        "clarify": {
+          "listen": 0,
+          "draft": 0,
+          "clarify": 3,
+          "unknown": 0,
+          "abstain": 0
+        },
+        "unknown": {
+          "listen": 0,
+          "draft": 0,
+          "clarify": 0,
+          "unknown": 0,
+          "abstain": 3
+        }
+      },
+      "unknown_correct": 0,
+      "unknown_n": 3,
+      "explicit_requests_abstained": 0
+    },
+    {
+      "threshold": 0.5,
+      "loss": 0.75,
+      "feasible": true,
+      "n": 12,
+      "accepted": 9,
+      "coverage": 0.75,
+      "abstentions": 3,
+      "selective_errors": 0,
+      "selective_error_rate": 0.0,
+      "correct_over_all": 0.75,
+      "confusion_gold_rows": {
+        "listen": {
+          "listen": 3,
+          "draft": 0,
+          "clarify": 0,
+          "unknown": 0,
+          "abstain": 0
+        },
+        "draft": {
+          "listen": 0,
+          "draft": 3,
+          "clarify": 0,
+          "unknown": 0,
+          "abstain": 0
+        },
+        "clarify": {
+          "listen": 0,
+          "draft": 0,
+          "clarify": 3,
+          "unknown": 0,
+          "abstain": 0
+        },
+        "unknown": {
+          "listen": 0,
+          "draft": 0,
+          "clarify": 0,
+          "unknown": 0,
+          "abstain": 3
+        }
+      },
+      "unknown_correct": 0,
+      "unknown_n": 3,
+      "explicit_requests_abstained": 0
+    },
+    {
+      "threshold": 1.0,
+      "loss": 0.75,
+      "feasible": true,
+      "n": 12,
+      "accepted": 9,
+      "coverage": 0.75,
+      "abstentions": 3,
+      "selective_errors": 0,
+      "selective_error_rate": 0.0,
+      "correct_over_all": 0.75,
+      "confusion_gold_rows": {
+        "listen": {
+          "listen": 3,
+          "draft": 0,
+          "clarify": 0,
+          "unknown": 0,
+          "abstain": 0
+        },
+        "draft": {
+          "listen": 0,
+          "draft": 3,
+          "clarify": 0,
+          "unknown": 0,
+          "abstain": 0
+        },
+        "clarify": {
+          "listen": 0,
+          "draft": 0,
+          "clarify": 3,
+          "unknown": 0,
+          "abstain": 0
+        },
+        "unknown": {
+          "listen": 0,
+          "draft": 0,
+          "clarify": 0,
+          "unknown": 0,
+          "abstain": 3
+        }
+      },
+      "unknown_correct": 0,
+      "unknown_n": 3,
+      "explicit_requests_abstained": 0
+    },
+    {
+      "threshold": 2.0,
+      "loss": 0.75,
+      "feasible": true,
+      "n": 12,
+      "accepted": 9,
+      "coverage": 0.75,
+      "abstentions": 3,
+      "selective_errors": 0,
+      "selective_error_rate": 0.0,
+      "correct_over_all": 0.75,
+      "confusion_gold_rows": {
+        "listen": {
+          "listen": 3,
+          "draft": 0,
+          "clarify": 0,
+          "unknown": 0,
+          "abstain": 0
+        },
+        "draft": {
+          "listen": 0,
+          "draft": 3,
+          "clarify": 0,
+          "unknown": 0,
+          "abstain": 0
+        },
+        "clarify": {
+          "listen": 0,
+          "draft": 0,
+          "clarify": 3,
+          "unknown": 0,
+          "abstain": 0
+        },
+        "unknown": {
+          "listen": 0,
+          "draft": 0,
+          "clarify": 0,
+          "unknown": 0,
+          "abstain": 3
+        }
+      },
+      "unknown_correct": 0,
+      "unknown_n": 3,
+      "explicit_requests_abstained": 0
+    }
+  ],
+  "coverage_constraint_feasible": true,
+  "hashes": {
+    "backend/app/ccare/student_intent_model.py": "58e9fc9db1d3d319d6e56cccc033acea8a1b5f9ccfe8ed68d326368eb1f4b616",
+    "backend/app/ccare/intent_scope.py": "3d0d73c67047952c4b9755a00b1880b42d6783999cd67dc8db37543e77f37860",
+    "backend/app/ccare/learned_evidence.py": "2fd05d574850a1544c5161769282369c6bd4ea90bc35853b7c693d375d44dcf0",
+    "scripts/train_student_intent.py": "c52a9abb39837a87fbb1f0f114449948906ca24099f25fd0393e9b855c946faa",
+    "research/student-intent-p2-v1/PROTOCOL.md": "4d060b31cd49ae2171123acc6773163f687552282a49821fa1dfc5107f892633",
+    "research/student-intent-p2-v1/train.jsonl": "a6842a2f8850f37de0bd747e2c28eeaddf73abfc7a4c091eaf2fe005a84a8a3d",
+    "research/student-intent-p2-v1/dev.jsonl": "631791a2c5c5138541083963be9e983acdb7700dad95d604d454731f85af79f3"
+  },
+  "models": {
+    "nb.json": "fca9302bead88311794352dde63cc960c808a32ba685536c5b3c9af60f6cef56",
+    "linear.json": "c7ae05f2a72be9b668da0a4e472f4ec1ec995347288a0edb2a58a54e4ffe0d3f"
+  },
+  "quality": {
+    "max_cross_split_char3_jaccard": 0.45454545454545453,
+    "nearest_pairs": [
+      [
+        0.45454545454545453,
+        "train-01-1",
+        "dev-03-2"
+      ],
+      [
+        0.2631578947368421,
+        "train-06-1",
+        "dev-06-1"
+      ],
+      [
+        0.23333333333333334,
+        "train-14-1",
+        "dev-04-1"
+      ],
+      [
+        0.2,
+        "train-08-1",
+        "dev-02-2"
+      ],
+      [
+        0.16,
+        "train-14-1",
+        "dev-03-2"
+      ],
+      [
+        0.15151515151515152,
+        "train-02-1",
+        "dev-04-1"
+      ],
+      [
+        0.15,
+        "train-10-1",
+        "dev-06-1"
+      ],
+      [
+        0.13636363636363635,
+        "train-13-2",
+        "dev-03-2"
+      ],
+      [
+        0.13636363636363635,
+        "train-10-1",
+        "dev-02-2"
+      ],
+      [
+        0.13043478260869565,
+        "train-16-2",
+        "dev-05-2"
+      ]
+    ],
+    "threshold": 0.85,
+    "note": "lexical audit only; shared intent grammar is not independent authorship"
+  },
+  "external_calls": 0
+}

@@ -1,0 +1,9 @@
+{
+  "evaluated_utc": "2026-10-26T11:38:28.289443+00:00",
+  "frozen_manifest_sha256": "1aa8554c774ed6171f2460cf614507b8b40ffe885e140288efb2b78c67c1fd68",
+  "candidate_lock_sha256": "d8b5bc49ac09f387a10a68b975e594e59b9da1414c01ec44f1a4c7a565ade191",
+  "predictions_sha256": "6577f1f025818069092cd4175384bd790d16ff32de41ce85b6c377ea1f81f140",
+  "metrics_sha256": "13f3e6aa1451d2bee4c86ed4c7a7ff1d2eecdc2db1d7b6e3f03aa4ceb6e31642",
+  "paid_calls": 0,
+  "same_author_candidate_not_independent": true
+}

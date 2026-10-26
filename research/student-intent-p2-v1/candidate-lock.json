@@ -1,0 +1,62 @@
+{
+  "locked_utc": "2026-10-26T11:38:27.960964+00:00",
+  "candidate_sha256": "afd2a441ebeddb01dd76a9ccf9c4c5f2f99786c60c0ccf96dfab1e82d405ea92",
+  "frozen_sha256": "1aa8554c774ed6171f2460cf614507b8b40ffe885e140288efb2b78c67c1fd68",
+  "quality": {
+    "max_cross_split_char3_jaccard": 0.45454545454545453,
+    "nearest_pairs": [
+      [
+        0.45454545454545453,
+        "train-01-1",
+        "dev-03-2"
+      ],
+      [
+        0.28,
+        "train-14-2",
+        "candidate-03-2"
+      ],
+      [
+        0.2631578947368421,
+        "train-06-1",
+        "dev-06-1"
+      ],
+      [
+        0.23333333333333334,
+        "train-14-1",
+        "dev-04-1"
+      ],
+      [
+        0.2,
+        "train-08-1",
+        "dev-02-2"
+      ],
+      [
+        0.16,
+        "train-14-1",
+        "dev-03-2"
+      ],
+      [
+        0.15151515151515152,
+        "train-02-1",
+        "dev-04-1"
+      ],
+      [
+        0.15,
+        "train-10-1",
+        "dev-06-1"
+      ],
+      [
+        0.13636363636363635,
+        "train-13-2",
+        "dev-03-2"
+      ],
+      [
+        0.13636363636363635,
+        "train-10-1",
+        "dev-02-2"
+      ]
+    ],
+    "threshold": 0.85,
+    "note": "lexical audit only; shared intent grammar is not independent authorship"
+  }
+}
