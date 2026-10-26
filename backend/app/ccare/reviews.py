@@ -40,8 +40,10 @@ def reduce_reviews(entries):
 def validate_reviews(req):
     eligible = {digest(text): text for _, text in sources(req)}
     by_id = dict(sources(req))
+    from .student import FIELDS
+    permitted=VALUES | FIELDS
     for entry in reduce_reviews(req.reviews):
-        if (entry.revision < 1 or eligible.get(entry.source_digest) != entry.source_text or entry.value not in VALUES[entry.field]
+        if (entry.revision < 1 or eligible.get(entry.source_digest) != entry.source_text or entry.value not in permitted[entry.field]
                 or (entry.source_message_id is not None and by_id.get(entry.source_message_id) != entry.source_text)):
             raise ValueError('Review must reference eligible user source and a permitted value')
 
@@ -59,6 +61,7 @@ def apply_reviews(req, state, links, guard):
     latest = sorted(reduce_reviews(req.reviews), key=lambda entry: (rank[entry.source_message_id or entry.source_digest], entry.revision))
     outcomes = []
     for entry in latest:
+        if entry.field not in VALUES:continue
         newer = False
         for assessment in state.assessments:
             text = source_by_id.get(assessment.message_id)

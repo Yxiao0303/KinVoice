@@ -19,7 +19,7 @@ class HistoryMessage(StrictModel):
 
 
 class ReviewEntry(StrictModel):
-    field: Literal["emotion", "support_intent", "risk", "family_unsafe"]
+    field: Literal["emotion", "support_intent", "risk", "family_unsafe", "student_pressure", "student_subject", "student_time", "student_impact", "student_event"]
     value: str = Field(max_length=16)
     action: Literal["confirm", "correct", "revoke"]
     source_message_id: str | None = Field(default=None, min_length=1, max_length=64, pattern=r"^[A-Za-z0-9:_-]+$")
