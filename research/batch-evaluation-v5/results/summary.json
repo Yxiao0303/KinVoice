@@ -1,0 +1,48 @@
+{
+  "mode": "live",
+  "planned_outputs": 72,
+  "professional_ratings": "unavailable",
+  "external_calls": 152,
+  "per_arm": {
+    "strong_single": {
+      "planned": 24,
+      "status_counts": {
+        "remote": 22,
+        "safety_template": 2
+      },
+      "with_text": 24,
+      "calls": 22,
+      "usage_known_calls": 22,
+      "prompt_tokens_known": 4271,
+      "completion_tokens_known": 426,
+      "elapsed_ms": 36118
+    },
+    "strong_multi": {
+      "planned": 24,
+      "status_counts": {
+        "remote": 22,
+        "safety_template": 2
+      },
+      "with_text": 24,
+      "calls": 66,
+      "usage_known_calls": 66,
+      "prompt_tokens_known": 17278,
+      "completion_tokens_known": 2110,
+      "elapsed_ms": 106552
+    },
+    "ccare": {
+      "planned": 24,
+      "status_counts": {
+        "remote": 21,
+        "safe_fallback": 1,
+        "safety_template": 2
+      },
+      "with_text": 24,
+      "calls": 64,
+      "usage_known_calls": 64,
+      "prompt_tokens_known": 30004,
+      "completion_tokens_known": 2286,
+      "elapsed_ms": 97866
+    }
+  }
+}

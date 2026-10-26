@@ -1,0 +1,29 @@
+[
+  {
+    "id": "quoted_attacker_words",
+    "synthetic": true,
+    "review_status": "unreviewed",
+    "message": "我现在被堵在门口，对方说“我要打你”。",
+    "actual_risk": "unknown",
+    "developer_expected": "urgent",
+    "status": "known_rule_limitation_not_fixed"
+  },
+  {
+    "id": "time_after_event",
+    "synthetic": true,
+    "review_status": "unreviewed",
+    "message": "有人砸东西并拦住我，这就发生在现在。",
+    "actual_risk": "unknown",
+    "developer_expected": "urgent",
+    "status": "known_rule_limitation_not_fixed"
+  },
+  {
+    "id": "legacy_quoted_resolved",
+    "synthetic": true,
+    "review_status": "unreviewed",
+    "message": "朋友说“爸爸正在掐我”，她已经安全到家。",
+    "actual_risk": "urgent",
+    "developer_expected": "unknown",
+    "status": "known_rule_limitation_not_fixed"
+  }
+]

@@ -4,7 +4,8 @@ import { technicalReport } from './report.mjs';
 
 const $ = id => document.getElementById(id);
 const conversation = new Conversation();
-let token = '', mode = 'disabled', controller = null, register = false, requestTimeout = 55000, supportsProgress = false;
+let token = '', mode = 'disabled', controller = null, register = false, requestTimeout = 55000, supportsProgress = false, supportsReviews = false;
+let offlineMock = false, supportsStudent = false;
 let selectedCase = null, wantsInspector = false, toastTimer, expiryTimer, authVersion = 0;
 const liveStages = new Map();
 const cases = {
@@ -12,7 +13,7 @@ const cases = {
   boundary: {goal: 'draft', text: '虚构案例：刚和妈妈吵完。虽然我点了准备表达，但现在不想和解，也不要给我建议，我只想有人听我说。', caption: '案例 02：界面选了准备表达，文字明确拒绝建议 → 保留倾听，尊重当下意愿。'},
   unsafe: {goal: 'draft', text: '虚构案例：爸爸以前打我。我现在在宿舍安全，想写一段话回他。', caption: '案例 03：出现家庭不安全线索 → 暂不进入沟通草稿，退回倾听。此规则尚待专业审阅。'},
 };
-const strategyNames = {listen:'倾听', clarify:'澄清事实与需求', ground:'短暂稳定', draft:'沟通草稿', safety:'安全模板'};
+const strategyNames = {listen:'倾听', clarify:'澄清事实与需求', ground:'短暂稳定', draft:'沟通草稿', safety:'安全模板',organize:'整理事件与需要',small_step:'学习小步骤',options:'整理选项'};
 const reasonNames = {urgent_guard:'紧急线索优先',family_contact_restricted:'家庭不安全，限制沟通草稿',current_refusal:'本轮明确拒绝建议',current_listen_intent:'本轮明确希望被倾听',current_text_intent:'本轮文字明确了支持需求',user_selected_goal:'采用用户选择'};
 const stageNames = {state:'状态估计',generate:'候选生成',rewrite:'重写',verify:'回应校验'};
 const failureNames = {invalid_key:'模型密钥无效',insufficient_balance:'模型账户余额不足',rate_limited:'模型请求过于频繁',provider_timeout:'模型服务等待超时',turn_timeout:'本轮处理超时',connection_error:'无法连接模型服务',incomplete_output:'模型输出被截断或未正常结束',invalid_state_or_verdict:'状态证据或校验格式未通过',verification_rejected:'候选回应未通过检查',invalid_request:'服务商未接受请求参数'};
@@ -22,7 +23,9 @@ function count() { $('char-count').textContent = `${$('message').value.length} /
 function setBusy() {
   const busy = conversation.pending !== null;
   $('send').disabled = busy; $('pause').disabled = !busy; $('thinking').hidden = !busy;
-  $('message').disabled = busy; $('chat-form').setAttribute('aria-busy', String(busy));
+  document.querySelectorAll('#review-controls button, #review-controls select').forEach(el => el.disabled = busy);
+  $('message').disabled = busy;
+  for (const id of ['student-mode','student-adult','student-support']) $(id).disabled = busy; $('chat-form').setAttribute('aria-busy', String(busy));
 }
 async function api(path, data, method = 'POST', signal, onEvent) {
   const sentToken = token;
@@ -50,7 +53,7 @@ function renderMessages() {
     if (message.role === 'assistant') {
       const icon = document.createElement('img'); icon.src = '/assets/mark.svg'; icon.alt = ''; item.append(icon);
       const label = document.createElement('small'); label.className = 'message-label';
-      label.textContent = message.mode === 'demo' ? 'KinVoice · 固定示例，无模型调用' : message.mode === 'remote' ? 'KinVoice · AI 生成，可能有误' : 'KinVoice · 固定退回模板，待专业审阅'; body.append(label);
+      label.textContent = offlineMock ? 'KinVoice · 离线 mock，无模型调用' : message.mode === 'demo' ? 'KinVoice · 固定示例，无模型调用' : message.mode === 'remote' ? 'KinVoice · AI 生成，可能有误' : 'KinVoice · 固定退回模板，待专业审阅'; body.append(label);
     }
     const content = document.createElement('p'); content.className = 'message-content'; content.textContent = message.content; body.append(content);
     if (message.role === 'assistant' && message.strategy === 'draft' && ['remote','demo'].includes(message.mode)) {
@@ -90,7 +93,69 @@ function updateProgress(event) {
     $('trace-allowed').textContent = '本轮允许：' + (event.allowed || []).map(s => strategyNames[s] || s).join('、');
   }
 }
+const reviewOptions = {
+  student_pressure:{label:'压力线索',values:{unknown:'暂不判断',academic:'学业',family:'家庭',academic_family:'学业与家庭',peer:'同伴',future:'未来选择'}},
+  student_subject:{label:'事件主体',values:{unknown:'暂不判断',self:'自己',mother:'妈妈',father:'爸爸',teacher:'老师',peer:'同伴',multiple:'多主体待区分'}},
+  student_time:{label:'事件时序',values:{unknown:'暂不判断',current:'当前',past:'历史',future:'未来'}},
+  student_impact:{label:'自述影响',values:{unknown:'暂不判断',study:'学习',sleep:'睡眠',daily:'日常生活',multiple:'多项影响'}},
+  student_event:{label:'这条事件记录',values:{unknown:'不使用',retained:'保留本轮记录'}},
+  emotion: {label:'情绪理解', values:{unknown:'暂不判断',sad:'难过',angry:'生气',afraid:'害怕',mixed:'多种感受'}},
+  support_intent: {label:'希望得到的支持', values:{unknown:'暂不确定',listen:'倾听',clarify:'梳理',ground:'先缓一缓',draft:'准备草稿'}},
+  risk: {label:'风险线索理解', values:{unknown:'仍不确定',ordinary:'当前未表达急性危险',urgent:'有急性危险线索'}},
+  family_unsafe: {label:'家庭不安全线索', values:{false:'不认同此判断',true:'有不安全线索'}},
+};
+function renderReviews(result) {
+  $('review-controls').replaceChildren(); $('review-status').textContent = '';
+  $('state-review').hidden = !result?.review_targets?.length;
+  const ticket = conversation.version;
+  for (const target of result?.review_targets || []) {
+    const config = reviewOptions[target.field]; if (!config) continue;
+    const row = document.createElement('div'), label = document.createElement('label'), select = document.createElement('select');
+    label.textContent = config.label + '：';
+    for (const [value, text] of Object.entries(config.values)) {
+      const option = document.createElement('option'); option.value = value; option.textContent = text; select.append(option);
+    }
+    select.value = target.value; label.append(select); row.append(label);
+    for (const [action, caption] of [['confirm','确认原判断'],['correct','采用更正'],['revoke','撤销此判断']]) {
+      const button = document.createElement('button'); button.type = 'button'; button.textContent = caption;
+      button.addEventListener('click', () => {
+        const value = action === 'confirm' ? target.value : select.value;
+        const ok = conversation.review(target, action, value, ticket);
+        $('review-status').textContent = ok ? '已记录。下次发送时采用；新的明确意愿和独立安全线索仍优先。' : '此轮已过期或记录已满，请查看最新结果或清空后继续。';
+      }); row.append(button);
+    }
+    $('review-controls').append(row);
+  }
+  if (result?.review_outcomes?.length) {
+    $('review-status').textContent = result.review_outcomes.map(outcome =>
+      `${reviewOptions[outcome.field]?.label || '本轮理解'}：${outcome.status === 'superseded' ? '已由更新的表达取代' : outcome.status === 'revoke' ? '已撤销判断' : '已采用确认或更正'}${outcome.independent_guard_preserved ? '；独立安全保护仍保留' : ''}`
+    ).join('。');
+  }
+  setBusy();
+}
+function renderStudent(result) {
+  const j = result?.student_judgment; $('student-card').hidden = !j;
+  $('student-evidence').replaceChildren();
+  for (const id of ['student-event-summary','student-impact-summary','student-action-summary','student-unknown-summary']) $(id).textContent = '';
+  if (!j) return;
+  const events = j.events || [], usable = events.filter(e => e.active && e.claims.some(c => c.field !== 'student_event' && c.value !== 'unknown'));
+  const event = usable.at(-1) || events.at(-1);
+  const label = f => {const c=event?.claims.find(c=>c.field===f);return reviewOptions[f]?.values[c?.value] || '暂不判断';};
+  $('student-event-summary').textContent = `提及线索：${label('student_pressure')}；主体：${label('student_subject')}；时序：${label('student_time')}。`;
+  $('student-impact-summary').textContent = `仅据自述的影响：${label('student_impact')}；未表达的持续时间不推断。`;
+  $('student-action-summary').textContent = `当前需要：${strategyNames[j.current_need] || '待核对'}；下一步：${strategyNames[j.action] || '待核对'}。你可以改变需要或暂停。`;
+  $('student-unknown-summary').textContent = (j.uncertainties || []).join(' ');
+  for (const e of events) for (const c of e.claims) {
+    if (!c.evidence.length && !c.supersedes) continue;
+    const item=document.createElement('li');
+    item.textContent = `${reviewOptions[c.field]?.label || c.field} · ${c.status==='confirmed'?'用户已更正/确认':c.status==='revoked'?'已撤销':'待核对'} · ${e.message_id}：${c.evidence.map(x=>x.quote).join('；')}${c.supersedes?'（旧依据已失效）':''}`;
+    $('student-evidence').append(item);
+  }
+}
+
 function updateTrace(result = null) {
+  renderStudent(result);
+  renderReviews(result);
   $('case-caption').textContent = selectedCase ? cases[selectedCase].caption : '观察用户选择怎样影响回应策略。显示内容来自实际接口返回。';
   if (!result) {
     $('trace-state').textContent = '等待本轮输入'; $('trace-strategy').textContent = '结合用户选择，检查沟通边界';
@@ -98,11 +163,11 @@ function updateTrace(result = null) {
     $('trace-allowed').textContent = '等待本轮决策'; $('trace-evidence').replaceChildren(); $('trace-stages').replaceChildren(); $('trace-cost').textContent = ''; return;
   }
   const state = result.state || {};
-  $('trace-state').textContent = state.risk === 'urgent' ? '命中紧急线索。此判断不等于临床诊断。' : state.family_unsafe ? '检测到家庭不安全线索；无法据此还原完整关系。' : state.risk === 'ordinary' ? '模型估计为普通支持情境，仍可能误判。' : '风险状态仍为未知；未命中关键词不等于确认安全。';
+  $('trace-state').textContent = state.risk === 'urgent' ? '命中紧急线索。此判断不等于临床诊断。' : state.family_unsafe ? '检测到家庭不安全线索；无法据此还原完整关系。' : state.risk === 'ordinary' ? ((state.assessments || []).some(a => a.field === 'risk' && a.origin === 'confirmed') ? '本页确认的信息未表达急性危险；仍不代表专业安全结论。' : '模型估计为普通支持情境，仍可能误判。') : '风险状态仍为未知；未命中关键词不等于确认安全。';
   const decision = result.decision;
   $('trace-strategy').textContent = `${strategyNames[result.strategy] || result.strategy}。` + (result.mode === 'safe_fallback' ? `原定策略为${strategyNames[decision?.selected] || '未确定'}，本轮改用固定退回回应。` : (decision?.reasons || []).map(code => reasonNames[code] || code).join('；'));
-  $('trace-source').textContent = result.mode === 'demo' ? '固定示例。没有执行大模型状态估计或生成。' : result.mode === 'remote' ? '外部模型生成；具体服务商见本次同意说明。' : '固定安全或服务退回模板。';
-  $('trace-check').textContent = result.checks.includes('model_check_passed_unvalidated') ? '规则及模型检查通过；模型校验可靠性与专业审阅仍待验证。' : '本地线索检查已执行。本轮未通过模型校验流程；模板待专业审阅。';
+  $('trace-source').textContent = offlineMock ? '离线 mock：真实页面与本地流程，模型响应为桩。' : result.mode === 'demo' ? '固定示例。没有执行大模型状态估计或生成。' : result.mode === 'remote' ? '外部模型生成；具体服务商见本次同意说明。' : '固定安全或服务退回模板。';
+  $('trace-check').textContent = offlineMock ? '离线 mock：规则与本地桩校验，不代表真实模型或专业审核。' : result.checks.includes('model_check_passed_unvalidated') ? '规则及模型检查通过；模型校验可靠性与专业审阅仍待验证。' : '本地线索检查已执行。本轮未通过模型校验流程；模板待专业审阅。';
   $('trace-calls').textContent = String(result.model_calls);
   $('trace-allowed').textContent = '本轮允许：' + (decision?.allowed || []).map(s => strategyNames[s] || s).join('、');
   $('trace-evidence').replaceChildren();
@@ -113,7 +178,7 @@ function updateTrace(result = null) {
   renderStages(result.stages || []);
   const completeUsage = (result.usage || []).every(u => Number.isInteger(u?.total_tokens));
   const totalTokens = completeUsage ? (result.usage || []).reduce((sum,u) => sum+u.total_tokens,0) : '未知（服务商未完整返回）';
-  $('trace-cost').textContent = `后端耗时 ${result.elapsed_ms ?? '未知'} ms · 总 token ${totalTokens}${result.failure_code ? ' · '+(failureNames[result.failure_code] || '模型处理未完成') : ''}`;
+  $('trace-cost').textContent = offlineMock ? `本地桩调用 ${result.model_calls} 次 · 无真实 token 或模型费用` : `后端耗时 ${result.elapsed_ms ?? '未知'} ms · 总 token ${totalTokens}${result.failure_code ? ' · '+(failureNames[result.failure_code] || '模型处理未完成') : ''}`;
 }
 function inspector(open) { wantsInspector = open; $('inspector').hidden = !open; $('chat-view').classList.toggle('with-inspector', open); $('toggle-inspector').setAttribute('aria-pressed', String(open)); }
 function pause(silent = false) {
@@ -131,7 +196,7 @@ function clear() {
   status('本页对话已清空。不会恢复之前的回复。');
 }
 function reset() {
-  clearTimeout(expiryTimer); clear(); token = ''; $('eligible').checked = false; $('consent').checked = false;
+  clearTimeout(expiryTimer); clear(); token = ''; $('student-adult').checked=false; $('eligible').checked = false; $('consent').checked = false;
   $('info-dialog').close(); location.hash = 'home'; route();
 }
 function route() {
@@ -188,7 +253,9 @@ $('chat-form').addEventListener('submit', async event => {
   event.preventDefault(); if (conversation.pending !== null) return;
   if (!$('eligible').checked) { status('请先确认本次使用虚构大学生情境进行演示。', true); $('eligible').focus(); return; }
   const message = $('message').value.trim(); if (!message) return;
-  if (mode === 'remote' && !$('consent').checked) { status('请先阅读服务商隐私说明，并选择是否同意本轮外部处理。', true); return; }
+  const studentMode = supportsStudent && $('student-mode').checked;
+  if (studentMode && !$('student-adult').checked) return status('请单独确认本次是成年大学生虚构案例；学段不代表成年。', true);
+  if (!studentMode && mode === 'remote' && !offlineMock && !$('consent').checked) { status('请先阅读服务商隐私说明，并选择是否同意本轮外部处理。', true); return; }
   const history = conversation.context(), requestGoal = document.querySelector('input[name="goal"]:checked').value;
   const ticket = conversation.begin(message); const requestController = new AbortController(); controller = requestController;
   const timer = setTimeout(() => requestController.abort(), requestTimeout);
@@ -196,7 +263,7 @@ $('chat-form').addEventListener('submit', async event => {
   liveStages.clear(); updateTrace();
   renderMessages(); status(mode === 'demo' ? '本地固定示例，未调用模型。可点击暂停演示回复。' : '正在回应，你可以随时暂停。');
   try {
-    const result = await api(supportsProgress ? '/support/stream' : '/support/turn', {message, history, goal:requestGoal, eligible:true, external_consent:$('consent').checked}, 'POST', requestController.signal, supportsProgress ? event => {
+    const result = await api(studentMode ? '/support/student' : supportsProgress ? '/support/stream' : '/support/turn', {...(studentMode ? {student:{stage:'university',adult_confirmed:true,synthetic_only:true,scenario:'academic_family'}, support:$('student-support').value}:{}), message, history: supportsReviews ? history : history.map(({role,content}) => ({role,content})), goal:requestGoal, eligible:true, external_consent:offlineMock || $('consent').checked, ...(supportsReviews ? {message_id:`u:${ticket}`, reviews:conversation.reviewsFor(history, message)} : {})}, 'POST', requestController.signal, !studentMode && supportsProgress ? event => {
       if (!requestController.signal.aborted && conversation.pending === ticket) updateProgress(event);
     } : undefined);
     // Explicitly disclosed pacing for presentations, not simulated model latency.
@@ -244,14 +311,26 @@ window.addEventListener('hashchange', route);
 window.addEventListener('pagehide', () => { pause(true); conversation.clear(); token = ''; renderMessages(); });
 window.addEventListener('pageshow', event => { if (event.persisted) reset(); });
 api('/ping', undefined, 'GET').then(config => {
-  mode = config.mode;
+  mode = config.mode; offlineMock = config.offline_mock === true;
   supportsProgress = config.progress_stream === 'ccare-stream-v1';
+  supportsReviews = config.review_protocol === 'ccare-review-v1';
+  supportsStudent = config.student_protocol === 'student-p1-offline-v1';
+  $('student-entry').hidden = !supportsStudent;
   $('technology-status').textContent = mode === 'remote' ? '当前已配置模型模式；实际调用与检查结果见每轮技术面板。专业审阅待完成。' : '当前：本地规则与固定示例可演示；真实模型和专业评审待接入。';
   requestTimeout = Math.min(105000, Math.max(15000, (config.turn_timeout_seconds || 45)*1000+10000));
   $('home-mode').textContent = mode === 'demo' ? '本地固定示例 · 未调用大模型 · 专业审阅待完成' : mode === 'remote' ? '外部模型已配置 · 明确同意后发送 · 专业审阅待完成' : '模型未启用 · 可浏览网站与账号流程';
   $('chat-mode').textContent = mode === 'demo' ? '演示模式' : mode === 'remote' ? config.model || '模型模式' : '未接入模型';
   $('session-mode').textContent = mode === 'demo' ? '固定示例演示，没有模型调用。请勿输入真实咨询信息。' : '仅供内部评审。请使用虚构情境，不提供诊断或紧急救援。';
   $('remote-notice').hidden = mode !== 'remote'; $('provider').textContent = config.provider;
+  if (offlineMock) {
+    $('home-mode').textContent = '离线 mock · 无模型调用 · 仅虚构演示';
+    $('chat-mode').textContent = '离线 mock';
+    $('session-mode').textContent = '本地桩演示，不使用密钥、不外发；阶段调用数是桩调用。';
+    $('technology-status').textContent = '离线 mock 验证页面与工程流程，不代表模型或心理效果。';
+    $('remote-notice').hidden = true;
+  }
   if (config.provider_privacy_url && /^https:\/\//.test(config.provider_privacy_url)) $('privacy-link').href = config.provider_privacy_url;
 }).catch(() => { $('home-mode').textContent = '本地服务未连接，请启动后端后刷新。'; $('chat-mode').textContent = '服务未连接'; });
 route();
+
+$('student-mode').addEventListener('change', () => {clear(); $('student-adult').checked=false; status('已切换路径并清空本页历史及纠正记录。学生路径仅离线。');});

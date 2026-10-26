@@ -1,0 +1,274 @@
+{
+  "kind": "seen_development_replay_not_candidate_evaluation",
+  "original_artifact_sha256": "ce9ff5c896fcf4f752f5e89fe6b590b50556f37dc351e3d9be5eeaef450262f0",
+  "original_artifact": "research/student-intent-p2-v1/p1-counterexample.json",
+  "paid_calls": 0,
+  "result": {
+    "review_targets": [
+      {
+        "field": "emotion",
+        "value": "unknown",
+        "action": "confirm",
+        "source_message_id": "u:3",
+        "source_digest": "e030e6dc7ec3c31a9d87267d404a783b2fe27039af690c19760ea426fe2b02a6",
+        "source_text": "那句话是我爸说的。",
+        "revision": 0
+      },
+      {
+        "field": "support_intent",
+        "value": "unknown",
+        "action": "confirm",
+        "source_message_id": "u:3",
+        "source_digest": "e030e6dc7ec3c31a9d87267d404a783b2fe27039af690c19760ea426fe2b02a6",
+        "source_text": "那句话是我爸说的。",
+        "revision": 0
+      },
+      {
+        "field": "risk",
+        "value": "unknown",
+        "action": "confirm",
+        "source_message_id": "u:3",
+        "source_digest": "e030e6dc7ec3c31a9d87267d404a783b2fe27039af690c19760ea426fe2b02a6",
+        "source_text": "那句话是我爸说的。",
+        "revision": 0
+      },
+      {
+        "field": "family_unsafe",
+        "value": "false",
+        "action": "confirm",
+        "source_message_id": "u:3",
+        "source_digest": "e030e6dc7ec3c31a9d87267d404a783b2fe27039af690c19760ea426fe2b02a6",
+        "source_text": "那句话是我爸说的。",
+        "revision": 0
+      },
+      {
+        "field": "student_pressure",
+        "value": "unknown",
+        "action": "confirm",
+        "source_message_id": "u:3",
+        "source_digest": "e030e6dc7ec3c31a9d87267d404a783b2fe27039af690c19760ea426fe2b02a6",
+        "source_text": "那句话是我爸说的。",
+        "revision": 0
+      },
+      {
+        "field": "student_subject",
+        "value": "father",
+        "action": "confirm",
+        "source_message_id": "u:3",
+        "source_digest": "e030e6dc7ec3c31a9d87267d404a783b2fe27039af690c19760ea426fe2b02a6",
+        "source_text": "那句话是我爸说的。",
+        "revision": 0
+      },
+      {
+        "field": "student_time",
+        "value": "unknown",
+        "action": "confirm",
+        "source_message_id": "u:3",
+        "source_digest": "e030e6dc7ec3c31a9d87267d404a783b2fe27039af690c19760ea426fe2b02a6",
+        "source_text": "那句话是我爸说的。",
+        "revision": 0
+      },
+      {
+        "field": "student_impact",
+        "value": "unknown",
+        "action": "confirm",
+        "source_message_id": "u:3",
+        "source_digest": "e030e6dc7ec3c31a9d87267d404a783b2fe27039af690c19760ea426fe2b02a6",
+        "source_text": "那句话是我爸说的。",
+        "revision": 0
+      },
+      {
+        "field": "student_event",
+        "value": "retained",
+        "action": "confirm",
+        "source_message_id": "u:3",
+        "source_digest": "e030e6dc7ec3c31a9d87267d404a783b2fe27039af690c19760ea426fe2b02a6",
+        "source_text": "那句话是我爸说的。",
+        "revision": 0
+      }
+    ],
+    "review_outcomes": [],
+    "reply": "[学生场景离线规则示例] 我在听。你可以先说完，不需要马上给出计划，也不用补齐所有信息。",
+    "mode": "demo",
+    "strategy": "listen",
+    "state": {
+      "assessments": [],
+      "needs_clarification": false,
+      "risk": "unknown",
+      "family_unsafe": false,
+      "emotion": "unknown",
+      "evidence": [],
+      "support_intent": "unknown",
+      "intent_evidence": []
+    },
+    "checks": [
+      "independent_local_guard",
+      "student_source_validation",
+      "offline_only_no_provider"
+    ],
+    "model_calls": 0,
+    "usage": [],
+    "policy_version": "ccare-prototype-0.4",
+    "decision": {
+      "requested": "listen",
+      "selected": "listen",
+      "allowed": [
+        "listen"
+      ],
+      "reasons": [
+        "user_selected_goal",
+        "offline_student_rules",
+        "current_request_or_explicit_support_choice"
+      ],
+      "evidence": []
+    },
+    "stages": [],
+    "failure_code": null,
+    "elapsed_ms": 0,
+    "student_judgment": {
+      "version": "student-p1-v1",
+      "method": "conservative_rules_unvalidated",
+      "stage": "university",
+      "events": [
+        {
+          "event_id": "student-event:08a51148445b174392c04a5b",
+          "message_id": "u:1",
+          "source_digest": "db2fe52ed3802701f2d50fa07da5c766805ac8953ec679da073d30d9842e045d",
+          "provenance": "self_report",
+          "claims": [
+            {
+              "field": "student_pressure",
+              "value": "unknown",
+              "status": "revoked",
+              "evidence": [],
+              "revision": 0,
+              "supersedes": "student-event:994a75426f70678e221b760b:student_subject"
+            },
+            {
+              "field": "student_subject",
+              "value": "unknown",
+              "status": "revoked",
+              "evidence": [],
+              "revision": 0,
+              "supersedes": "student-event:994a75426f70678e221b760b:student_subject"
+            },
+            {
+              "field": "student_time",
+              "value": "unknown",
+              "status": "revoked",
+              "evidence": [],
+              "revision": 0,
+              "supersedes": "student-event:994a75426f70678e221b760b:student_subject"
+            },
+            {
+              "field": "student_impact",
+              "value": "unknown",
+              "status": "revoked",
+              "evidence": [],
+              "revision": 0,
+              "supersedes": "student-event:994a75426f70678e221b760b:student_subject"
+            },
+            {
+              "field": "student_event",
+              "value": "unknown",
+              "status": "revoked",
+              "evidence": [],
+              "revision": 0,
+              "supersedes": "student-event:994a75426f70678e221b760b:student_subject"
+            }
+          ],
+          "active": false
+        },
+        {
+          "event_id": "student-event:994a75426f70678e221b760b",
+          "message_id": "u:3",
+          "source_digest": "e030e6dc7ec3c31a9d87267d404a783b2fe27039af690c19760ea426fe2b02a6",
+          "provenance": "self_report",
+          "claims": [
+            {
+              "field": "student_pressure",
+              "value": "unknown",
+              "status": "unknown",
+              "evidence": [],
+              "revision": 0,
+              "supersedes": "student-event:08a51148445b174392c04a5b:student_pressure"
+            },
+            {
+              "field": "student_subject",
+              "value": "father",
+              "status": "confirmed",
+              "evidence": [
+                {
+                  "message_id": "u:3",
+                  "role": "user",
+                  "source": "current",
+                  "turn": 1,
+                  "start": 0,
+                  "end": 9,
+                  "quote": "那句话是我爸说的。",
+                  "purpose": "state"
+                }
+              ],
+              "revision": 0,
+              "supersedes": "student-event:08a51148445b174392c04a5b:student_subject"
+            },
+            {
+              "field": "student_time",
+              "value": "unknown",
+              "status": "unknown",
+              "evidence": [],
+              "revision": 0,
+              "supersedes": "student-event:08a51148445b174392c04a5b:student_time"
+            },
+            {
+              "field": "student_impact",
+              "value": "unknown",
+              "status": "unknown",
+              "evidence": [],
+              "revision": 0,
+              "supersedes": "student-event:08a51148445b174392c04a5b:student_impact"
+            },
+            {
+              "field": "student_event",
+              "value": "retained",
+              "status": "supported",
+              "evidence": [
+                {
+                  "message_id": "u:3",
+                  "role": "user",
+                  "source": "current",
+                  "turn": 1,
+                  "start": 0,
+                  "end": 9,
+                  "quote": "那句话是我爸说的。",
+                  "purpose": "state"
+                }
+              ],
+              "revision": 0,
+              "supersedes": "student-event:08a51148445b174392c04a5b:student_event"
+            }
+          ],
+          "active": true
+        }
+      ],
+      "uncertainties": [
+        "未表达的影响及持续时间保持未知；未知不要求逐项追问。",
+        "主体/时态为保守词面判断；同一消息多事件或跨消息指代不自动合并。",
+        "已按可绑定的主体更正停用旧事件及依赖；压力、影响和时序不自动迁移给新主体。"
+      ],
+      "risk": "unknown",
+      "current_need": "listen",
+      "need_origin": "user_choice",
+      "need_evidence": [],
+      "action": "listen",
+      "reasons": [
+        "user_selected_goal",
+        "offline_student_rules",
+        "current_request_or_explicit_support_choice"
+      ],
+      "basis_event_ids": [
+        "student-event:994a75426f70678e221b760b"
+      ]
+    }
+  }
+}

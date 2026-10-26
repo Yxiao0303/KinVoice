@@ -80,7 +80,7 @@ class ProviderContractTests(unittest.IsolatedAsyncioTestCase):
             captures.append(json.loads(request.content))
             return httpx.Response(200,json={'model':'returned-version','choices':[{'finish_reason':'stop','message':{'content':'{"safe":true,"violations":[]}'}}], 'usage':{'total_tokens':20,'prompt_cache_hit_tokens':5}})
         original = httpx.AsyncClient
-        with patch('app.ccare.provider.httpx.AsyncClient',side_effect=lambda **kwargs: original(transport=httpx.MockTransport(handler),**kwargs)):
+        with patch('app.ccare.provider.httpx.AsyncClient',side_effect=lambda **kwargs: original(transport=httpx.MockTransport(handler),**{**kwargs, "trust_env":False})):
             result = await RemoteProvider(self.config()).complete([{'role':'user','content':'Return JSON'}],temperature=0,max_tokens=200,json_mode=True)
         self.assertEqual(captures[0]['thinking'], {'type':'disabled'})
         self.assertEqual(captures[0]['response_format'], {'type':'json_object'})
@@ -90,7 +90,7 @@ class ProviderContractTests(unittest.IsolatedAsyncioTestCase):
     async def test_provider_failures_are_actionable_without_secrets(self):
         original = httpx.AsyncClient
         for status,code in [(401,'invalid_key'),(402,'insufficient_balance'),(429,'rate_limited')]:
-            with patch('app.ccare.provider.httpx.AsyncClient',side_effect=lambda **kwargs: original(transport=httpx.MockTransport(lambda r: httpx.Response(status,text='private-body-secret')),**kwargs)):
+            with patch('app.ccare.provider.httpx.AsyncClient',side_effect=lambda **kwargs: original(transport=httpx.MockTransport(lambda r: httpx.Response(status,text='private-body-secret')),**{**kwargs, "trust_env":False})):
                 with self.assertRaises(ProviderUnavailable) as caught:
                     await RemoteProvider(self.config()).complete([],temperature=0,max_tokens=200)
                 self.assertEqual(caught.exception.code,code)
@@ -98,7 +98,7 @@ class ProviderContractTests(unittest.IsolatedAsyncioTestCase):
 
     async def test_truncated_response_never_reaches_engine(self):
         original = httpx.AsyncClient
-        with patch('app.ccare.provider.httpx.AsyncClient',side_effect=lambda **kwargs: original(transport=httpx.MockTransport(lambda r: httpx.Response(200,json={'choices':[{'finish_reason':'length','message':{'content':'partial'}}]})),**kwargs)):
+        with patch('app.ccare.provider.httpx.AsyncClient',side_effect=lambda **kwargs: original(transport=httpx.MockTransport(lambda r: httpx.Response(200,json={'choices':[{'finish_reason':'length','message':{'content':'partial'}}]})),**{**kwargs, "trust_env":False})):
             with self.assertRaises(ProviderUnavailable) as caught:
                 await RemoteProvider(self.config()).complete([],temperature=0,max_tokens=200)
         self.assertEqual(caught.exception.code,'incomplete_output')
@@ -115,7 +115,7 @@ class ProviderContractTests(unittest.IsolatedAsyncioTestCase):
 
     async def test_malformed_choice_fails_closed(self):
         original = httpx.AsyncClient
-        with patch('app.ccare.provider.httpx.AsyncClient',side_effect=lambda **kwargs: original(transport=httpx.MockTransport(lambda r: httpx.Response(200,json={'choices':['not-an-object']})),**kwargs)):
+        with patch('app.ccare.provider.httpx.AsyncClient',side_effect=lambda **kwargs: original(transport=httpx.MockTransport(lambda r: httpx.Response(200,json={'choices':['not-an-object']})),**{**kwargs, "trust_env":False})):
             with self.assertRaises(ProviderUnavailable) as caught:
                 await RemoteProvider(self.config()).complete([],temperature=0,max_tokens=200)
         self.assertEqual(caught.exception.code,'invalid_response')

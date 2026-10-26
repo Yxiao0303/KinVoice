@@ -1,0 +1,78 @@
+{
+  "created_utc": "2026-10-24T08:57:47.608625+00:00",
+  "freeze": {
+    "created_utc": "2026-10-24T08:56:45.995630+00:00",
+    "hashes": {
+      "scripts/run_listen_first.py": "a2a5b5f83f1b0e29db92048412b8b4dfa177b0dfb8d1be640b23acad2a981eef",
+      "scripts/listen_first.py": "3df30369015f55b32c9f5eeb416b0f3aaa48379b8ea43600669d84be0e00b000",
+      "scripts/selective_evidence.py": "28dbb5839200d66890dd33e1321bb87a1bdb9d9a922ef81e55a5691d69a91b11",
+      "research/listen-first-v1/PLAN.md": "32347060e6e05ebe1eb754a691baf3633c74b4d1a140b8af0194c038027ab65f",
+      "research/selective-v1/frozen/linear.json": "d64d7d87d304a235df37afc2c3a62babe5f35accfcbf3519b25be55eb7651685",
+      "research/selective-v1/frozen/manifest.json": "c59107323e125252ebbd79d21089daa48faf41d4a2d6d278cd93264b8f33839b",
+      "backend/app/ccare/engine.py": "692671a727e4174400eec40feb54388b1a56ac5e435d1e9aaa4e396c106444e6",
+      "backend/app/ccare/policy.py": "129be6f2d0990a12ece422ca0a7235adad805b0fbed398297d6f37f737b40fef"
+    }
+  },
+  "data_lock": {
+    "created_utc": "2026-10-24T08:57:46.855544+00:00",
+    "method_commit": "dde3f4505fd85fd69d0fd27b2aa8bc8af922fc60",
+    "freeze_sha256": "cf861df47c2171c8058c6692fc87abc63515e8f1277e2a7a80bf7b2035c4a07e",
+    "data_sha256": "ad1d0ce0e3c0afb16c9945d71971871933bfc0d22c7c2d667d2b534fec09fd95",
+    "n": 12,
+    "families": 6,
+    "author": "Same AI development assistant; synthetic/unreviewed; not independent",
+    "construction": "All texts contain uncertainty language to isolate action choice. Labels written before outputs. Same gold for both policies.",
+    "policy": "One paired evaluation, no post-result tuning"
+  },
+  "external_calls": 0,
+  "metrics": {
+    "old_selective": {
+      "n": 12,
+      "errors": {
+        "unsupported_assertion": 0,
+        "will_violation": 10,
+        "unnecessary_question": 8,
+        "missed_required_question": 2
+      },
+      "questions": 12,
+      "required_questions": 4,
+      "unknown_inputs": 12,
+      "unknown_kept": 12,
+      "unknown_retention": 1.0,
+      "necessary_risk_questions": 2,
+      "retained_risk_questions": 2,
+      "provisional_weighted_cost": 56,
+      "weights": {
+        "unsupported_assertion": 4,
+        "will_violation": 4,
+        "unnecessary_question": 1,
+        "missed_required_question": 4
+      },
+      "warning": "Product preference weights, not expert utility or measured psychological cost"
+    },
+    "listen_first": {
+      "n": 12,
+      "errors": {
+        "unsupported_assertion": 0,
+        "will_violation": 3,
+        "unnecessary_question": 1,
+        "missed_required_question": 0
+      },
+      "questions": 5,
+      "required_questions": 4,
+      "unknown_inputs": 12,
+      "unknown_kept": 12,
+      "unknown_retention": 1.0,
+      "necessary_risk_questions": 2,
+      "retained_risk_questions": 2,
+      "provisional_weighted_cost": 13,
+      "weights": {
+        "unsupported_assertion": 4,
+        "will_violation": 4,
+        "unnecessary_question": 1,
+        "missed_required_question": 4
+      },
+      "warning": "Product preference weights, not expert utility or measured psychological cost"
+    }
+  }
+}

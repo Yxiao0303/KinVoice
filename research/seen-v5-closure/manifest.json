@@ -1,0 +1,14 @@
+{
+  "kind": "posthoc_seen_development_fix_no_new_generation",
+  "base": "ad4451ca369b7a08f3cc2faffbdf0d730e676175",
+  "hashes": {
+    "backend/app/ccare/intent_scope.py": "3d0d73c67047952c4b9755a00b1880b42d6783999cd67dc8db37543e77f37860",
+    "backend/app/ccare/emotion_grounding.py": "126c77434f2c3781d0f385b2e57f37cf6ee3cfef2de64b4b079be08947c717ce",
+    "backend/app/ccare/engine.py": "ec8fee2c0f258a004f2bd2e3e156aee0139dfdda5ab8184ab54a163ee98ec604",
+    "scripts/three_arm.py": "e5740fbed38d6b788b5136a994a0645187f547f16284b5efab5d2b750dbc04bb",
+    "scripts/replay_seen_v5.py": "c1494baf463ad626748a8d073a89ebe859b5d9852d58260906f0ca3179c2b48f",
+    "backend/tests/test_seen_v5_closure.py": "9bf1ae66c84377e883794d1dbe9d3c81fdc1381bfd079e817fa782b5abcdc3ad",
+    "research/seen-v5-closure/replay.json": "19102eb14ec3e359f41a7e798ae8b75e60ecfb28fc042970aa8c672f6e5538ec",
+    "research/seen-v5-closure/README.md": "a38f4b3a0f8e03fb64865a7b8990224486994a0db055d43bb5edb7d5739efb25"
+  }
+}

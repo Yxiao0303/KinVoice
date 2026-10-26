@@ -1,0 +1,33 @@
+{
+  "hashes": {
+    "scripts/batch_evaluation.py": "872599e802f0d8eec93af9531ad9687bcac4d5cdf58652bba3f1b26a36874d49",
+    "scripts/three_arm.py": "ce38c7617e22cc962641d215c49e3e139a3c8d4960edf56d021478ae0154a0f4",
+    "scripts/listen_first.py": "3df30369015f55b32c9f5eeb416b0f3aaa48379b8ea43600669d84be0e00b000",
+    "scripts/listen_first_v2.py": "e2eb844df6f36701ee58316925a775ab0490c7d4c8fd5d71ec98c9d64195cefe",
+    "scripts/price_refresh.py": "41535365d9ff1ba6261283acc4d91763e42bbcc44d3dd6d3cd7aa16a63b8767c",
+    "scripts/validate_evaluation_pack.py": "cf612caee4087f24a9d19943e9fa9ee3b12f95fe0e3f2dfe85a99db7e8ac7cda",
+    "research/evaluation-pack-v1/freeze.json": "685516195818503fc01a51af1daa9d11e34176f478620abd3443bc5c3c0a48c2",
+    "research/batch-evaluation-v2/PROTOCOL.md": "131756377ea24537b08212e65d11bae9d9ccdf6f1afaa99963b413c094d4ce24",
+    "backend/app/ccare/__init__.py": "526925502da213b08f5af12681de8ca5f6f4f4a5a7f31ab4ddc4ed5f408f030b",
+    "backend/app/ccare/api.py": "4a612ddaa33bc83c2c28ddba65f7120793e346d992ff7efd3664c58a99484aa4",
+    "backend/app/ccare/auth.py": "241e65aa37d29f2b174e764d4368b678301c4d21b74b2add2e38e9b1542c05e3",
+    "backend/app/ccare/billing.py": "759ea35f67d4cb9d97103496e1c35ada260d705d52ae4cc5fa2600799746f312",
+    "backend/app/ccare/cny_ledger.py": "423e11bd2480a33f0e4c1ec4a275d9838b349d94f250831fbe07b78d20e5d3bc",
+    "backend/app/ccare/config.py": "0fa8599a7b5e56975d3aeea0bcac2abb72f638f85193da28e8ea6c9317e59583",
+    "backend/app/ccare/core_smoke.py": "c71a455d3f3f023f9fb0b7db5d47607ed4420cda98b71d1a85c7f59ab31829d6",
+    "backend/app/ccare/current_threat.py": "7d6d9fd34d9953176b689aa80cbad632a5ff96768639391be7e706ba9763d900",
+    "backend/app/ccare/engine.py": "1a86a3600afa1fcc6ec881eb81234259698cca8efd14839be65a2767b17d68fb",
+    "backend/app/ccare/intent_scope.py": "a5ccb77002f719615a4b79431498bc17da54f7dc52cd7a29f982283d46cbb836",
+    "backend/app/ccare/learned_evidence.py": "2fd05d574850a1544c5161769282369c6bd4ea90bc35853b7c693d375d44dcf0",
+    "backend/app/ccare/policy.py": "e2119b8f7df168bbcd35e81405d7925c980f37bbb95ad25e348c30f86107e19c",
+    "backend/app/ccare/provider.py": "68237e726844240d8cb0aff025132fb38ed58de3c3cc025185e7ad20fa69220d",
+    "backend/app/ccare/research.py": "d01da30da5e4dc9fa299590e758cb534ab0e35bc88e76aed0864edc6055ae688",
+    "backend/app/ccare/reviews.py": "433a7e23b770c483fb9bc1a3410613cad1c64fed26935821e12f51b9d14f4e5a",
+    "backend/app/ccare/schemas.py": "81d5b8f12f44d6a7cc2efd05c91d2324acc98a7e37470c756055fd064937f601",
+    "backend/app/ccare/semantics.py": "ae02481c192d95292bd17db443501bbc865abea01001b1650e1ff8e7c293f05d",
+    "backend/app/ccare/smoke.py": "a7b4a7fb4eac14e71fe2f9dc37155d2229e7970c67f520e82873984874aa48eb",
+    "backend/app/ccare/streaming.py": "5cf6fa22705ab284a54e10c9eaaf018b3036341120c4529e86cf9871b9bcaa6d",
+    "backend/app/ccare/web_budget.py": "0933116d401abc998271d176541024e79d5e4bd4f8059522de7792224753be10"
+  },
+  "status": "v2 pre-execution freeze; candidate not run"
+}

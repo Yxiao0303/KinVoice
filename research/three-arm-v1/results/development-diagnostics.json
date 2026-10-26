@@ -1,0 +1,70 @@
+{
+  "kind": "single_case_development_diagnostics_not_effect_study",
+  "arms": [
+    {
+      "arm": "strong_multi",
+      "call_count": 3,
+      "http_statuses": [
+        200,
+        200,
+        200
+      ],
+      "returned_models": [
+        "deepseek-flash",
+        "deepseek-flash",
+        "deepseek-flash"
+      ],
+      "prompt_tokens": 894,
+      "completion_tokens": 97,
+      "total_tokens": 991,
+      "peak_no_cache_estimate_cny": "0.002564",
+      "elapsed_ms": 4678,
+      "question_marks": 0,
+      "professional_metrics": "unavailable",
+      "status": "remote",
+      "failure": null
+    },
+    {
+      "arm": "strong_single",
+      "call_count": 1,
+      "http_statuses": [
+        200
+      ],
+      "returned_models": [
+        "deepseek-flash"
+      ],
+      "prompt_tokens": 226,
+      "completion_tokens": 39,
+      "total_tokens": 265,
+      "peak_no_cache_estimate_cny": "0.000764",
+      "elapsed_ms": 1140,
+      "question_marks": 0,
+      "professional_metrics": "unavailable",
+      "status": "remote",
+      "failure": null
+    },
+    {
+      "arm": "ccare",
+      "call_count": 3,
+      "http_statuses": [
+        200,
+        200,
+        200
+      ],
+      "returned_models": [
+        "deepseek-flash",
+        "deepseek-flash",
+        "deepseek-flash"
+      ],
+      "prompt_tokens": 1473,
+      "completion_tokens": 132,
+      "total_tokens": 1605,
+      "peak_no_cache_estimate_cny": "0.004002",
+      "elapsed_ms": 3636,
+      "question_marks": 0,
+      "professional_metrics": "unavailable",
+      "status": "remote",
+      "failure": null
+    }
+  ]
+}

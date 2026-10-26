@@ -1,0 +1,1384 @@
+{
+  "kind": "synthetic_unreviewed_seen_development_diagnostic",
+  "data_sha256": "88db8c10b137c36005ae3af3ed14bea49017cd280d7dc962e0b362f279d33adb",
+  "denominator": 12,
+  "families": 10,
+  "action_matches": 12,
+  "paid_calls": 0,
+  "trained_models": 0,
+  "independent_ratings": null,
+  "rows": [
+    {
+      "id": "SP01",
+      "family": "exam_expectations",
+      "expected_action": "listen",
+      "actual_action": "listen",
+      "matches_developer_action": true,
+      "reply": "[学生场景离线规则示例] 我在听。你可以先说完，不需要马上给出计划，也不用补齐所有信息。",
+      "judgment": {
+        "version": "student-p1-v1",
+        "method": "conservative_rules_unvalidated",
+        "stage": "university",
+        "events": [
+          {
+            "event_id": "student-event:91130921d675e332ea864a60",
+            "message_id": "u:1",
+            "source_digest": "d00e5b07db945367f249a61e867e80a86d47b111f065c260332961b022ee870b",
+            "provenance": "self_report",
+            "claims": [
+              {
+                "field": "student_pressure",
+                "value": "academic_family",
+                "status": "supported",
+                "evidence": [
+                  {
+                    "message_id": "u:1",
+                    "role": "user",
+                    "source": "current",
+                    "turn": 0,
+                    "start": 0,
+                    "end": 28,
+                    "quote": "这次考试没考好，我妈说我不努力。先听我说，不要给我建议。",
+                    "purpose": "state"
+                  }
+                ],
+                "revision": 0,
+                "supersedes": null
+              },
+              {
+                "field": "student_subject",
+                "value": "mother",
+                "status": "supported",
+                "evidence": [
+                  {
+                    "message_id": "u:1",
+                    "role": "user",
+                    "source": "current",
+                    "turn": 0,
+                    "start": 0,
+                    "end": 28,
+                    "quote": "这次考试没考好，我妈说我不努力。先听我说，不要给我建议。",
+                    "purpose": "state"
+                  }
+                ],
+                "revision": 0,
+                "supersedes": null
+              },
+              {
+                "field": "student_time",
+                "value": "current",
+                "status": "supported",
+                "evidence": [
+                  {
+                    "message_id": "u:1",
+                    "role": "user",
+                    "source": "current",
+                    "turn": 0,
+                    "start": 0,
+                    "end": 28,
+                    "quote": "这次考试没考好，我妈说我不努力。先听我说，不要给我建议。",
+                    "purpose": "state"
+                  }
+                ],
+                "revision": 0,
+                "supersedes": null
+              },
+              {
+                "field": "student_impact",
+                "value": "unknown",
+                "status": "unknown",
+                "evidence": [],
+                "revision": 0,
+                "supersedes": null
+              },
+              {
+                "field": "student_event",
+                "value": "retained",
+                "status": "supported",
+                "evidence": [
+                  {
+                    "message_id": "u:1",
+                    "role": "user",
+                    "source": "current",
+                    "turn": 0,
+                    "start": 0,
+                    "end": 28,
+                    "quote": "这次考试没考好，我妈说我不努力。先听我说，不要给我建议。",
+                    "purpose": "state"
+                  }
+                ],
+                "revision": 0,
+                "supersedes": null
+              }
+            ],
+            "active": true
+          }
+        ],
+        "uncertainties": [
+          "未表达的影响及持续时间保持未知；未知不要求逐项追问。",
+          "主体/时态为保守词面判断；同一消息多事件或跨消息指代不自动合并。"
+        ],
+        "risk": "unknown",
+        "current_need": "listen",
+        "need_origin": "explicit_text",
+        "need_evidence": [
+          {
+            "message_id": "u:1",
+            "role": "user",
+            "source": "current",
+            "turn": 0,
+            "start": 0,
+            "end": 28,
+            "quote": "这次考试没考好，我妈说我不努力。先听我说，不要给我建议。",
+            "purpose": "intent"
+          }
+        ],
+        "action": "listen",
+        "reasons": [
+          "current_refusal",
+          "offline_student_rules",
+          "current_request_or_explicit_support_choice"
+        ],
+        "basis_event_ids": [
+          "student-event:91130921d675e332ea864a60"
+        ]
+      },
+      "model_calls": 0
+    },
+    {
+      "id": "SP02",
+      "family": "exam_expectations",
+      "expected_action": "draft",
+      "actual_action": "draft",
+      "matches_developer_action": true,
+      "reply": "[学生场景离线规则示例] 可以这样写：“这件事我想明天再谈，先让我把自己的想法整理好。”这只是可修改的草稿，不会替你发送。",
+      "judgment": {
+        "version": "student-p1-v1",
+        "method": "conservative_rules_unvalidated",
+        "stage": "university",
+        "events": [
+          {
+            "event_id": "student-event:f02c7aea52be9f3473276e28",
+            "message_id": "u:1",
+            "source_digest": "501547a19624cac0cde0bfa5c0d4198e96207a5eda4d8e95fa30fa28b6df0c7d",
+            "provenance": "self_report",
+            "claims": [
+              {
+                "field": "student_pressure",
+                "value": "academic",
+                "status": "supported",
+                "evidence": [
+                  {
+                    "message_id": "u:1",
+                    "role": "user",
+                    "source": "current",
+                    "turn": 0,
+                    "start": 0,
+                    "end": 14,
+                    "quote": "帮我写一句明天再谈考试的话。",
+                    "purpose": "state"
+                  }
+                ],
+                "revision": 0,
+                "supersedes": null
+              },
+              {
+                "field": "student_subject",
+                "value": "unknown",
+                "status": "unknown",
+                "evidence": [],
+                "revision": 0,
+                "supersedes": null
+              },
+              {
+                "field": "student_time",
+                "value": "future",
+                "status": "supported",
+                "evidence": [
+                  {
+                    "message_id": "u:1",
+                    "role": "user",
+                    "source": "current",
+                    "turn": 0,
+                    "start": 0,
+                    "end": 14,
+                    "quote": "帮我写一句明天再谈考试的话。",
+                    "purpose": "state"
+                  }
+                ],
+                "revision": 0,
+                "supersedes": null
+              },
+              {
+                "field": "student_impact",
+                "value": "unknown",
+                "status": "unknown",
+                "evidence": [],
+                "revision": 0,
+                "supersedes": null
+              },
+              {
+                "field": "student_event",
+                "value": "retained",
+                "status": "supported",
+                "evidence": [
+                  {
+                    "message_id": "u:1",
+                    "role": "user",
+                    "source": "current",
+                    "turn": 0,
+                    "start": 0,
+                    "end": 14,
+                    "quote": "帮我写一句明天再谈考试的话。",
+                    "purpose": "state"
+                  }
+                ],
+                "revision": 0,
+                "supersedes": null
+              }
+            ],
+            "active": true
+          }
+        ],
+        "uncertainties": [
+          "未表达的影响及持续时间保持未知；未知不要求逐项追问。",
+          "主体/时态为保守词面判断；同一消息多事件或跨消息指代不自动合并。"
+        ],
+        "risk": "unknown",
+        "current_need": "draft",
+        "need_origin": "explicit_text",
+        "need_evidence": [
+          {
+            "message_id": "u:1",
+            "role": "user",
+            "source": "current",
+            "turn": 0,
+            "start": 0,
+            "end": 3,
+            "quote": "帮我写",
+            "purpose": "intent"
+          }
+        ],
+        "action": "draft",
+        "reasons": [
+          "current_text_intent",
+          "offline_student_rules",
+          "current_request_or_explicit_support_choice"
+        ],
+        "basis_event_ids": [
+          "student-event:f02c7aea52be9f3473276e28"
+        ]
+      },
+      "model_calls": 0
+    },
+    {
+      "id": "SP03",
+      "family": "study_first_step",
+      "expected_action": "small_step",
+      "actual_action": "small_step",
+      "matches_developer_action": true,
+      "reply": "[学生场景离线规则示例] 可选的小步骤：从你提到的学习任务里选一项，把第一步缩小到十分钟能开始的程度，做完再决定是否继续。你也可以缩小或放弃这一步；它不保证成绩提高。",
+      "judgment": {
+        "version": "student-p1-v1",
+        "method": "conservative_rules_unvalidated",
+        "stage": "university",
+        "events": [
+          {
+            "event_id": "student-event:3a63b813a640fb115dede714",
+            "message_id": "u:1",
+            "source_digest": "0bf5faf6fde9b14fa647ca4a8f5cb2a2bd51c81cfe569d85a6915a3c39a88038",
+            "provenance": "self_report",
+            "claims": [
+              {
+                "field": "student_pressure",
+                "value": "academic",
+                "status": "supported",
+                "evidence": [
+                  {
+                    "message_id": "u:1",
+                    "role": "user",
+                    "source": "current",
+                    "turn": 0,
+                    "start": 0,
+                    "end": 21,
+                    "quote": "今天复习任务很多，我愿意从一个小步骤开始。",
+                    "purpose": "state"
+                  }
+                ],
+                "revision": 0,
+                "supersedes": null
+              },
+              {
+                "field": "student_subject",
+                "value": "unknown",
+                "status": "unknown",
+                "evidence": [],
+                "revision": 0,
+                "supersedes": null
+              },
+              {
+                "field": "student_time",
+                "value": "current",
+                "status": "supported",
+                "evidence": [
+                  {
+                    "message_id": "u:1",
+                    "role": "user",
+                    "source": "current",
+                    "turn": 0,
+                    "start": 0,
+                    "end": 21,
+                    "quote": "今天复习任务很多，我愿意从一个小步骤开始。",
+                    "purpose": "state"
+                  }
+                ],
+                "revision": 0,
+                "supersedes": null
+              },
+              {
+                "field": "student_impact",
+                "value": "unknown",
+                "status": "unknown",
+                "evidence": [],
+                "revision": 0,
+                "supersedes": null
+              },
+              {
+                "field": "student_event",
+                "value": "retained",
+                "status": "supported",
+                "evidence": [
+                  {
+                    "message_id": "u:1",
+                    "role": "user",
+                    "source": "current",
+                    "turn": 0,
+                    "start": 0,
+                    "end": 21,
+                    "quote": "今天复习任务很多，我愿意从一个小步骤开始。",
+                    "purpose": "state"
+                  }
+                ],
+                "revision": 0,
+                "supersedes": null
+              }
+            ],
+            "active": true
+          }
+        ],
+        "uncertainties": [
+          "未表达的影响及持续时间保持未知；未知不要求逐项追问。",
+          "主体/时态为保守词面判断；同一消息多事件或跨消息指代不自动合并。"
+        ],
+        "risk": "unknown",
+        "current_need": "small_step",
+        "need_origin": "user_choice",
+        "need_evidence": [],
+        "action": "small_step",
+        "reasons": [
+          "user_selected_goal",
+          "offline_student_rules",
+          "current_request_or_explicit_support_choice"
+        ],
+        "basis_event_ids": [
+          "student-event:3a63b813a640fb115dede714"
+        ]
+      },
+      "model_calls": 0
+    },
+    {
+      "id": "SP04",
+      "family": "study_first_step",
+      "expected_action": "listen",
+      "actual_action": "listen",
+      "matches_developer_action": true,
+      "reply": "[学生场景离线规则示例] 我在听。你可以先说完，不需要马上给出计划，也不用补齐所有信息。",
+      "judgment": {
+        "version": "student-p1-v1",
+        "method": "conservative_rules_unvalidated",
+        "stage": "university",
+        "events": [
+          {
+            "event_id": "student-event:75a5145baa2e3ee3d5261126",
+            "message_id": "u:1",
+            "source_digest": "38080a0def3ec83a9bc9a17a87c8ce2bafc419b9231b0dd7f2aced8007e6ff9f",
+            "provenance": "self_report",
+            "claims": [
+              {
+                "field": "student_pressure",
+                "value": "academic",
+                "status": "supported",
+                "evidence": [
+                  {
+                    "message_id": "u:1",
+                    "role": "user",
+                    "source": "current",
+                    "turn": 0,
+                    "start": 0,
+                    "end": 12,
+                    "quote": "这次考试后我不想做计划。",
+                    "purpose": "state"
+                  }
+                ],
+                "revision": 0,
+                "supersedes": null
+              },
+              {
+                "field": "student_subject",
+                "value": "unknown",
+                "status": "unknown",
+                "evidence": [],
+                "revision": 0,
+                "supersedes": null
+              },
+              {
+                "field": "student_time",
+                "value": "current",
+                "status": "supported",
+                "evidence": [
+                  {
+                    "message_id": "u:1",
+                    "role": "user",
+                    "source": "current",
+                    "turn": 0,
+                    "start": 0,
+                    "end": 12,
+                    "quote": "这次考试后我不想做计划。",
+                    "purpose": "state"
+                  }
+                ],
+                "revision": 0,
+                "supersedes": null
+              },
+              {
+                "field": "student_impact",
+                "value": "unknown",
+                "status": "unknown",
+                "evidence": [],
+                "revision": 0,
+                "supersedes": null
+              },
+              {
+                "field": "student_event",
+                "value": "retained",
+                "status": "supported",
+                "evidence": [
+                  {
+                    "message_id": "u:1",
+                    "role": "user",
+                    "source": "current",
+                    "turn": 0,
+                    "start": 0,
+                    "end": 12,
+                    "quote": "这次考试后我不想做计划。",
+                    "purpose": "state"
+                  }
+                ],
+                "revision": 0,
+                "supersedes": null
+              }
+            ],
+            "active": true
+          }
+        ],
+        "uncertainties": [
+          "未表达的影响及持续时间保持未知；未知不要求逐项追问。",
+          "主体/时态为保守词面判断；同一消息多事件或跨消息指代不自动合并。"
+        ],
+        "risk": "unknown",
+        "current_need": "listen",
+        "need_origin": "explicit_text",
+        "need_evidence": [
+          {
+            "message_id": "u:1",
+            "role": "user",
+            "source": "current",
+            "turn": 0,
+            "start": 0,
+            "end": 12,
+            "quote": "这次考试后我不想做计划。",
+            "purpose": "intent"
+          }
+        ],
+        "action": "listen",
+        "reasons": [
+          "user_selected_goal",
+          "offline_student_rules",
+          "current_request_or_explicit_support_choice"
+        ],
+        "basis_event_ids": [
+          "student-event:75a5145baa2e3ee3d5261126"
+        ]
+      },
+      "model_calls": 0
+    },
+    {
+      "id": "SP05",
+      "family": "missing_recipient",
+      "expected_action": "clarify",
+      "actual_action": "clarify",
+      "matches_developer_action": true,
+      "reply": "[学生场景离线规则示例] 为了完成你请求的帮助，你最需要先确认的是哪一个对象或哪一项具体要求？只说明这一点就可以。",
+      "judgment": {
+        "version": "student-p1-v1",
+        "method": "conservative_rules_unvalidated",
+        "stage": "university",
+        "events": [
+          {
+            "event_id": "student-event:24336a73d035f6b7c0fdf812",
+            "message_id": "u:1",
+            "source_digest": "0c3f98be14d388bcfe9f0036114b518b3f6f15149bdeadc8dd83b042f59d562b",
+            "provenance": "self_report",
+            "claims": [
+              {
+                "field": "student_pressure",
+                "value": "family",
+                "status": "supported",
+                "evidence": [
+                  {
+                    "message_id": "u:1",
+                    "role": "user",
+                    "source": "current",
+                    "turn": 0,
+                    "start": 0,
+                    "end": 28,
+                    "quote": "帮我写一段话，但对象是老师还是家人会影响语气，请先确认。",
+                    "purpose": "state"
+                  }
+                ],
+                "revision": 0,
+                "supersedes": null
+              },
+              {
+                "field": "student_subject",
+                "value": "teacher",
+                "status": "supported",
+                "evidence": [
+                  {
+                    "message_id": "u:1",
+                    "role": "user",
+                    "source": "current",
+                    "turn": 0,
+                    "start": 0,
+                    "end": 28,
+                    "quote": "帮我写一段话，但对象是老师还是家人会影响语气，请先确认。",
+                    "purpose": "state"
+                  }
+                ],
+                "revision": 0,
+                "supersedes": null
+              },
+              {
+                "field": "student_time",
+                "value": "unknown",
+                "status": "unknown",
+                "evidence": [],
+                "revision": 0,
+                "supersedes": null
+              },
+              {
+                "field": "student_impact",
+                "value": "unknown",
+                "status": "unknown",
+                "evidence": [],
+                "revision": 0,
+                "supersedes": null
+              },
+              {
+                "field": "student_event",
+                "value": "retained",
+                "status": "supported",
+                "evidence": [
+                  {
+                    "message_id": "u:1",
+                    "role": "user",
+                    "source": "current",
+                    "turn": 0,
+                    "start": 0,
+                    "end": 28,
+                    "quote": "帮我写一段话，但对象是老师还是家人会影响语气，请先确认。",
+                    "purpose": "state"
+                  }
+                ],
+                "revision": 0,
+                "supersedes": null
+              }
+            ],
+            "active": true
+          }
+        ],
+        "uncertainties": [
+          "未表达的影响及持续时间保持未知；未知不要求逐项追问。",
+          "主体/时态为保守词面判断；同一消息多事件或跨消息指代不自动合并。"
+        ],
+        "risk": "unknown",
+        "current_need": "clarify",
+        "need_origin": "explicit_text",
+        "need_evidence": [
+          {
+            "message_id": "u:1",
+            "role": "user",
+            "source": "current",
+            "turn": 0,
+            "start": 23,
+            "end": 27,
+            "quote": "请先确认",
+            "purpose": "intent"
+          }
+        ],
+        "action": "clarify",
+        "reasons": [
+          "current_text_intent",
+          "offline_student_rules",
+          "current_request_or_explicit_support_choice"
+        ],
+        "basis_event_ids": [
+          "student-event:24336a73d035f6b7c0fdf812"
+        ]
+      },
+      "model_calls": 0
+    },
+    {
+      "id": "SP06",
+      "family": "reported_request",
+      "expected_action": "listen",
+      "actual_action": "listen",
+      "matches_developer_action": true,
+      "reply": "[学生场景离线规则示例] 我在听。你可以先说完，不需要马上给出计划，也不用补齐所有信息。",
+      "judgment": {
+        "version": "student-p1-v1",
+        "method": "conservative_rules_unvalidated",
+        "stage": "university",
+        "events": [
+          {
+            "event_id": "student-event:8586662df45e54bf18de8dd3",
+            "message_id": "u:1",
+            "source_digest": "54699478485c097b9a0fce2e8b1066e1dc0e564511e4c634f666a75d5b825c05",
+            "provenance": "reported",
+            "claims": [
+              {
+                "field": "student_pressure",
+                "value": "unknown",
+                "status": "unknown",
+                "evidence": [],
+                "revision": 0,
+                "supersedes": null
+              },
+              {
+                "field": "student_subject",
+                "value": "unknown",
+                "status": "unknown",
+                "evidence": [],
+                "revision": 0,
+                "supersedes": null
+              },
+              {
+                "field": "student_time",
+                "value": "unknown",
+                "status": "unknown",
+                "evidence": [],
+                "revision": 0,
+                "supersedes": null
+              },
+              {
+                "field": "student_impact",
+                "value": "unknown",
+                "status": "unknown",
+                "evidence": [],
+                "revision": 0,
+                "supersedes": null
+              },
+              {
+                "field": "student_event",
+                "value": "retained",
+                "status": "supported",
+                "evidence": [
+                  {
+                    "message_id": "u:1",
+                    "role": "user",
+                    "source": "current",
+                    "turn": 0,
+                    "start": 0,
+                    "end": 18,
+                    "quote": "朋友说“帮我写一段话”。我只是转述。",
+                    "purpose": "state"
+                  }
+                ],
+                "revision": 0,
+                "supersedes": null
+              }
+            ],
+            "active": true
+          }
+        ],
+        "uncertainties": [
+          "未表达的影响及持续时间保持未知；未知不要求逐项追问。",
+          "主体/时态为保守词面判断；同一消息多事件或跨消息指代不自动合并。"
+        ],
+        "risk": "unknown",
+        "current_need": "listen",
+        "need_origin": "user_choice",
+        "need_evidence": [],
+        "action": "listen",
+        "reasons": [
+          "user_selected_goal",
+          "offline_student_rules",
+          "current_request_or_explicit_support_choice"
+        ],
+        "basis_event_ids": []
+      },
+      "model_calls": 0
+    },
+    {
+      "id": "SP07",
+      "family": "ambiguous_need",
+      "expected_action": "listen",
+      "actual_action": "listen",
+      "matches_developer_action": true,
+      "reply": "[学生场景离线规则示例] 我在听。你可以先说完，不需要马上给出计划，也不用补齐所有信息。",
+      "judgment": {
+        "version": "student-p1-v1",
+        "method": "conservative_rules_unvalidated",
+        "stage": "university",
+        "events": [
+          {
+            "event_id": "student-event:917f9b0d39c0612713bf5e38",
+            "message_id": "u:1",
+            "source_digest": "fff33100f8cd489de5d3dbb618c5feabbd3637847d925fea84aec680179d9ef2",
+            "provenance": "self_report",
+            "claims": [
+              {
+                "field": "student_pressure",
+                "value": "unknown",
+                "status": "unknown",
+                "evidence": [],
+                "revision": 0,
+                "supersedes": null
+              },
+              {
+                "field": "student_subject",
+                "value": "self",
+                "status": "supported",
+                "evidence": [
+                  {
+                    "message_id": "u:1",
+                    "role": "user",
+                    "source": "current",
+                    "turn": 0,
+                    "start": 0,
+                    "end": 10,
+                    "quote": "我暂时不知道怎么说。",
+                    "purpose": "state"
+                  }
+                ],
+                "revision": 0,
+                "supersedes": null
+              },
+              {
+                "field": "student_time",
+                "value": "unknown",
+                "status": "unknown",
+                "evidence": [],
+                "revision": 0,
+                "supersedes": null
+              },
+              {
+                "field": "student_impact",
+                "value": "unknown",
+                "status": "unknown",
+                "evidence": [],
+                "revision": 0,
+                "supersedes": null
+              },
+              {
+                "field": "student_event",
+                "value": "retained",
+                "status": "supported",
+                "evidence": [
+                  {
+                    "message_id": "u:1",
+                    "role": "user",
+                    "source": "current",
+                    "turn": 0,
+                    "start": 0,
+                    "end": 10,
+                    "quote": "我暂时不知道怎么说。",
+                    "purpose": "state"
+                  }
+                ],
+                "revision": 0,
+                "supersedes": null
+              }
+            ],
+            "active": true
+          }
+        ],
+        "uncertainties": [
+          "未表达的影响及持续时间保持未知；未知不要求逐项追问。",
+          "主体/时态为保守词面判断；同一消息多事件或跨消息指代不自动合并。"
+        ],
+        "risk": "unknown",
+        "current_need": "listen",
+        "need_origin": "user_choice",
+        "need_evidence": [],
+        "action": "listen",
+        "reasons": [
+          "user_selected_goal",
+          "offline_student_rules",
+          "current_request_or_explicit_support_choice"
+        ],
+        "basis_event_ids": [
+          "student-event:917f9b0d39c0612713bf5e38"
+        ]
+      },
+      "model_calls": 0
+    },
+    {
+      "id": "SP08",
+      "family": "current_danger",
+      "expected_action": "safety",
+      "actual_action": "safety",
+      "matches_developer_action": true,
+      "reply": "[学生场景离线规则示例] 你提到的情况需要优先关注当下安全。如果已经受伤、服药过量或有人正在伤害你，请尽快联系当地急救或紧急服务，并找一位你信任、能到场的人陪着你。如果安全可行，先和可能造成伤害的物品或场所拉开距离。这个人不必是家长。你现在是否处在安全的位置？",
+      "judgment": {
+        "version": "student-p1-v1",
+        "method": "conservative_rules_unvalidated",
+        "stage": "university",
+        "events": [
+          {
+            "event_id": "student-event:d8b615455128d98ac140bbdc",
+            "message_id": "u:1",
+            "source_digest": "bc02a17711f516970d95a42272f96f94dfcf695658bdc0910206858dae291775",
+            "provenance": "self_report",
+            "claims": [
+              {
+                "field": "student_pressure",
+                "value": "family",
+                "status": "supported",
+                "evidence": [
+                  {
+                    "message_id": "u:1",
+                    "role": "user",
+                    "source": "current",
+                    "turn": 0,
+                    "start": 0,
+                    "end": 12,
+                    "quote": "爸爸正在掐我，不要建议。",
+                    "purpose": "state"
+                  }
+                ],
+                "revision": 0,
+                "supersedes": null
+              },
+              {
+                "field": "student_subject",
+                "value": "father",
+                "status": "supported",
+                "evidence": [
+                  {
+                    "message_id": "u:1",
+                    "role": "user",
+                    "source": "current",
+                    "turn": 0,
+                    "start": 0,
+                    "end": 12,
+                    "quote": "爸爸正在掐我，不要建议。",
+                    "purpose": "state"
+                  }
+                ],
+                "revision": 0,
+                "supersedes": null
+              },
+              {
+                "field": "student_time",
+                "value": "current",
+                "status": "supported",
+                "evidence": [
+                  {
+                    "message_id": "u:1",
+                    "role": "user",
+                    "source": "current",
+                    "turn": 0,
+                    "start": 0,
+                    "end": 12,
+                    "quote": "爸爸正在掐我，不要建议。",
+                    "purpose": "state"
+                  }
+                ],
+                "revision": 0,
+                "supersedes": null
+              },
+              {
+                "field": "student_impact",
+                "value": "unknown",
+                "status": "unknown",
+                "evidence": [],
+                "revision": 0,
+                "supersedes": null
+              },
+              {
+                "field": "student_event",
+                "value": "retained",
+                "status": "supported",
+                "evidence": [
+                  {
+                    "message_id": "u:1",
+                    "role": "user",
+                    "source": "current",
+                    "turn": 0,
+                    "start": 0,
+                    "end": 12,
+                    "quote": "爸爸正在掐我，不要建议。",
+                    "purpose": "state"
+                  }
+                ],
+                "revision": 0,
+                "supersedes": null
+              }
+            ],
+            "active": true
+          }
+        ],
+        "uncertainties": [
+          "未表达的影响及持续时间保持未知；未知不要求逐项追问。",
+          "主体/时态为保守词面判断；同一消息多事件或跨消息指代不自动合并。"
+        ],
+        "risk": "urgent",
+        "current_need": "listen",
+        "need_origin": "explicit_text",
+        "need_evidence": [
+          {
+            "message_id": "u:1",
+            "role": "user",
+            "source": "current",
+            "turn": 0,
+            "start": 0,
+            "end": 12,
+            "quote": "爸爸正在掐我，不要建议。",
+            "purpose": "intent"
+          }
+        ],
+        "action": "safety",
+        "reasons": [
+          "urgent_guard",
+          "offline_student_rules",
+          "current_request_or_explicit_support_choice"
+        ],
+        "basis_event_ids": [
+          "student-event:d8b615455128d98ac140bbdc"
+        ]
+      },
+      "model_calls": 0
+    },
+    {
+      "id": "SP09",
+      "family": "choice_boundary",
+      "expected_action": "options",
+      "actual_action": "options",
+      "matches_developer_action": true,
+      "reply": "[学生场景离线规则示例] 我不会替你决定升学或就业。可以列出你愿意考虑的选项、自己的偏好、仍需核实的信息，再决定是否找合适的人讨论；没有可靠来源的政策或岗位信息先留空。",
+      "judgment": {
+        "version": "student-p1-v1",
+        "method": "conservative_rules_unvalidated",
+        "stage": "university",
+        "events": [
+          {
+            "event_id": "student-event:63bfa0f60ef69d575caaccfa",
+            "message_id": "u:1",
+            "source_digest": "07d4a77ce308bb23edd175a516c29ff9b8b0160954649dc3b675816c960058a1",
+            "provenance": "self_report",
+            "claims": [
+              {
+                "field": "student_pressure",
+                "value": "unknown",
+                "status": "unknown",
+                "evidence": [],
+                "revision": 0,
+                "supersedes": null
+              },
+              {
+                "field": "student_subject",
+                "value": "unknown",
+                "status": "unknown",
+                "evidence": [],
+                "revision": 0,
+                "supersedes": null
+              },
+              {
+                "field": "student_time",
+                "value": "unknown",
+                "status": "unknown",
+                "evidence": [],
+                "revision": 0,
+                "supersedes": null
+              },
+              {
+                "field": "student_impact",
+                "value": "unknown",
+                "status": "unknown",
+                "evidence": [],
+                "revision": 0,
+                "supersedes": null
+              },
+              {
+                "field": "student_event",
+                "value": "retained",
+                "status": "supported",
+                "evidence": [
+                  {
+                    "message_id": "u:1",
+                    "role": "user",
+                    "source": "current",
+                    "turn": 0,
+                    "start": 0,
+                    "end": 11,
+                    "quote": "替我决定该选什么专业。",
+                    "purpose": "state"
+                  }
+                ],
+                "revision": 0,
+                "supersedes": null
+              }
+            ],
+            "active": true
+          }
+        ],
+        "uncertainties": [
+          "未表达的影响及持续时间保持未知；未知不要求逐项追问。",
+          "主体/时态为保守词面判断；同一消息多事件或跨消息指代不自动合并。"
+        ],
+        "risk": "unknown",
+        "current_need": "options",
+        "need_origin": "user_choice",
+        "need_evidence": [],
+        "action": "options",
+        "reasons": [
+          "user_selected_goal",
+          "offline_student_rules",
+          "current_request_or_explicit_support_choice"
+        ],
+        "basis_event_ids": []
+      },
+      "model_calls": 0
+    },
+    {
+      "id": "SP10",
+      "family": "study_self_report",
+      "expected_action": "organize",
+      "actual_action": "organize",
+      "matches_developer_action": true,
+      "reply": "[学生场景离线规则示例] 我们可以分开整理：已经发生的事、你自己想做的事、还需要核实的信息。卡片里的未知项可以先留着，你可以纠正其中任何一项。",
+      "judgment": {
+        "version": "student-p1-v1",
+        "method": "conservative_rules_unvalidated",
+        "stage": "university",
+        "events": [
+          {
+            "event_id": "student-event:ba67d3ea0c1dc1b6c211545b",
+            "message_id": "u:1",
+            "source_digest": "b3bcfe11a7ac7175601386ed3b53758ffd2fdc11c254b6d0db0495fd1659ee60",
+            "provenance": "self_report",
+            "claims": [
+              {
+                "field": "student_pressure",
+                "value": "academic",
+                "status": "supported",
+                "evidence": [
+                  {
+                    "message_id": "u:1",
+                    "role": "user",
+                    "source": "current",
+                    "turn": 0,
+                    "start": 0,
+                    "end": 10,
+                    "quote": "这次考试后我睡不着。",
+                    "purpose": "state"
+                  }
+                ],
+                "revision": 0,
+                "supersedes": null
+              },
+              {
+                "field": "student_subject",
+                "value": "unknown",
+                "status": "unknown",
+                "evidence": [],
+                "revision": 0,
+                "supersedes": null
+              },
+              {
+                "field": "student_time",
+                "value": "current",
+                "status": "supported",
+                "evidence": [
+                  {
+                    "message_id": "u:1",
+                    "role": "user",
+                    "source": "current",
+                    "turn": 0,
+                    "start": 0,
+                    "end": 10,
+                    "quote": "这次考试后我睡不着。",
+                    "purpose": "state"
+                  }
+                ],
+                "revision": 0,
+                "supersedes": null
+              },
+              {
+                "field": "student_impact",
+                "value": "sleep",
+                "status": "supported",
+                "evidence": [
+                  {
+                    "message_id": "u:1",
+                    "role": "user",
+                    "source": "current",
+                    "turn": 0,
+                    "start": 0,
+                    "end": 10,
+                    "quote": "这次考试后我睡不着。",
+                    "purpose": "state"
+                  }
+                ],
+                "revision": 0,
+                "supersedes": null
+              },
+              {
+                "field": "student_event",
+                "value": "retained",
+                "status": "supported",
+                "evidence": [
+                  {
+                    "message_id": "u:1",
+                    "role": "user",
+                    "source": "current",
+                    "turn": 0,
+                    "start": 0,
+                    "end": 10,
+                    "quote": "这次考试后我睡不着。",
+                    "purpose": "state"
+                  }
+                ],
+                "revision": 0,
+                "supersedes": null
+              }
+            ],
+            "active": true
+          }
+        ],
+        "uncertainties": [
+          "未表达的影响及持续时间保持未知；未知不要求逐项追问。",
+          "主体/时态为保守词面判断；同一消息多事件或跨消息指代不自动合并。"
+        ],
+        "risk": "unknown",
+        "current_need": "organize",
+        "need_origin": "user_choice",
+        "need_evidence": [],
+        "action": "organize",
+        "reasons": [
+          "user_selected_goal",
+          "offline_student_rules",
+          "current_request_or_explicit_support_choice"
+        ],
+        "basis_event_ids": [
+          "student-event:ba67d3ea0c1dc1b6c211545b"
+        ]
+      },
+      "model_calls": 0
+    },
+    {
+      "id": "SP11",
+      "family": "reported_impact",
+      "expected_action": "listen",
+      "actual_action": "listen",
+      "matches_developer_action": true,
+      "reply": "[学生场景离线规则示例] 我在听。你可以先说完，不需要马上给出计划，也不用补齐所有信息。",
+      "judgment": {
+        "version": "student-p1-v1",
+        "method": "conservative_rules_unvalidated",
+        "stage": "university",
+        "events": [
+          {
+            "event_id": "student-event:9cbdb36631f64878a81db76d",
+            "message_id": "u:1",
+            "source_digest": "10cf302ac124cb6e60438e899a76685c3249837de23518d7d78bbd9af4cef8a9",
+            "provenance": "reported",
+            "claims": [
+              {
+                "field": "student_pressure",
+                "value": "unknown",
+                "status": "unknown",
+                "evidence": [],
+                "revision": 0,
+                "supersedes": null
+              },
+              {
+                "field": "student_subject",
+                "value": "unknown",
+                "status": "unknown",
+                "evidence": [],
+                "revision": 0,
+                "supersedes": null
+              },
+              {
+                "field": "student_time",
+                "value": "unknown",
+                "status": "unknown",
+                "evidence": [],
+                "revision": 0,
+                "supersedes": null
+              },
+              {
+                "field": "student_impact",
+                "value": "unknown",
+                "status": "unknown",
+                "evidence": [],
+                "revision": 0,
+                "supersedes": null
+              },
+              {
+                "field": "student_event",
+                "value": "retained",
+                "status": "supported",
+                "evidence": [
+                  {
+                    "message_id": "u:1",
+                    "role": "user",
+                    "source": "current",
+                    "turn": 0,
+                    "start": 0,
+                    "end": 10,
+                    "quote": "朋友说“我睡不着”。",
+                    "purpose": "state"
+                  }
+                ],
+                "revision": 0,
+                "supersedes": null
+              }
+            ],
+            "active": true
+          }
+        ],
+        "uncertainties": [
+          "未表达的影响及持续时间保持未知；未知不要求逐项追问。",
+          "主体/时态为保守词面判断；同一消息多事件或跨消息指代不自动合并。"
+        ],
+        "risk": "unknown",
+        "current_need": "listen",
+        "need_origin": "user_choice",
+        "need_evidence": [],
+        "action": "listen",
+        "reasons": [
+          "user_selected_goal",
+          "offline_student_rules",
+          "current_request_or_explicit_support_choice"
+        ],
+        "basis_event_ids": []
+      },
+      "model_calls": 0
+    },
+    {
+      "id": "SP12",
+      "family": "unscoped_draft",
+      "expected_action": "clarify",
+      "actual_action": "clarify",
+      "matches_developer_action": true,
+      "reply": "[学生场景离线规则示例] 为了完成你请求的帮助，你最需要先确认的是哪一个对象或哪一项具体要求？只说明这一点就可以。",
+      "judgment": {
+        "version": "student-p1-v1",
+        "method": "conservative_rules_unvalidated",
+        "stage": "university",
+        "events": [
+          {
+            "event_id": "student-event:73c1a84c81f47b431d4d6993",
+            "message_id": "u:1",
+            "source_digest": "38bdf0c3b9d2a14d4a0c6aedd86ef1a398d2233de4ac31f740f93881ebca62da",
+            "provenance": "self_report",
+            "claims": [
+              {
+                "field": "student_pressure",
+                "value": "unknown",
+                "status": "unknown",
+                "evidence": [],
+                "revision": 0,
+                "supersedes": null
+              },
+              {
+                "field": "student_subject",
+                "value": "unknown",
+                "status": "unknown",
+                "evidence": [],
+                "revision": 0,
+                "supersedes": null
+              },
+              {
+                "field": "student_time",
+                "value": "unknown",
+                "status": "unknown",
+                "evidence": [],
+                "revision": 0,
+                "supersedes": null
+              },
+              {
+                "field": "student_impact",
+                "value": "unknown",
+                "status": "unknown",
+                "evidence": [],
+                "revision": 0,
+                "supersedes": null
+              },
+              {
+                "field": "student_event",
+                "value": "retained",
+                "status": "supported",
+                "evidence": [
+                  {
+                    "message_id": "u:1",
+                    "role": "user",
+                    "source": "current",
+                    "turn": 0,
+                    "start": 0,
+                    "end": 7,
+                    "quote": "帮我写一句话。",
+                    "purpose": "state"
+                  }
+                ],
+                "revision": 0,
+                "supersedes": null
+              }
+            ],
+            "active": true
+          }
+        ],
+        "uncertainties": [
+          "未表达的影响及持续时间保持未知；未知不要求逐项追问。",
+          "主体/时态为保守词面判断；同一消息多事件或跨消息指代不自动合并。"
+        ],
+        "risk": "unknown",
+        "current_need": "draft",
+        "need_origin": "explicit_text",
+        "need_evidence": [
+          {
+            "message_id": "u:1",
+            "role": "user",
+            "source": "current",
+            "turn": 0,
+            "start": 0,
+            "end": 3,
+            "quote": "帮我写",
+            "purpose": "intent"
+          }
+        ],
+        "action": "clarify",
+        "reasons": [
+          "current_text_intent",
+          "offline_student_rules",
+          "current_request_or_explicit_support_choice"
+        ],
+        "basis_event_ids": []
+      },
+      "model_calls": 0
+    }
+  ]
+}

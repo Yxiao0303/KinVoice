@@ -1,0 +1,342 @@
+{
+  "$defs": {
+    "EvidenceLink": {
+      "additionalProperties": false,
+      "properties": {
+        "message_id": {
+          "default": "",
+          "title": "Message Id",
+          "type": "string"
+        },
+        "role": {
+          "const": "user",
+          "default": "user",
+          "enum": [
+            "user"
+          ],
+          "title": "Role",
+          "type": "string"
+        },
+        "source": {
+          "enum": [
+            "current",
+            "history"
+          ],
+          "title": "Source",
+          "type": "string"
+        },
+        "turn": {
+          "title": "Turn",
+          "type": "integer"
+        },
+        "start": {
+          "title": "Start",
+          "type": "integer"
+        },
+        "end": {
+          "title": "End",
+          "type": "integer"
+        },
+        "quote": {
+          "title": "Quote",
+          "type": "string"
+        },
+        "purpose": {
+          "enum": [
+            "state",
+            "intent",
+            "local_guard"
+          ],
+          "title": "Purpose",
+          "type": "string"
+        }
+      },
+      "required": [
+        "source",
+        "turn",
+        "start",
+        "end",
+        "quote",
+        "purpose"
+      ],
+      "title": "EvidenceLink",
+      "type": "object"
+    },
+    "HistoryMessage": {
+      "additionalProperties": false,
+      "properties": {
+        "message_id": {
+          "anyOf": [
+            {
+              "maxLength": 64,
+              "minLength": 1,
+              "pattern": "^[A-Za-z0-9:_-]+$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Message Id"
+        },
+        "role": {
+          "enum": [
+            "user",
+            "assistant"
+          ],
+          "title": "Role",
+          "type": "string"
+        },
+        "content": {
+          "maxLength": 2000,
+          "minLength": 1,
+          "title": "Content",
+          "type": "string"
+        }
+      },
+      "required": [
+        "role",
+        "content"
+      ],
+      "title": "HistoryMessage",
+      "type": "object"
+    },
+    "ReviewEntry": {
+      "additionalProperties": false,
+      "properties": {
+        "field": {
+          "enum": [
+            "emotion",
+            "support_intent",
+            "risk",
+            "family_unsafe"
+          ],
+          "title": "Field",
+          "type": "string"
+        },
+        "value": {
+          "maxLength": 16,
+          "title": "Value",
+          "type": "string"
+        },
+        "action": {
+          "enum": [
+            "confirm",
+            "correct",
+            "revoke"
+          ],
+          "title": "Action",
+          "type": "string"
+        },
+        "source_message_id": {
+          "anyOf": [
+            {
+              "maxLength": 64,
+              "minLength": 1,
+              "pattern": "^[A-Za-z0-9:_-]+$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Source Message Id"
+        },
+        "source_digest": {
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Source Digest",
+          "type": "string"
+        },
+        "source_text": {
+          "maxLength": 2000,
+          "minLength": 1,
+          "title": "Source Text",
+          "type": "string"
+        },
+        "revision": {
+          "maximum": 1000000,
+          "minimum": 0,
+          "title": "Revision",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "field",
+        "value",
+        "action",
+        "source_digest",
+        "source_text",
+        "revision"
+      ],
+      "title": "ReviewEntry",
+      "type": "object"
+    },
+    "TurnRequest": {
+      "additionalProperties": false,
+      "properties": {
+        "message_id": {
+          "anyOf": [
+            {
+              "maxLength": 64,
+              "minLength": 1,
+              "pattern": "^[A-Za-z0-9:_-]+$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Message Id"
+        },
+        "message": {
+          "maxLength": 2000,
+          "minLength": 1,
+          "title": "Message",
+          "type": "string"
+        },
+        "history": {
+          "items": {
+            "$ref": "#/$defs/HistoryMessage"
+          },
+          "maxItems": 20,
+          "title": "History",
+          "type": "array"
+        },
+        "goal": {
+          "default": "listen",
+          "enum": [
+            "listen",
+            "clarify",
+            "ground",
+            "draft"
+          ],
+          "title": "Goal",
+          "type": "string"
+        },
+        "eligible": {
+          "default": false,
+          "title": "Eligible",
+          "type": "boolean"
+        },
+        "external_consent": {
+          "default": false,
+          "title": "External Consent",
+          "type": "boolean"
+        },
+        "reviews": {
+          "items": {
+            "$ref": "#/$defs/ReviewEntry"
+          },
+          "maxItems": 24,
+          "title": "Reviews",
+          "type": "array"
+        }
+      },
+      "required": [
+        "message"
+      ],
+      "title": "TurnRequest",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "case_id": {
+      "title": "Case Id",
+      "type": "string"
+    },
+    "family_id": {
+      "title": "Family Id",
+      "type": "string"
+    },
+    "split": {
+      "enum": [
+        "dev",
+        "test",
+        "train"
+      ],
+      "title": "Split",
+      "type": "string"
+    },
+    "synthetic": {
+      "const": true,
+      "enum": [
+        true
+      ],
+      "title": "Synthetic",
+      "type": "boolean"
+    },
+    "review_status": {
+      "const": "unreviewed",
+      "enum": [
+        "unreviewed"
+      ],
+      "title": "Review Status",
+      "type": "string"
+    },
+    "source": {
+      "title": "Source",
+      "type": "string"
+    },
+    "license": {
+      "title": "License",
+      "type": "string"
+    },
+    "request": {
+      "$ref": "#/$defs/TurnRequest"
+    },
+    "evidence": {
+      "items": {
+        "$ref": "#/$defs/EvidenceLink"
+      },
+      "title": "Evidence",
+      "type": "array"
+    },
+    "allowed_strategies": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Allowed Strategies",
+      "type": "array"
+    },
+    "prohibited_behaviors": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Prohibited Behaviors",
+      "type": "array"
+    },
+    "ambiguity": {
+      "title": "Ambiguity",
+      "type": "string"
+    },
+    "severity": {
+      "enum": [
+        "ordinary",
+        "uncertain",
+        "urgent"
+      ],
+      "title": "Severity",
+      "type": "string"
+    }
+  },
+  "required": [
+    "case_id",
+    "family_id",
+    "split",
+    "synthetic",
+    "review_status",
+    "source",
+    "license",
+    "request",
+    "allowed_strategies",
+    "prohibited_behaviors",
+    "ambiguity",
+    "severity"
+  ],
+  "title": "BenchCase",
+  "type": "object"
+}

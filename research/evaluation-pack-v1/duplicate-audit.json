@@ -1,0 +1,638 @@
+{
+  "base_commit": "2c04bb07cc372273979cf8238c4e719592d6992d",
+  "scope": "current-message lexical comparison against original JSON utterance fields and Chinese test literals; no algorithm/model execution",
+  "thresholds": {
+    "sequence_ratio": 0.72,
+    "trigram_jaccard": 0.4
+  },
+  "old_source_hashes": {
+    "backend/tests/test_budget_increase.py": "e9f736d40c6c45f4f390f506187251d8d5af80303f6224662a083359509941a2",
+    "backend/tests/test_ccare.py": "54a95a8dcc71f55fe9df70445aed9af217603577788e0c94ac58cfecd15e1efb",
+    "backend/tests/test_cny_ledger.py": "6643869bde465f804344037061c28c227ac57a5a065e6281c7125c07fbeef40d",
+    "backend/tests/test_core_smoke.py": "4ea737e9e9b472707aba0b74d414f1ec4ae8b3acd94c95089eb7e48b1391f71e",
+    "backend/tests/test_intent_scope_guard.py": "5647e15cc2a51af6ca02b5910382bee77897ed5a375fc7f291de17d25f30ca87",
+    "backend/tests/test_learned_evidence.py": "fbda241d865fbfca9d0def6eeb65f0f91732a2689b286e3dd7301f1210150724",
+    "backend/tests/test_listen_first.py": "5bbb3e899289198057f75d2ad91b7db0726ab24036f022006f81fdd16e12cc6d",
+    "backend/tests/test_llm_service.py": "c32fd8a952eafb907af18a11b52a3a6d97c82dab9c88fb00afb825ba319202ec",
+    "backend/tests/test_oct26_research.py": "75180dc11d53f79b444e0d1e5155184d289a71c373f008c2a6f02c6203b29946",
+    "backend/tests/test_phase1.py": "d357b857bc513bd98452c764aecb27d90cfe683485c5a7390d3c053f11050a4b",
+    "backend/tests/test_policy_integration.py": "8c6646e8c74a52165d3f78cf82b510c7824deff07a0e8c74153b2f432519f069",
+    "backend/tests/test_research_adapters.py": "283086a92f4b12b8f6c274922c07f8d23e26b8f304bf54b45571484efecfb85b",
+    "backend/tests/test_research_protocol.py": "136fc9bab03ce0a2a772ddf51c19fa7cf3e2bb37d3550ecd9b18cdea5b16a229",
+    "backend/tests/test_review_budget.py": "fc260ce881870b5b46d3b8a3506ba2994759866bf8858aba958b7f15554ec82b",
+    "backend/tests/test_revocation_semantics.py": "dfc40c30cf3ab2242c9305d912702a0097fa880917c2009b0abe2739a8493bb4",
+    "backend/tests/test_selective_evidence.py": "db72ac0baef1374063decbf3e4d1a448704aa699ff09b659fa3d8cbbda1c74d0",
+    "backend/tests/test_single_smoke.py": "e6a4310ee2c73fd1a5c0307362f37f85d88292a9c82183054ac829470b6f37d2",
+    "backend/tests/test_streaming.py": "d17b415d2a08d36b92cb04c88c9aa1d4a1a492444855fa8d9e8632fe67663132",
+    "data/development/FamilyStressBench.schema.json": "a64aea219be7c9e79762ecbd92f8df4514ebb7eab4ff902096492ad5cdea92df",
+    "data/development/family_stress_v1.jsonl": "c9c4a6a3fc6d42c85ca3c7f4381c386f8bb4dd881c6e4dc65007976cc5c7db8d",
+    "data/development/policy_pairs_v1.json": "850ec0b2a815dda0ee79116d0e4a8ff7a2c1bd70e7521dcaaab0e36a21f86388",
+    "data/development/synthetic_cases.jsonl": "3f9a490de83e92f3c8c637363d91b73f8df523597fb8d4acea024821ce675f09",
+    "docs/verification/2026-10-23-ccare-v2/development-cases-manifest.json": "52202017fc391abc67b24826e681a4cb15fba16a766549aaf3b90a71b77d3f6e",
+    "docs/verification/2026-10-23-ccare-v2/development-cases-results.jsonl": "c408896af5d4a0e8f00d4cb1e7fdeed8f851dda13587d59edcbff823fa190d0f",
+    "docs/verification/2026-10-23-ccare-v2/policy-pairs-manifest.json": "1151d1145cae336df8ba9314cd1cd2870cfddb4298a3830cdb1a25a0f8df0750",
+    "docs/verification/2026-10-23-ccare-v2/policy-pairs-results.jsonl": "bc67f8d68812008193f6200ec8fb79928177177500f1798278e3905ef922a32d",
+    "docs/verification/2026-10-23-streaming/browser-simulated-events.jsonl": "b716cc6e8ff43271949f9b5144ba870e7457db9a3f89807e0b2ed014319bf4e8",
+    "docs/verification/2026-10-23-streaming/manifest.json": "5dbe41f465c778ad63f7146bdb19936bfb597a3bc4ed9a882774a1065935f95d",
+    "docs/verification/2026-10-23/manifest.json": "9358d475401bb6b5253edc8264f3233d0afc4613656211b6717f6f996ce3f627",
+    "docs/verification/2026-10-23/results.jsonl": "2ac9f3fdf9c3ea2bc747e655d93e2ba6c0686a42eac302607300b4aa047bfd70",
+    "research/exploratory-v1/freeze.json": "4ab958c080f1f2a70ce81825b46eb66d0fe663ae2d01895ffdbd85e56c0cc876",
+    "research/listen-first-v1/cases.jsonl": "ad1d0ce0e3c0afb16c9945d71971871933bfc0d22c7c2d667d2b534fec09fd95",
+    "research/listen-first-v1/data-lock.json": "3026bffd742ec59c65bb54b7d48017ec19fd0e10f67dd66a23b0fcb9e5af40aa",
+    "research/listen-first-v1/freeze.json": "cf861df47c2171c8058c6692fc87abc63515e8f1277e2a7a80bf7b2035c4a07e",
+    "research/listen-first-v1/results/report.json": "3f039124852379faca7af05b11daeb9f6dce688299be9200b55542f97def919c",
+    "research/listen-first-v1/results/rows.json": "4066b0f78ad0d181737dd7d27070355e5ff99d5fc674811849a65f07468e9646",
+    "research/selective-v1/evaluation-lock.json": "807da2a71719c3036aadb162bd5b0f76d84c2dfcbf6fc6618e87a77a5d448597",
+    "research/selective-v1/evaluation.jsonl": "b1df4029832732672c33f761c73781d294d44de12a82855293e8271074fdd463",
+    "research/selective-v1/frozen/linear.json": "d64d7d87d304a235df37afc2c3a62babe5f35accfcbf3519b25be55eb7651685",
+    "research/selective-v1/frozen/manifest.json": "c59107323e125252ebbd79d21089daa48faf41d4a2d6d278cd93264b8f33839b",
+    "research/selective-v1/frozen/nb.json": "faa7095aa0a874ba4a98bdf090d9e6df7ca82dfead924fce039ecbb979b5274f",
+    "research/selective-v1/results/predictions.json": "99112bf69479c5fb98c297cf074778602f7fb02f0b5b411742cf971f69bfcb8d",
+    "research/selective-v1/results/report.json": "bf9a18688084966d25d16655b227e3ae218983794f4cce346af11c4a78253430",
+    "research/three-arm-v1/case-lock.json": "e40b866cd3744c7fbbeafc600547dab83765a5475861c0a76bea92ee9792546c",
+    "research/three-arm-v1/case.json": "a91a1c7f89f159de44364aacc64200c8ef7c38cb2f4d29e1b01ac71cfb530336",
+    "research/three-arm-v1/freeze.json": "a82841d144cc760f5835b6774717c286d65025ce9a6f668f6e8e670e546bcebf",
+    "research/three-arm-v1/results/blind-key.json": "70480af804051d82f990d9cae6cb6e866e555536ed85f6a4ab7566d3f91fd738",
+    "research/three-arm-v1/results/development-diagnostics.json": "e604621151bbfa99edeb6eeb93c07b74fd5b1f303b20ca9a64d0563b87cb4607",
+    "research/three-arm-v1/results/outputs.json": "eddf50fe5661351f5f233b39e2aad0defc5194260ba8e1632f87d86ad359f49d",
+    "research/training-v1/artifacts/model.json": "e2a49d111feed04f6f5fe79da197f0470d917d3c14c16615b370d245287a54f7",
+    "research/training-v1/artifacts/predictions.json": "404be81fb8219d796b35f273b109a9222d744dda5acfa1cd7d6af4a2047edaf4",
+    "research/training-v1/artifacts/report.json": "ae2340dc10131cd469d152240ad217e4b551833968616bbbcf45ba61869216c3",
+    "research/training-v1/data.jsonl": "ef60c07d5d260c8f634a98b91e0704316ac4c11f32e8c13270794c19d2ba60e6",
+    "research/training-v1/freeze.json": "6f34313c1f14aea26cef799c3d743dd627e51c014975af92deb62016eaef9118"
+  },
+  "old_unique_texts": 149,
+  "cross_split_pairs": 864,
+  "cross_split_flags": [],
+  "same_split_flags": [],
+  "old_flags": [],
+  "top_cross_split": [
+    {
+      "left": "D07_door_threat-01",
+      "right": "T08_uncertain_location-02",
+      "sequence_ratio": 0.325581,
+      "trigram_jaccard": 0.012346,
+      "exact": false
+    },
+    {
+      "left": "D07_door_threat-02",
+      "right": "T15_safety_despite_no_questions-02",
+      "sequence_ratio": 0.314286,
+      "trigram_jaccard": 0.047619,
+      "exact": false
+    },
+    {
+      "left": "D08_sibling_pronouns-01",
+      "right": "T10_unassigned_objects-01",
+      "sequence_ratio": 0.307692,
+      "trigram_jaccard": 0.048193,
+      "exact": false
+    },
+    {
+      "left": "D06_resolved_stairfall-01",
+      "right": "T09_two_recipients-01",
+      "sequence_ratio": 0.306122,
+      "trigram_jaccard": 0.032967,
+      "exact": false
+    },
+    {
+      "left": "D01_commute_voice-01",
+      "right": "T11_positive_affect_not_distress-01",
+      "sequence_ratio": 0.305882,
+      "trigram_jaccard": 0.0,
+      "exact": false
+    },
+    {
+      "left": "D12_private_topic-01",
+      "right": "T16_mutually_incompatible_scope-01",
+      "sequence_ratio": 0.292683,
+      "trigram_jaccard": 0.04,
+      "exact": false
+    },
+    {
+      "left": "D01_commute_voice-01",
+      "right": "T01_shared_album-01",
+      "sequence_ratio": 0.292135,
+      "trigram_jaccard": 0.0,
+      "exact": false
+    },
+    {
+      "left": "D06_resolved_stairfall-01",
+      "right": "T06_reported_roleplay-02",
+      "sequence_ratio": 0.288462,
+      "trigram_jaccard": 0.030928,
+      "exact": false
+    },
+    {
+      "left": "D09_read_receipt-01",
+      "right": "T12_observation_causal_gap-01",
+      "sequence_ratio": 0.285714,
+      "trigram_jaccard": 0.073529,
+      "exact": false
+    },
+    {
+      "left": "D07_door_threat-02",
+      "right": "T07_past_to_new_threat-01",
+      "sequence_ratio": 0.27907,
+      "trigram_jaccard": 0.064935,
+      "exact": false
+    },
+    {
+      "left": "D09_read_receipt-01",
+      "right": "T01_shared_album-02",
+      "sequence_ratio": 0.277778,
+      "trigram_jaccard": 0.014925,
+      "exact": false
+    },
+    {
+      "left": "D01_commute_voice-01",
+      "right": "T01_shared_album-02",
+      "sequence_ratio": 0.271605,
+      "trigram_jaccard": 0.026667,
+      "exact": false
+    }
+  ],
+  "nearest_old_per_case": [
+    {
+      "case_id": "D01_commute_voice-01",
+      "old_path": "research/selective-v1/evaluation.jsonl",
+      "old_text_sha256": "7d7ebda41ecee5b9388fcd9f699a02a68ea93f66f2256f059f2305fcdf086826",
+      "sequence_ratio": 0.27027,
+      "trigram_jaccard": 0.0,
+      "exact": false
+    },
+    {
+      "case_id": "D01_commute_voice-02",
+      "old_path": "data/development/synthetic_cases.jsonl",
+      "old_text_sha256": "8a960bdbf038a053edc827a95e4360e380f6520341b6eccf287c730bf232dd98",
+      "sequence_ratio": 0.196078,
+      "trigram_jaccard": 0.0,
+      "exact": false
+    },
+    {
+      "case_id": "D02_resume_pause-01",
+      "old_path": "backend/tests/test_intent_scope_guard.py",
+      "old_text_sha256": "7aef6b875b470b6a31afc64e0cc148d790e147479a4e82f3262864492c4c141f",
+      "sequence_ratio": 0.35,
+      "trigram_jaccard": 0.090909,
+      "exact": false
+    },
+    {
+      "case_id": "D02_resume_pause-02",
+      "old_path": "data/development/synthetic_cases.jsonl",
+      "old_text_sha256": "8a960bdbf038a053edc827a95e4360e380f6520341b6eccf287c730bf232dd98",
+      "sequence_ratio": 0.228571,
+      "trigram_jaccard": 0.033333,
+      "exact": false
+    },
+    {
+      "case_id": "D03_call_sequence-01",
+      "old_path": "research/listen-first-v1/cases.jsonl",
+      "old_text_sha256": "0ba2edb311b3a695c42f036f5a6eac5dd6448df3232c785dacbdf658a747ba74",
+      "sequence_ratio": 0.289855,
+      "trigram_jaccard": 0.031746,
+      "exact": false
+    },
+    {
+      "case_id": "D03_call_sequence-02",
+      "old_path": "research/listen-first-v1/cases.jsonl",
+      "old_text_sha256": "0ba2edb311b3a695c42f036f5a6eac5dd6448df3232c785dacbdf658a747ba74",
+      "sequence_ratio": 0.28,
+      "trigram_jaccard": 0.0,
+      "exact": false
+    },
+    {
+      "case_id": "D04_budget_negation-01",
+      "old_path": "research/selective-v1/evaluation.jsonl",
+      "old_text_sha256": "8e2e93c78dca8a23af9de06fd303bb254fd9bccaba08ab2f931ea258415af8db",
+      "sequence_ratio": 0.225806,
+      "trigram_jaccard": 0.0,
+      "exact": false
+    },
+    {
+      "case_id": "D04_budget_negation-02",
+      "old_path": "research/listen-first-v1/cases.jsonl",
+      "old_text_sha256": "b347a4389cbc25a6e2aef2897d432fee3c4be52dd4ea04e3f0a19dac00da8791",
+      "sequence_ratio": 0.227848,
+      "trigram_jaccard": 0.0,
+      "exact": false
+    },
+    {
+      "case_id": "D05_cousin_quote-01",
+      "old_path": "research/selective-v1/evaluation.jsonl",
+      "old_text_sha256": "59c13abb2880b69d29bf8fc279619d9bc025ca024ae3e6ab09ce0769413feff7",
+      "sequence_ratio": 0.191781,
+      "trigram_jaccard": 0.0,
+      "exact": false
+    },
+    {
+      "case_id": "D05_cousin_quote-02",
+      "old_path": "research/selective-v1/evaluation.jsonl",
+      "old_text_sha256": "d786f469246bca4f9194cfda6937a25d660703b2ac398d9bdda95bde605c9989",
+      "sequence_ratio": 0.328767,
+      "trigram_jaccard": 0.045455,
+      "exact": false
+    },
+    {
+      "case_id": "D06_resolved_stairfall-01",
+      "old_path": "data/development/synthetic_cases.jsonl",
+      "old_text_sha256": "1d1d766997f7ab0c5f96566e2776a577049134508913234370da0e7fa04b5396",
+      "sequence_ratio": 0.246154,
+      "trigram_jaccard": 0.051724,
+      "exact": false
+    },
+    {
+      "case_id": "D06_resolved_stairfall-02",
+      "old_path": "research/selective-v1/evaluation.jsonl",
+      "old_text_sha256": "151bea7d4b3479cf5892d933c61b3c6ea98c806bee32a4a858ab676db12b55b1",
+      "sequence_ratio": 0.205128,
+      "trigram_jaccard": 0.0,
+      "exact": false
+    },
+    {
+      "case_id": "D07_door_threat-01",
+      "old_path": "research/listen-first-v1/cases.jsonl",
+      "old_text_sha256": "8da9364a9527ba3fbd50b223012e05d85f99bdc23204d057b7b4ab7dc12b1cea",
+      "sequence_ratio": 0.264706,
+      "trigram_jaccard": 0.032258,
+      "exact": false
+    },
+    {
+      "case_id": "D07_door_threat-02",
+      "old_path": "research/listen-first-v1/cases.jsonl",
+      "old_text_sha256": "8da9364a9527ba3fbd50b223012e05d85f99bdc23204d057b7b4ab7dc12b1cea",
+      "sequence_ratio": 0.266667,
+      "trigram_jaccard": 0.0,
+      "exact": false
+    },
+    {
+      "case_id": "D08_sibling_pronouns-01",
+      "old_path": "backend/tests/test_phase1.py",
+      "old_text_sha256": "16fa1d3fa5a0d83db164b4163a861fe47fa88448d28b51ed2077781941ff1748",
+      "sequence_ratio": 0.218182,
+      "trigram_jaccard": 0.02,
+      "exact": false
+    },
+    {
+      "case_id": "D08_sibling_pronouns-02",
+      "old_path": "research/listen-first-v1/cases.jsonl",
+      "old_text_sha256": "0019a0dfb6081f6e0515398ebb2b4496b47196cdd179efcb56fbd319b2ad3bba",
+      "sequence_ratio": 0.258065,
+      "trigram_jaccard": 0.035714,
+      "exact": false
+    },
+    {
+      "case_id": "D09_read_receipt-01",
+      "old_path": "backend/tests/test_listen_first.py",
+      "old_text_sha256": "bdd571de2185514ed6b8728e95d12a55c0d5b596ad2d03be519c91b8c08f9cee",
+      "sequence_ratio": 0.244898,
+      "trigram_jaccard": 0.022727,
+      "exact": false
+    },
+    {
+      "case_id": "D09_read_receipt-02",
+      "old_path": "research/training-v1/data.jsonl",
+      "old_text_sha256": "fee9fccb9b6babf9984fa32369a4c578ca5e059100113c83a25723081c7d1ee8",
+      "sequence_ratio": 0.333333,
+      "trigram_jaccard": 0.020408,
+      "exact": false
+    },
+    {
+      "case_id": "D10_address_missing-01",
+      "old_path": "research/listen-first-v1/cases.jsonl",
+      "old_text_sha256": "53c7d505ca2703936c66f879450d800eccb891e18d158c4e768b3ab727db6d1b",
+      "sequence_ratio": 0.227273,
+      "trigram_jaccard": 0.012195,
+      "exact": false
+    },
+    {
+      "case_id": "D10_address_missing-02",
+      "old_path": "research/listen-first-v1/cases.jsonl",
+      "old_text_sha256": "09f419d38208795190ec9f0d47297bcb00fe82ec09ded398f3adabaf69d023b7",
+      "sequence_ratio": 0.231884,
+      "trigram_jaccard": 0.031746,
+      "exact": false
+    },
+    {
+      "case_id": "D11_emotion_correction-01",
+      "old_path": "research/training-v1/data.jsonl",
+      "old_text_sha256": "4959d7e06c5cc545f840f549fe96864507d47d56cb53d14e1fe2f0eec78f18ad",
+      "sequence_ratio": 0.243902,
+      "trigram_jaccard": 0.027778,
+      "exact": false
+    },
+    {
+      "case_id": "D11_emotion_correction-02",
+      "old_path": "research/training-v1/data.jsonl",
+      "old_text_sha256": "7c8387ba23af0df20ffb984b1d121e9e7c015447eb87db106c4122647a0297cd",
+      "sequence_ratio": 0.227273,
+      "trigram_jaccard": 0.0,
+      "exact": false
+    },
+    {
+      "case_id": "D12_private_topic-01",
+      "old_path": "backend/tests/test_listen_first.py",
+      "old_text_sha256": "bdd571de2185514ed6b8728e95d12a55c0d5b596ad2d03be519c91b8c08f9cee",
+      "sequence_ratio": 0.230769,
+      "trigram_jaccard": 0.0,
+      "exact": false
+    },
+    {
+      "case_id": "D12_private_topic-02",
+      "old_path": "data/development/synthetic_cases.jsonl",
+      "old_text_sha256": "8a960bdbf038a053edc827a95e4360e380f6520341b6eccf287c730bf232dd98",
+      "sequence_ratio": 0.214286,
+      "trigram_jaccard": 0.0,
+      "exact": false
+    },
+    {
+      "case_id": "T01_shared_album-01",
+      "old_path": "research/three-arm-v1/results/outputs.json",
+      "old_text_sha256": "2b5b6f8c078f6c097f18e0ad9930357d132cae9bb21980d94fe6622b9b17634f",
+      "sequence_ratio": 0.21875,
+      "trigram_jaccard": 0.0,
+      "exact": false
+    },
+    {
+      "case_id": "T01_shared_album-02",
+      "old_path": "research/selective-v1/evaluation.jsonl",
+      "old_text_sha256": "d51ff66c7d5319a07b4d8dbdfb40122528d31f8329afbbebff6fc2372869b077",
+      "sequence_ratio": 0.196721,
+      "trigram_jaccard": 0.017857,
+      "exact": false
+    },
+    {
+      "case_id": "T02_recipe_revision-01",
+      "old_path": "research/training-v1/data.jsonl",
+      "old_text_sha256": "20c6667ffd1e0a938aa629efbd391265321b0005204944b1bd17ef7fd5d48fd6",
+      "sequence_ratio": 0.326531,
+      "trigram_jaccard": 0.071429,
+      "exact": false
+    },
+    {
+      "case_id": "T02_recipe_revision-02",
+      "old_path": "research/training-v1/data.jsonl",
+      "old_text_sha256": "23e3dc33e061d02fc5271700c76d50cc761c481fdecb6df9834423438eeee4ed",
+      "sequence_ratio": 0.212766,
+      "trigram_jaccard": 0.0,
+      "exact": false
+    },
+    {
+      "case_id": "T03_rehearsal_reversal-01",
+      "old_path": "data/development/synthetic_cases.jsonl",
+      "old_text_sha256": "8a960bdbf038a053edc827a95e4360e380f6520341b6eccf287c730bf232dd98",
+      "sequence_ratio": 0.232558,
+      "trigram_jaccard": 0.0,
+      "exact": false
+    },
+    {
+      "case_id": "T03_rehearsal_reversal-02",
+      "old_path": "backend/tests/test_phase1.py",
+      "old_text_sha256": "53641a63f12dc8b99a7c3a3590de3cdade4a7afc8ca32da8a90aa8a43f5e18bb",
+      "sequence_ratio": 0.277778,
+      "trigram_jaccard": 0.0,
+      "exact": false
+    },
+    {
+      "case_id": "T04_negated_sequence-01",
+      "old_path": "research/listen-first-v1/cases.jsonl",
+      "old_text_sha256": "b347a4389cbc25a6e2aef2897d432fee3c4be52dd4ea04e3f0a19dac00da8791",
+      "sequence_ratio": 0.210526,
+      "trigram_jaccard": 0.0,
+      "exact": false
+    },
+    {
+      "case_id": "T04_negated_sequence-02",
+      "old_path": "research/listen-first-v1/cases.jsonl",
+      "old_text_sha256": "09f419d38208795190ec9f0d47297bcb00fe82ec09ded398f3adabaf69d023b7",
+      "sequence_ratio": 0.26087,
+      "trigram_jaccard": 0.031746,
+      "exact": false
+    },
+    {
+      "case_id": "T05_nested_audio-01",
+      "old_path": "backend/tests/test_intent_scope_guard.py",
+      "old_text_sha256": "add8189c12c65918400a9f1f133f819414766b1643b11d307fb87f6fef96ba77",
+      "sequence_ratio": 0.21875,
+      "trigram_jaccard": 0.0,
+      "exact": false
+    },
+    {
+      "case_id": "T05_nested_audio-02",
+      "old_path": "research/selective-v1/evaluation.jsonl",
+      "old_text_sha256": "d786f469246bca4f9194cfda6937a25d660703b2ac398d9bdda95bde605c9989",
+      "sequence_ratio": 0.285714,
+      "trigram_jaccard": 0.028169,
+      "exact": false
+    },
+    {
+      "case_id": "T06_reported_roleplay-01",
+      "old_path": "research/training-v1/data.jsonl",
+      "old_text_sha256": "db6a4def9c887b6bf63aba83217d814a50edbf19dce5af0cdfbac80635fdc564",
+      "sequence_ratio": 0.189189,
+      "trigram_jaccard": 0.0,
+      "exact": false
+    },
+    {
+      "case_id": "T06_reported_roleplay-02",
+      "old_path": "research/listen-first-v1/cases.jsonl",
+      "old_text_sha256": "8da9364a9527ba3fbd50b223012e05d85f99bdc23204d057b7b4ab7dc12b1cea",
+      "sequence_ratio": 0.225,
+      "trigram_jaccard": 0.0,
+      "exact": false
+    },
+    {
+      "case_id": "T07_past_to_new_threat-01",
+      "old_path": "research/listen-first-v1/cases.jsonl",
+      "old_text_sha256": "8da9364a9527ba3fbd50b223012e05d85f99bdc23204d057b7b4ab7dc12b1cea",
+      "sequence_ratio": 0.210526,
+      "trigram_jaccard": 0.0,
+      "exact": false
+    },
+    {
+      "case_id": "T07_past_to_new_threat-02",
+      "old_path": "research/listen-first-v1/cases.jsonl",
+      "old_text_sha256": "8da9364a9527ba3fbd50b223012e05d85f99bdc23204d057b7b4ab7dc12b1cea",
+      "sequence_ratio": 0.242424,
+      "trigram_jaccard": 0.0,
+      "exact": false
+    },
+    {
+      "case_id": "T08_uncertain_location-01",
+      "old_path": "research/selective-v1/evaluation.jsonl",
+      "old_text_sha256": "6db81ce97167d1fdcb6b391a4dda5df8b748fd852547058298ddf871035c1619",
+      "sequence_ratio": 0.208955,
+      "trigram_jaccard": 0.0,
+      "exact": false
+    },
+    {
+      "case_id": "T08_uncertain_location-02",
+      "old_path": "data/development/synthetic_cases.jsonl",
+      "old_text_sha256": "1d1d766997f7ab0c5f96566e2776a577049134508913234370da0e7fa04b5396",
+      "sequence_ratio": 0.271186,
+      "trigram_jaccard": 0.037736,
+      "exact": false
+    },
+    {
+      "case_id": "T09_two_recipients-01",
+      "old_path": "research/selective-v1/evaluation.jsonl",
+      "old_text_sha256": "f5d5ba5b88be44d7904848cb94705a54e3783f7019c7790cb60909de948c97b7",
+      "sequence_ratio": 0.233766,
+      "trigram_jaccard": 0.013889,
+      "exact": false
+    },
+    {
+      "case_id": "T09_two_recipients-02",
+      "old_path": "backend/tests/test_intent_scope_guard.py",
+      "old_text_sha256": "a58919edbcc4fb74386266df326c949fe2b1c7293214005930f844e15deacef3",
+      "sequence_ratio": 0.2,
+      "trigram_jaccard": 0.0,
+      "exact": false
+    },
+    {
+      "case_id": "T10_unassigned_objects-01",
+      "old_path": "backend/tests/test_intent_scope_guard.py",
+      "old_text_sha256": "7bc46bfde96d2fa6a0b90fc649114b65fa7ff0dbce87f56b386213fd1d540e86",
+      "sequence_ratio": 0.179104,
+      "trigram_jaccard": 0.0,
+      "exact": false
+    },
+    {
+      "case_id": "T10_unassigned_objects-02",
+      "old_path": "research/selective-v1/evaluation.jsonl",
+      "old_text_sha256": "59c13abb2880b69d29bf8fc279619d9bc025ca024ae3e6ab09ce0769413feff7",
+      "sequence_ratio": 0.25974,
+      "trigram_jaccard": 0.013889,
+      "exact": false
+    },
+    {
+      "case_id": "T11_positive_affect_not_distress-01",
+      "old_path": "backend/tests/test_intent_scope_guard.py",
+      "old_text_sha256": "7bc46bfde96d2fa6a0b90fc649114b65fa7ff0dbce87f56b386213fd1d540e86",
+      "sequence_ratio": 0.237288,
+      "trigram_jaccard": 0.02,
+      "exact": false
+    },
+    {
+      "case_id": "T11_positive_affect_not_distress-02",
+      "old_path": "research/selective-v1/evaluation.jsonl",
+      "old_text_sha256": "6db81ce97167d1fdcb6b391a4dda5df8b748fd852547058298ddf871035c1619",
+      "sequence_ratio": 0.202899,
+      "trigram_jaccard": 0.0,
+      "exact": false
+    },
+    {
+      "case_id": "T12_observation_causal_gap-01",
+      "old_path": "research/listen-first-v1/cases.jsonl",
+      "old_text_sha256": "caf77d310ecba5a3a6f5743f39f94ecae7f0e881a870e645037e1b46d4f8aa94",
+      "sequence_ratio": 0.196721,
+      "trigram_jaccard": 0.017857,
+      "exact": false
+    },
+    {
+      "case_id": "T12_observation_causal_gap-02",
+      "old_path": "research/selective-v1/evaluation.jsonl",
+      "old_text_sha256": "9bfcd0e74f97ba3b066e36f192fa03c2cdff66c895cb7cb77a7246e465afe0ae",
+      "sequence_ratio": 0.25,
+      "trigram_jaccard": 0.034483,
+      "exact": false
+    },
+    {
+      "case_id": "T13_limited_advice_budget-01",
+      "old_path": "research/selective-v1/evaluation.jsonl",
+      "old_text_sha256": "f5d5ba5b88be44d7904848cb94705a54e3783f7019c7790cb60909de948c97b7",
+      "sequence_ratio": 0.189189,
+      "trigram_jaccard": 0.0,
+      "exact": false
+    },
+    {
+      "case_id": "T13_limited_advice_budget-02",
+      "old_path": "research/listen-first-v1/cases.jsonl",
+      "old_text_sha256": "e95caa2397640112cf0c008b7f16363acd5c11929c32b343f089f67b9e1e0d07",
+      "sequence_ratio": 0.228571,
+      "trigram_jaccard": 0.0,
+      "exact": false
+    },
+    {
+      "case_id": "T14_contact_restricted-01",
+      "old_path": "research/training-v1/data.jsonl",
+      "old_text_sha256": "db6a4def9c887b6bf63aba83217d814a50edbf19dce5af0cdfbac80635fdc564",
+      "sequence_ratio": 0.21875,
+      "trigram_jaccard": 0.034483,
+      "exact": false
+    },
+    {
+      "case_id": "T14_contact_restricted-02",
+      "old_path": "data/development/synthetic_cases.jsonl",
+      "old_text_sha256": "f3e576a57191805059761229156a1165563c2a6167a1dd18e983328cf37824cb",
+      "sequence_ratio": 0.237288,
+      "trigram_jaccard": 0.0,
+      "exact": false
+    },
+    {
+      "case_id": "T15_safety_despite_no_questions-01",
+      "old_path": "research/listen-first-v1/cases.jsonl",
+      "old_text_sha256": "8da9364a9527ba3fbd50b223012e05d85f99bdc23204d057b7b4ab7dc12b1cea",
+      "sequence_ratio": 0.266667,
+      "trigram_jaccard": 0.0,
+      "exact": false
+    },
+    {
+      "case_id": "T15_safety_despite_no_questions-02",
+      "old_path": "data/development/synthetic_cases.jsonl",
+      "old_text_sha256": "1d1d766997f7ab0c5f96566e2776a577049134508913234370da0e7fa04b5396",
+      "sequence_ratio": 0.235294,
+      "trigram_jaccard": 0.021739,
+      "exact": false
+    },
+    {
+      "case_id": "T16_mutually_incompatible_scope-01",
+      "old_path": "backend/tests/test_listen_first.py",
+      "old_text_sha256": "bdd571de2185514ed6b8728e95d12a55c0d5b596ad2d03be519c91b8c08f9cee",
+      "sequence_ratio": 0.241379,
+      "trigram_jaccard": 0.018868,
+      "exact": false
+    },
+    {
+      "case_id": "T16_mutually_incompatible_scope-02",
+      "old_path": "research/listen-first-v1/cases.jsonl",
+      "old_text_sha256": "685e75d4157493c220be07c2b54013a3ff2c53db0e5837b62c6b60eff05357fe",
+      "sequence_ratio": 0.2,
+      "trigram_jaccard": 0.0,
+      "exact": false
+    },
+    {
+      "case_id": "T17_partial_correction-01",
+      "old_path": "research/listen-first-v1/cases.jsonl",
+      "old_text_sha256": "53c7d505ca2703936c66f879450d800eccb891e18d158c4e768b3ab727db6d1b",
+      "sequence_ratio": 0.276923,
+      "trigram_jaccard": 0.033898,
+      "exact": false
+    },
+    {
+      "case_id": "T17_partial_correction-02",
+      "old_path": "research/selective-v1/evaluation.jsonl",
+      "old_text_sha256": "d786f469246bca4f9194cfda6937a25d660703b2ac398d9bdda95bde605c9989",
+      "sequence_ratio": 0.229508,
+      "trigram_jaccard": 0.0,
+      "exact": false
+    },
+    {
+      "case_id": "T18_long_request_scope-01",
+      "old_path": "research/listen-first-v1/cases.jsonl",
+      "old_text_sha256": "b347a4389cbc25a6e2aef2897d432fee3c4be52dd4ea04e3f0a19dac00da8791",
+      "sequence_ratio": 0.15625,
+      "trigram_jaccard": 0.0,
+      "exact": false
+    },
+    {
+      "case_id": "T18_long_request_scope-02",
+      "old_path": "research/listen-first-v1/cases.jsonl",
+      "old_text_sha256": "b347a4389cbc25a6e2aef2897d432fee3c4be52dd4ea04e3f0a19dac00da8791",
+      "sequence_ratio": 0.166667,
+      "trigram_jaccard": 0.0,
+      "exact": false
+    }
+  ],
+  "limitations": "Lexical only; not proof of semantic independence. Same author; mechanisms overlap. Full context and family definitions also need human review."
+}

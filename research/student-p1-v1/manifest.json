@@ -1,0 +1,20 @@
+{
+  "base": "781d168858b1f9a03ec7b786b8c93ecfcca90c5e",
+  "kind": "offline_synthetic_development",
+  "hashes": {
+    "backend/app/ccare/student.py": "a31623cc90044acf7a9c6e6490aa4846fb6841f3c853787fc0e205c84061dc19",
+    "backend/app/ccare/student_schemas.py": "2038fb6ebdd98d04bc6ea0a98613a82c920f26311bd5e8a62aafd3c4a5d0c2e8",
+    "backend/app/ccare/schemas.py": "867aa36a0a39b41bbfdf46b864bee76d9b3b8324a53d7c2417ffb2b83893ec31",
+    "backend/app/ccare/reviews.py": "5dfcb2aad55a4a5f081b9fa20e10633ccb51940f05fddfa0f930947bc7458435",
+    "backend/app/ccare/api.py": "125fa99f742faf4a4325f01f83c07b665f889855e1ef9c215acb913aa88a7434",
+    "backend/app/ccare/web/site.html": "2011ff9bf2f69cea6f054c1c1f0feaa9e3aaa94ba4e20fbf1aa9c7a4f6f466d3",
+    "backend/app/ccare/web/site.js": "45a0c761f69c341db84334c7ecb21d735bd6c4caf371eba7dd6edb0919937e72",
+    "backend/app/ccare/web/site.css": "f15807a6655a8b4d966a937b4e224c9281c200f196b082ca88bb7bac6630e22b",
+    "backend/tests/test_student_p1.py": "3fff0ff35e16f470720643e7b2216d57b2cde83c78d77fb40368daf530f631b3",
+    "scripts/check_web_e2e.py": "0bd9e3e3aa4baa6f28b5b037b065ac229f47797bb4d2e8a58943ddbc63f8309f",
+    "scripts/evaluate_student_p1.py": "7a58ceb8dea008736dd5b3097e6fd663d7b3cfd1fa7a85842e793e477bcd193d",
+    "research/student-p1-v1/development.jsonl": "88db8c10b137c36005ae3af3ed14bea49017cd280d7dc962e0b362f279d33adb",
+    "research/student-p1-v1/diagnostic.json": "877b7a3481981b75be79cc5c8cd8ad70c9375a7652828368698fc07d90fe2e28",
+    "research/student-p1-v1/README.md": "dd5a9a8291899b78908522251120d0d4c23bdc5cd891243d56c90120b9b49572"
+  }
+}

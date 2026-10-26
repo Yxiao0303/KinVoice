@@ -1,10 +1,22 @@
 name: C-CARE offline checks
 on: [push, pull_request]
 jobs:
+  browser-offline:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install -r backend/requirements-ccare.lock.txt -r tests/requirements-browser.txt
+      - run: python -m playwright install --with-deps chromium
+      - run: python scripts/check_web_e2e.py
   backend:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
@@ -16,6 +28,11 @@ jobs:
       - run: node --test tests/web-stream.test.mjs
       - run: python scripts/evaluate_ccare.py
       - run: python scripts/evaluate_policy_pairs.py
+      - run: python scripts/audit_frozen_research.py --mock-output experiments/frozen-research-mock
+      - run: python scripts/benchmark_ccare.py --output experiments/benchmark-dry-run
+      - run: python scripts/benchmark_ccare.py --mock --output experiments/benchmark-mock
+      - run: python scripts/check_cny_budget.py --mock --ledger experiments/fee-ledger/offline.db --attempts 6
+      - run: python scripts/check_cny_budget.py --mock --ledger experiments/fee-ledger/offline.db --attempts 2
       - uses: actions/upload-artifact@v4
         with:
           name: development-diagnostics-not-clinical-results

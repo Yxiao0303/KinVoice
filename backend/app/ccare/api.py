@@ -15,6 +15,8 @@ from .config import Settings
 from .engine import Engine
 from .provider import ProviderUnavailable, RemoteProvider
 from .schemas import Credentials, TurnRequest, TurnResponse
+from .student_schemas import StudentRequest, StudentResponse
+from .student import respond_student
 from .streaming import TurnStreamResponse
 
 WEB = Path(__file__).parent / "web"
@@ -122,7 +124,7 @@ def create_app(config=None, provider=None):
     @app.get("/ping")
     async def ping():
         return {"status": "ok", "version": "0.5.0", "mode": config.mode,
-                "progress_stream": "ccare-stream-v1",
+                "student_protocol": "student-p1-offline-v1", "progress_stream": "ccare-stream-v1", "review_protocol": "ccare-review-v1",
                 "model": config.model if config.mode == "remote" else "",
                 "turn_timeout_seconds": config.turn_timeout,
                 "provider": config.provider_label if config.mode == "remote" else "",
@@ -163,11 +165,22 @@ def create_app(config=None, provider=None):
 
     def admit(req, auth):
         if not req.eligible:
-            raise HTTPException(403, "此原型仅供18–25岁在校大学生场景的内部评审")
+            raise HTTPException(403, "此原型仅供成人大学生虚构场景的内部评审")
         limiter.check(("turn", auth[0]), 30, 60)
         if auth[0] in active or len(active) >= 2:
             raise HTTPException(409, "上一条请求尚未完成，请稍后再试")
         active.add(auth[0])
+
+    @app.post("/support/student", response_model=StudentResponse)
+    async def student_turn(req: StudentRequest, auth=Depends(identity)):
+        if req.student.stage!='university' or not req.student.adult_confirmed:
+            raise HTTPException(403, "学生入口仅供已单独确认成年的大学虚构案例；初高中仅为设计配置")
+        admit(req,auth)
+        try:
+            result=respond_student(req)
+            if await store.resolve(auth[1])!=auth[0]:raise HTTPException(401,"登录已失效")
+            return result
+        finally:active.discard(auth[0])
 
     @app.post("/support/stream")
     async def stream(req: TurnRequest, auth=Depends(identity)):
