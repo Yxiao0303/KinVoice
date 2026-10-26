@@ -1,5 +1,6 @@
 import sys,tempfile,unittest
 from pathlib import Path
+from unittest.mock import patch
 sys.path.insert(0,str(Path(__file__).resolve().parents[2]/'scripts'))
 from app.ccare.cny_ledger import CNYLedger,BudgetError,LIMIT_APPROVAL
 from app.ccare.smoke import POLICY as OLD
@@ -8,6 +9,16 @@ from development_budget import approve_400,DevelopmentLedger,APPROVAL,POLICY,fro
 from batch_evaluation import reserve_all
 
 class DevelopmentBudgetTests(unittest.TestCase):
+    def setUp(self):
+        # Only temporary offline databases use the audited historical scope.
+        # Production verify_freeze remains unchanged and rejects new source.
+        from audit_frozen_research import audit
+        audit('batch-evaluation-v5')
+        from batch_evaluation import verify_freeze
+        with self.assertRaises(ValueError):verify_freeze()
+        patched=patch('batch_evaluation.verify_freeze')
+        patched.start();self.addCleanup(patched.stop)
+
     def seed(self,path):
         ledger=CNYLedger(path,OLD,clock=lambda:OLD.verified_at+1)
         for i in range(20):

@@ -11,15 +11,15 @@ class ScopedIntent:
 
 QUOTES=re.compile(r'“[^”]*”|「[^」]*」|"[^"]*"')
 REVISION=re.compile(r'但现在|不过现在|现在改为|我改主意了|更正[：:]?|现在请')
-ATTRIBUTED=re.compile(r'朋友(?:说|表示)|(?:他|她|爸爸|妈妈|老师|姐姐|室友)(?:说|表示|告诉)|(?:他|她)希望')
+ATTRIBUTED=re.compile(r'朋友(?:说|表示|希望|要求)|(?:他|她|爸爸|妈妈|老师|姐姐|室友)(?:说|表示|告诉)|(?:他|她)希望')
 HISTORICAL=re.compile(r'以前|昨天|曾经|当时|过去')
 FUTURE=re.compile(r'之后|以后|然后|稍后|等.{0,8}再|再(?:给|帮|提|想)')
 SELF=re.compile(r'^\s*(?:但|不过)?\s*我(?:现在|此刻|只|想|要|不|先|希望|并|还)')
 NEGATED=re.compile(r'(?:不是|并非|并不|不再|不要|不想|不需要)(?:要|想|让|请)?(?:你)?\s*$')
 PATTERNS={
  'listen':re.compile(r'不要.{0,4}建议|先别.{0,4}(?:建议|劝)|别.{0,4}(?:建议|劝)|只.{0,5}(?:听我说|听听|倾听)|先听我(?:说|讲)|只想(?:说说|倾诉)|不想.{0,4}(?:沟通|和解|联系)'),
- 'draft':re.compile(r'想.{0,6}(?:写段话|写一段|草稿|措辞)|帮我.{0,12}(?:写|表达)'),
- 'clarify':re.compile(r'想.{0,4}(?:梳理|澄清|理清)|(?:请|给我)[^。！？；，]{0,40}(?:建议|办法|步骤)'),
+ 'draft':re.compile(r'想.{0,6}(?:写段话|写一段|草稿|措辞)|(?:帮我|替我).{0,12}(?:写|表达)|(?:想要|需要|请给我|给我)(?:一|几)(?:句|段)[^。！？；，]{0,16}(?:说明|话|措辞|回复)|(?:想|准备)(?:给[^。！？；，]{0,8})?(?:写|发)(?:一句|一段)'),
+ 'clarify':re.compile(r'(?:请|先)(?:先)?(?:确认|问清|核实)|想.{0,4}(?:梳理|澄清|理清)|(?:请|给我)[^。！？；，]{0,40}(?:建议|办法|步骤)'),
  'ground':re.compile(r'想.{0,4}(?:平静|稳定|冷静)'),
 }
 
@@ -30,7 +30,7 @@ def scoped_current_intent(text):
     revisions=list(REVISION.finditer(masked));offset=revisions[-1].end() if revisions else 0
     # '现在请' keeps 请 for the general advice recognizer.
     if revisions and revisions[-1].group()=='现在请':offset-=1
-    hits=[];blocked=False;attributed=False;historical=False
+    hits=[];blocked=bool(QUOTES.search(text));attributed=False;historical=False
     for sentence in re.finditer(r'[^。！？；;\n]+',masked[offset:]):
         attributed=historical=False
         for clause in re.finditer(r'[^，,]+',sentence.group()):
@@ -43,7 +43,9 @@ def scoped_current_intent(text):
             if present:
                 base+=present.end();part=part[present.end():];historical=False
                 if '我' in present.group():attributed=False
-            if attributed or historical or re.search(r'如果|假如|假设|也许|要是',part):continue
+            if attributed or historical or re.search(r'如果|假如|假设|也许|要是',part):
+                blocked=True
+                continue
             future=FUTURE.search(part)
             if future:part=part[:future.start()]
             for value,pattern in PATTERNS.items():
@@ -59,6 +61,10 @@ def scoped_current_intent(text):
     if 'listen' in values:
         value,start,end=[hit for hit in hits if hit[0]=='listen'][-1]
         return ScopedIntent(value,start,end,blocked or len(values)>1)
+    # A direct request to establish missing facts precedes composing wording.
+    if values == {'draft', 'clarify'}:
+        value,start,end=[hit for hit in hits if hit[0]=='clarify'][-1]
+        return ScopedIntent(value,start,end,blocked)
     if len(values)!=1:return ScopedIntent(blocks_inferred=blocked or len(values)>1)
     value,start,end=hits[-1]
     return ScopedIntent(value,start,end,blocked)

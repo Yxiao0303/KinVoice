@@ -8,6 +8,7 @@ from app.ccare.config import Settings
 from app.ccare.provider import RemoteProvider,ProviderUnavailable
 from app.ccare.engine import Engine,input_context,FALLBACK,local_state,SAFETY
 from app.ccare.policy import decide
+from app.ccare.intent_scope import scoped_current_intent
 from app.ccare.schemas import State,Check,TurnRequest
 from price_refresh import RefreshedLedger
 from listen_first_v2 import choose_v2
@@ -57,8 +58,12 @@ class ActionSelector:
         decision=decide(req,state,links)
         action=choose_v2(req)['action']
         desired={'listen':'listen','bounded_advice':'draft','detail_question':'clarify','safety_question':'clarify','safety':'safety'}[action]
-        if desired in decision.allowed:decision.selected=desired
-        decision.reasons.append('research_action_'+action)
+        # Explicit current requests and independent safety constraints outrank
+        # the exploratory action heuristic; unknown alone does not demand a question.
+        if desired in decision.allowed and 'current_text_intent' not in decision.reasons and not scoped_current_intent(req.message).blocks_inferred:
+            decision.selected=desired
+        decision.reasons.append('research_candidate_'+action)
+        if decision.selected!=desired:decision.reasons.append('research_candidate_not_selected')
         return decision
 
 class ResearchEngine(Engine):
@@ -66,7 +71,7 @@ class ResearchEngine(Engine):
         super().__init__(config,provider,selector=ActionSelector(),generation_attempts=1)
         self.action=choose_v2(req)['action']
     def generation_rules(self):
-        rule='此轮先中性倾听，不提出问题，不断言未知情绪。' if self.action=='listen' else '遵循选定策略，最多一个必要问题。'
+        rule='以最终strategy为准：listen中性倾听；draft完成当前措辞请求；clarify只问一个必要问题。不将未知情绪断言为事实。'
         return super().generation_rules()+COMMON+rule
     def verification_rules(self):return super().verification_rules()+COMMON
 

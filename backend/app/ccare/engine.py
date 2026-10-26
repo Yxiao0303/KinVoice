@@ -5,6 +5,7 @@ import re
 from time import perf_counter
 
 from pydantic import ValidationError
+from .emotion_grounding import unsupported_emotion
 from .config import Settings
 from .provider import Completion, ProviderUnavailable
 from .schemas import Check, StageRecord, State, TurnRequest, TurnResponse
@@ -233,7 +234,7 @@ class Engine:
                                    "allowed_strategies": decision.allowed, "policy_reasons": decision.reasons}, ensure_ascii=False)
                 for attempt in range(self.generation_attempts):
                     draft = await call("generate" if not attempt else "rewrite", instructions, data + ("\n上次未通过检查，请重新生成更保守的回应。" if attempt else ""), 0.3)
-                    violations = self.check_output(draft, decision, state)
+                    violations = self.check_output(draft, decision, state) + unsupported_emotion(draft, req)
                     if violations:
                         checks.append("draft_rule_rejected")
                         checks.extend(violations)
