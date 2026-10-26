@@ -11,7 +11,7 @@ from app.ccare.schemas import State,Check,TurnRequest
 from app.ccare.cny_ledger import DEFAULT_LEDGER,BudgetError,nano
 from price_refresh import RefreshedLedger
 from validate_evaluation_pack import validate as validate_pack
-BUNDLE=ROOT/'research/batch-evaluation-v1'
+BUNDLE=ROOT/'research/batch-evaluation-v2'
 PACK=ROOT/'research/evaluation-pack-v1'
 ARMS=('strong_single','strong_multi','ccare')
 SEED=2601026
@@ -161,7 +161,7 @@ async def run_batch(cases,planned,out,mode,ledger=None,transport=None,fail_first
     if mode not in ('live','mock'):raise ValueError('invalid_mode')
     if mode=='mock' and planned['split']!='development':raise ValueError('candidate_mock_prohibited')
     out.mkdir(parents=True,exist_ok=False)
-    run_id=f"batch-v1-{planned['split']}-{digest(planned)[:8]}"
+    run_id=f"batch-v2-{planned['split']}-{digest(planned)[:8]}"
     rows=[dict(x,mode=mode,status='not_run',failure=None,reply='',calls=[],elapsed_ms=0) for x in planned['items']]
     save(out/'plan.json',planned);save(out/'outputs.json',rows)
     if mode=='live':

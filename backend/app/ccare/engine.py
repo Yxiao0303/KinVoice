@@ -11,6 +11,7 @@ from .schemas import Check, StageRecord, State, TurnRequest, TurnResponse
 from .policy import decide, locate, validate_state, RuleStrategySelector
 from .reviews import apply_reviews, review_targets
 from .semantics import PATTERNS
+from .current_threat import current_threat_state
 
 SAFETY = (
     "你提到的情况需要优先关注当下安全。如果已经受伤、服药过量或有人正在伤害你，"
@@ -73,6 +74,11 @@ def local_state(req: TurnRequest) -> State:
         match = acute or UNSAFE.search(text)
         if match:
             evidence.append(text[max(0, match.start()-50):match.end()+70])
+    scoped_acute, scoped_context, scoped_evidence = current_threat_state(
+        req.message, [m.content for m in req.history if m.role == "user"])
+    urgent |= scoped_acute
+    contextual |= scoped_context and not scoped_acute
+    evidence.extend(scoped_evidence)
     return State(risk="urgent" if urgent else "unknown", needs_clarification=contextual,
                  family_unsafe=any(UNSAFE.search(t) for t in texts), evidence=evidence[-5:])
 
