@@ -66,6 +66,12 @@ def apply_reviews(req, state, links, guard):
                 newer = True
         if entry.field == 'support_intent' and (req.message_id or digest(req.message)) != (entry.source_message_id or entry.source_digest) and current_intent(req.message) != 'unknown':
             newer = True
+        if entry.field == 'risk':
+            from .risk_events import bind_risk_events
+            for event in bind_risk_events(req):
+                same_source = event.evidence.message_id == entry.source_message_id if entry.source_message_id else event.source_digest == entry.source_digest
+                if same_source and event.status == 'resolved' and rank[event.update_evidence.message_id] > rank[event.evidence.message_id]:
+                    newer = True
         if newer:
             outcomes.append({'field': entry.field, 'revision': entry.revision, 'status': 'superseded'})
             continue

@@ -13,6 +13,8 @@ from .reviews import apply_reviews, review_targets
 from .semantics import PATTERNS
 from .current_threat import current_threat_state
 from .threat_scope import physical_resolution_excludes
+from .risk_events import bind_risk_events, pending_risk_resolution, INQUIRY
+from .schemas import FieldAssessment
 
 SAFETY = (
     "你提到的情况需要优先关注当下安全。如果已经受伤、服药过量或有人正在伤害你，"
@@ -54,14 +56,14 @@ NON_ACUTE_CLAUSE = re.compile(
 )
 
 
-def urgent_evidence(text):
+def urgent_evidence(text, bound_exclusions=()):
     excluded = [part.span() for part in re.finditer(r"[^，。！？；,!?;\n]+", text)
                 if NON_ACUTE_CLAUSE.fullmatch(part.group().strip())]
     matches = list(URGENT.finditer(text))
     resolved = [m for m in matches if physical_resolution_excludes(text, m)]
     active = [match for match in matches
-              if match not in resolved and not any(start <= match.start() and match.end() <= end for start, end in excluded)]
-    return (active[0] if active else None), bool(matches and (excluded or resolved))
+              if match not in resolved and not any(a <= match.start() and match.end() <= b for a,b in bound_exclusions) and not any(start <= match.start() and match.end() <= end for start, end in excluded)]
+    return (active[0] if active else None), bool(matches and (excluded or resolved or bound_exclusions))
 
 
 def local_state(req: TurnRequest) -> State:
@@ -69,8 +71,11 @@ def local_state(req: TurnRequest) -> State:
     # coursework is not proof of safety: retain unknown and clarification metadata.
     texts = [m.content for m in req.history if m.role == "user"] + [req.message]
     evidence, urgent, contextual = [], False, False
-    for text in texts:
-        acute, uncertain = urgent_evidence(text)
+    bindings=bind_risk_events(req)
+    source_ids=[m.message_id or f'history:{i}' for i,m in enumerate(req.history) if m.role=='user']+[req.message_id or f'current:{len(req.history)}']
+    for mid,text in zip(source_ids,texts):
+        excluded=[(e.evidence.start,e.evidence.end) for e in bindings if e.evidence.message_id==mid and e.status in ('resolved','pending_resolution')]
+        acute, uncertain = urgent_evidence(text,excluded)
         urgent |= acute is not None
         contextual |= uncertain
         match = acute or UNSAFE.search(text)
@@ -81,7 +86,8 @@ def local_state(req: TurnRequest) -> State:
     urgent |= scoped_acute
     contextual |= scoped_context and not scoped_acute
     evidence.extend(scoped_evidence)
-    return State(risk="urgent" if urgent else "unknown", needs_clarification=contextual,
+    assessments=[FieldAssessment(field='risk',value='unknown',origin='explicit' if e.status=='resolved' else 'unknown',verdict='insufficient',message_id=e.update_evidence.message_id,current=e.update_evidence.source=='current',supersedes=e.event_id+':'+e.status) for e in bindings if e.update_evidence]
+    return State(assessments=assessments[-30:],risk="urgent" if urgent else "unknown", needs_clarification=contextual,
                  family_unsafe=any(UNSAFE.search(t) for t in texts), evidence=evidence[-5:])
 
 
@@ -153,6 +159,10 @@ class Engine:
         if state.risk == "urgent":
             policy_event()
             return result(SAFETY, "safety_template", "safety")
+        if pending_risk_resolution(req):
+            checks.append('risk_event_clarification')
+            policy_event()
+            return result(INQUIRY, 'safety_template', 'clarify')
         if self.config.mode == "demo":
             policy_event()
             strategy = decision.selected

@@ -1,0 +1,185 @@
+[
+  {
+    "case_id": "original_cross_turn",
+    "request": {
+      "message_id": "now",
+      "message": "朋友已经安全到家。",
+      "history": [
+        {
+          "message_id": "old",
+          "role": "user",
+          "content": "朋友说“爸爸正在掐我”。"
+        }
+      ],
+      "goal": "listen",
+      "eligible": false,
+      "external_consent": false,
+      "reviews": []
+    },
+    "state": {
+      "assessments": [
+        {
+          "field": "risk",
+          "value": "unknown",
+          "origin": "explicit",
+          "verdict": "insufficient",
+          "message_id": "now",
+          "role": "user",
+          "current": true,
+          "supersedes": "risk-event:b0067b03d351735b06444bb0:resolved"
+        }
+      ],
+      "needs_clarification": true,
+      "risk": "unknown",
+      "family_unsafe": true,
+      "emotion": "unknown",
+      "evidence": [
+        "朋友说“爸爸正在掐我”。"
+      ],
+      "support_intent": "unknown",
+      "intent_evidence": []
+    },
+    "bindings": [
+      {
+        "event_id": "risk-event:b0067b03d351735b06444bb0",
+        "subject": "朋友",
+        "source_digest": "d8f543709242c9502003ff26b82c2505c14a75136659630da9878316476082ad",
+        "evidence": {
+          "message_id": "old",
+          "role": "user",
+          "source": "history",
+          "turn": 0,
+          "start": 6,
+          "end": 10,
+          "quote": "正在掐我",
+          "purpose": "local_guard"
+        },
+        "status": "resolved",
+        "update_evidence": {
+          "message_id": "now",
+          "role": "user",
+          "source": "current",
+          "turn": 1,
+          "start": 0,
+          "end": 9,
+          "quote": "朋友已经安全到家。",
+          "purpose": "local_guard"
+        },
+        "review_revision": null
+      }
+    ],
+    "developer_expected_risk": "unknown",
+    "matches_developer_expectation": true,
+    "synthetic": true,
+    "review_status": "unreviewed"
+  },
+  {
+    "case_id": "ambiguous_pronoun",
+    "request": {
+      "message_id": null,
+      "message": "她已经安全到家。",
+      "history": [
+        {
+          "message_id": null,
+          "role": "user",
+          "content": "朋友说“爸爸正在掐我”。"
+        }
+      ],
+      "goal": "listen",
+      "eligible": false,
+      "external_consent": false,
+      "reviews": []
+    },
+    "state": {
+      "assessments": [
+        {
+          "field": "risk",
+          "value": "unknown",
+          "origin": "unknown",
+          "verdict": "insufficient",
+          "message_id": "current:1",
+          "role": "user",
+          "current": true,
+          "supersedes": "risk-event:0a16a83536d469488774469b:pending_resolution"
+        }
+      ],
+      "needs_clarification": true,
+      "risk": "unknown",
+      "family_unsafe": true,
+      "emotion": "unknown",
+      "evidence": [
+        "朋友说“爸爸正在掐我”。"
+      ],
+      "support_intent": "unknown",
+      "intent_evidence": []
+    },
+    "bindings": [
+      {
+        "event_id": "risk-event:0a16a83536d469488774469b",
+        "subject": "朋友",
+        "source_digest": "d8f543709242c9502003ff26b82c2505c14a75136659630da9878316476082ad",
+        "evidence": {
+          "message_id": "history:0",
+          "role": "user",
+          "source": "history",
+          "turn": 0,
+          "start": 6,
+          "end": 10,
+          "quote": "正在掐我",
+          "purpose": "local_guard"
+        },
+        "status": "pending_resolution",
+        "update_evidence": {
+          "message_id": "current:1",
+          "role": "user",
+          "source": "current",
+          "turn": 1,
+          "start": 0,
+          "end": 8,
+          "quote": "她已经安全到家。",
+          "purpose": "local_guard"
+        },
+        "review_revision": null
+      }
+    ],
+    "developer_expected_risk": "unknown",
+    "matches_developer_expectation": true,
+    "synthetic": true,
+    "review_status": "unreviewed"
+  },
+  {
+    "case_id": "unquoted_report_boundary",
+    "request": {
+      "message_id": null,
+      "message": "朋友已经安全到家。",
+      "history": [
+        {
+          "message_id": null,
+          "role": "user",
+          "content": "朋友说爸爸正在掐我。"
+        }
+      ],
+      "goal": "listen",
+      "eligible": false,
+      "external_consent": false,
+      "reviews": []
+    },
+    "state": {
+      "assessments": [],
+      "needs_clarification": false,
+      "risk": "urgent",
+      "family_unsafe": true,
+      "emotion": "unknown",
+      "evidence": [
+        "朋友说爸爸正在掐我。"
+      ],
+      "support_intent": "unknown",
+      "intent_evidence": []
+    },
+    "bindings": [],
+    "developer_expected_risk": "unknown",
+    "matches_developer_expectation": false,
+    "synthetic": true,
+    "review_status": "unreviewed"
+  }
+]

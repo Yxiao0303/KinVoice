@@ -67,6 +67,9 @@ def decide(req: TurnRequest, state: State, links=None, *, intent_constraints=Tru
     refusal = REFUSAL.search(quote) if text_intent == "listen" else None
     if state.risk == "urgent":
         return PolicyDecision(requested=req.goal, selected="safety", allowed=["safety"], reasons=["urgent_guard"], evidence=evidence)
+    from .risk_events import pending_risk_resolution
+    if pending_risk_resolution(req):
+        return PolicyDecision(requested=req.goal, selected='clarify', allowed=['clarify'], reasons=['risk_event_clarification'], evidence=evidence)
     if state.family_unsafe and family_constraints:
         allowed.remove("draft")
         reasons.append("family_contact_restricted")

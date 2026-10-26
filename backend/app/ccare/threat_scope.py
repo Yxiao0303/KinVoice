@@ -8,7 +8,7 @@ from typing import Protocol
 QUOTES=re.compile(r'“[^”]*”|「[^」]*」|"[^"]*"')
 PRESENT=re.compile(r'现在|此刻|正在|这会儿|目前')
 PAST=re.compile(r'昨天|去年|以前|当时|曾经|刚才')
-REPORTER=re.compile(r'(朋友|姐姐|室友|同事|哥哥)(?:说|告诉我|表示)\s*$')
+REPORTER=re.compile(r'(朋友(?:小[\u4e00-\u9fff])?|姐姐|室友|同事|哥哥)(?:说|告诉我|表示)\s*$')
 RESOLUTION=re.compile(r'(?:她|他|朋友|姐姐|室友|同事|哥哥)(?:现在)?(?:已经|已)(?:安全到家|安全到校|到安全地方)')
 
 @dataclass(frozen=True)
